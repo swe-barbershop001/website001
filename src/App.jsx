@@ -1,5 +1,6 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import { Analytics } from '@vercel/analytics/react'
+import { Toaster } from 'react-hot-toast'
 import Header from './components/Header'
 import ScrollToTop from './components/ScrollToTop'
 import ProtectedRoute from './components/ProtectedRoute'
@@ -13,6 +14,7 @@ import AdminLogin from './pages/AdminLogin'
 import SuperAdmin from './pages/SuperAdmin'
 import AnalyticsPage from './pages/Analytics'
 import Barbers from './pages/Barbers'
+import Services from './pages/Services'
 import NotFound from './pages/NotFound'
 
 function App() {
@@ -49,6 +51,14 @@ function App() {
             element={
               <ProtectedRoute requireAdmin={true}>
                 <Barbers />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/services" 
+            element={
+              <ProtectedRoute requireAdmin={true}>
+                <Services />
               </ProtectedRoute>
             } 
           />

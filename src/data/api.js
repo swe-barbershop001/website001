@@ -12,6 +12,15 @@ export const BARBERS_BASE_URL =
 export const BOOKINGS_BASE_URL =
   import.meta.env.VITE_BOOKINGS_BASE_URL || BASE_URL;
 
+// Socket.IO URL
+const getSocketIOUrl = () => {
+  const baseUrl = import.meta.env.VITE_BOOKINGS_BASE_URL || BASE_URL;
+  return baseUrl;
+};
+
+export const SOCKET_IO_URL =
+  import.meta.env.VITE_SOCKET_IO_URL || getSocketIOUrl();
+
 export const API_ENDPOINTS = {
   register: "/auth/register",
   login: "/auth/login",

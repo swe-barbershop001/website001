@@ -111,6 +111,11 @@ function AnalyticsPage() {
     barberStats.forEach((barberStat) => {
       const bookings = barberStat.bookings || [];
       bookings.forEach((booking) => {
+        // Skip completed bookings
+        if (booking.status === "completed") {
+          return;
+        }
+        
         // Count services
         if (booking.service) {
           const serviceName = booking.service.name;
@@ -131,21 +136,30 @@ function AnalyticsPage() {
       .sort((a, b) => b.count - a.count);
 
     // Transform barber statistics
-    const totalRevenue = barberStats.reduce(
-      (sum, stat) => sum + (stat.total_revenue || 0),
-      0
-    );
-    
+    // Calculate revenue excluding completed bookings
     const byBarbers = barberStats.map((stat) => {
-      const revenue = stat.total_revenue || 0;
-      const percentage = totalRevenue > 0 
-        ? Math.round((revenue / totalRevenue) * 100) 
-        : 0;
+      const bookings = stat.bookings || [];
+      // Calculate revenue from approved bookings only (excluding completed)
+      const revenue = bookings.reduce((sum, booking) => {
+        if (booking.status === "approved" && booking.service && booking.service.price) {
+          return sum + booking.service.price;
+        }
+        return sum;
+      }, 0);
       return {
         name: stat.barber?.name || "N/A",
         revenue: revenue,
-        percentage: percentage,
+        percentage: 0, // Will be calculated after totalRevenue
       };
+    });
+    
+    const totalRevenue = byBarbers.reduce((sum, barber) => sum + barber.revenue, 0);
+    
+    // Update percentages
+    byBarbers.forEach((barber) => {
+      barber.percentage = totalRevenue > 0 
+        ? Math.round((barber.revenue / totalRevenue) * 100) 
+        : 0;
     });
 
     // Create revenue over time data
@@ -165,7 +179,9 @@ function AnalyticsPage() {
     const profit = Math.round(totalRevenue * 0.3);
 
     // Calculate conversion rate (approved / total)
-    const totalBookings = summary.total_bookings || 0;
+    // Exclude completed bookings from total
+    const completedBookings = summary.bookings_by_status?.completed || 0;
+    const totalBookings = (summary.total_bookings || 0) - completedBookings;
     const approvedBookings = summary.bookings_by_status?.approved || 0;
     const conversionRate = totalBookings > 0 
       ? ((approvedBookings / totalBookings) * 100).toFixed(2)
@@ -185,7 +201,6 @@ function AnalyticsPage() {
         pending: summary.bookings_by_status?.pending || 0,
         rejected: summary.bookings_by_status?.rejected || 0,
         cancelled: summary.bookings_by_status?.cancelled || 0,
-        completed: summary.bookings_by_status?.completed || 0,
       },
     };
   };
@@ -254,7 +269,6 @@ function AnalyticsPage() {
 
   const stats = statistics || getMockStatistics();
   const previousRevenue = stats?.total_revenue * 0.75 || 0; // Mock previous value
-  const previousProfit = stats?.profit * 0.9 || 0;
   const previousBookings = stats?.total_bookings * 0.2 || 0;
 
   return (
@@ -348,7 +362,7 @@ function AnalyticsPage() {
           </div>
 
           {/* KPI Cards */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
             {/* Total Revenue */}
             <div className="bg-gradient-to-br from-green-50 to-green-100 rounded-xl p-6 shadow-lg border border-green-200 hover:shadow-xl transition-shadow">
               <div className="flex items-center justify-between mb-4">
@@ -362,22 +376,6 @@ function AnalyticsPage() {
               <div className="text-sm font-medium text-gray-600 mb-1">Jami Daromad</div>
               <div className="text-3xl font-bold text-gray-900">
                 {formatCurrency(stats.total_revenue || 0)}
-              </div>
-            </div>
-
-            {/* Profit */}
-            <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl p-6 shadow-lg border border-blue-200 hover:shadow-xl transition-shadow">
-              <div className="flex items-center justify-between mb-4">
-                <div className="p-3 bg-blue-500 rounded-lg">
-                  <ChartBarIcon className="w-6 h-6 text-white" />
-                </div>
-                <span className="text-xs font-semibold text-blue-700 bg-blue-200 px-2 py-1 rounded-full">
-                  ↑ {calculatePercentageChange(stats.profit || 0, previousProfit).toFixed(1)}%
-                </span>
-              </div>
-              <div className="text-sm font-medium text-gray-600 mb-1">Foyda</div>
-              <div className="text-3xl font-bold text-gray-900">
-                {formatCurrency(stats.profit || 0)}
               </div>
             </div>
 
@@ -400,10 +398,10 @@ function AnalyticsPage() {
             {/* Conversion Rate */}
             <div className="bg-gradient-to-br from-amber-50 to-amber-100 rounded-xl p-6 shadow-lg border border-amber-200 hover:shadow-xl transition-shadow">
               <div className="flex items-center justify-between mb-4">
-                <div className="p-3 bg-amber-500 rounded-lg">
+                <div className="p-3 bg-amber-500 rounded-lg w-fit mb-3">
                   <CheckCircleIcon className="w-6 h-6 text-white" />
                 </div>
-                <span className="text-xs font-semibold text-amber-700 bg-amber-200 px-2 py-1 rounded-full">
+                <span className="text-xs font-semibold text-amber-700 mb-[9px] bg-amber-200 px-2 py-1 rounded-full w-fit">
                   {stats.conversion_rate >= 80 ? "Yuqori" : stats.conversion_rate >= 50 ? "O'rtacha" : "Past"}
                 </span>
               </div>
@@ -485,41 +483,43 @@ function AnalyticsPage() {
           </div>
 
           {/* Bottom Three Cards */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-stretch">
             {/* By Services */}
-            <div className="bg-white rounded-xl p-6 shadow-md border border-gray-200">
+            <div className="bg-white rounded-xl p-6 shadow-md border border-gray-200 flex flex-col h-full">
               <h3 className="text-lg font-bold text-gray-900 mb-1">
                 Xizmatlar bo'yicha
               </h3>
               <p className="text-sm text-gray-500 mb-4">Eng ko'p buyurtma qilingan xizmatlar</p>
               {stats.by_services && stats.by_services.length > 0 ? (
-                <ResponsiveContainer width="100%" height={280}>
-                  <BarChart data={stats.by_services} margin={{ top: 5, right: 10, left: 0, bottom: 60 }}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
-                    <XAxis 
-                      dataKey="name" 
-                      angle={-45} 
-                      textAnchor="end" 
-                      height={80}
-                      stroke="#6b7280"
-                      style={{ fontSize: '11px' }}
-                    />
-                    <YAxis 
-                      stroke="#6b7280"
-                      style={{ fontSize: '12px' }}
-                    />
-                    <Tooltip 
-                      contentStyle={{
-                        backgroundColor: 'white',
-                        border: '1px solid #e5e7eb',
-                        borderRadius: '8px'
-                      }}
-                    />
-                    <Bar dataKey="count" fill="#3B82F6" radius={[8, 8, 0, 0]} />
-                  </BarChart>
-                </ResponsiveContainer>
+                <div className="flex-1 min-h-[400px]">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <BarChart data={stats.by_services} margin={{ top: 5, right: 10, left: 0, bottom: 60 }}>
+                      <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+                      <XAxis 
+                        dataKey="name" 
+                        angle={-45} 
+                        textAnchor="end" 
+                        height={80}
+                        stroke="#6b7280"
+                        style={{ fontSize: '11px' }}
+                      />
+                      <YAxis 
+                        stroke="#6b7280"
+                        style={{ fontSize: '12px' }}
+                      />
+                      <Tooltip 
+                        contentStyle={{
+                          backgroundColor: 'white',
+                          border: '1px solid #e5e7eb',
+                          borderRadius: '8px'
+                        }}
+                      />
+                      <Bar dataKey="count" fill="#3B82F6" radius={[8, 8, 0, 0]} />
+                    </BarChart>
+                  </ResponsiveContainer>
+                </div>
               ) : (
-                <div className="h-[280px] flex flex-col items-center justify-center text-gray-400 bg-gray-50 rounded-lg">
+                <div className="flex-1 min-h-[400px] flex flex-col items-center justify-center text-gray-400 bg-gray-50 rounded-lg">
                   <ChartBarIcon className="w-10 h-10 mb-2 opacity-50" />
                   <p className="text-sm">Ma'lumotlar mavjud emas</p>
                 </div>
@@ -614,8 +614,8 @@ function AnalyticsPage() {
                 <div className="text-sm font-medium text-gray-600">Jami bronlar</div>
               </div>
               <div className="space-y-2">
-                <div className="flex items-center justify-between p-3 bg-green-50 rounded-lg border border-green-200">
-                  <div className="flex items-center gap-3">
+                <div className="flex flex-col p-3 bg-green-50 rounded-lg border border-green-200">
+                  <div className="flex items-center gap-3 mb-2">
                     <div className="w-4 h-4 rounded-full bg-green-500"></div>
                     <span className="text-sm font-medium text-gray-700">Tasdiqlangan</span>
                   </div>
@@ -623,8 +623,8 @@ function AnalyticsPage() {
                     {stats.booking_status?.approved || 0}
                   </span>
                 </div>
-                <div className="flex items-center justify-between p-3 bg-yellow-50 rounded-lg border border-yellow-200">
-                  <div className="flex items-center gap-3">
+                <div className="flex flex-col p-3 bg-yellow-50 rounded-lg border border-yellow-200">
+                  <div className="flex items-center gap-3 mb-2">
                     <div className="w-4 h-4 rounded-full bg-yellow-500"></div>
                     <span className="text-sm font-medium text-gray-700">Kutilmoqda</span>
                   </div>
@@ -633,24 +633,13 @@ function AnalyticsPage() {
                   </span>
                 </div>
                 {stats.booking_status?.rejected > 0 && (
-                  <div className="flex items-center justify-between p-3 bg-red-50 rounded-lg border border-red-200">
-                    <div className="flex items-center gap-3">
+                  <div className="flex flex-col p-3 bg-red-50 rounded-lg border border-red-200">
+                    <div className="flex items-center gap-3 mb-2">
                       <div className="w-4 h-4 rounded-full bg-red-500"></div>
                       <span className="text-sm font-medium text-gray-700">Rad etilgan</span>
                     </div>
                     <span className="font-bold text-red-700 text-lg">
                       {stats.booking_status.rejected}
-                    </span>
-                  </div>
-                )}
-                {stats.booking_status?.completed > 0 && (
-                  <div className="flex items-center justify-between p-3 bg-blue-50 rounded-lg border border-blue-200">
-                    <div className="flex items-center gap-3">
-                      <div className="w-4 h-4 rounded-full bg-blue-500"></div>
-                      <span className="text-sm font-medium text-gray-700">Yakunlangan</span>
-                    </div>
-                    <span className="font-bold text-blue-700 text-lg">
-                      {stats.booking_status.completed}
                     </span>
                   </div>
                 )}

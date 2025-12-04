@@ -3,9 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { Button, Input } from "@material-tailwind/react";
 import { Analytics } from "@vercel/analytics/react";
 import { useAuth } from "../context/AuthContext";
-import { AUTH_BASE_URL, API_ENDPOINTS } from "../data/api";
+import { AUTH_BASE_URL, API_ENDPOINTS, BOOKINGS_BASE_URL, SERVICES_BASE_URL, BARBERS_BASE_URL } from "../data/api";
 import { getAuthToken } from "../utils/api";
-import Footer from "../components/Footer";
 
 function SuperAdmin() {
   const navigate = useNavigate();
@@ -30,6 +29,19 @@ function SuperAdmin() {
     password: "",
   });
   const [isSubmittingEdit, setIsSubmittingEdit] = useState(false);
+  const today = new Date().toISOString().split("T")[0];
+  const [bookingFormData, setBookingFormData] = useState({
+    barber_id: "",
+    service_ids: [],
+    date: today,
+    time: "",
+    name: "",
+    phone: "",
+  });
+  const [services, setServices] = useState([]);
+  const [barbers, setBarbers] = useState([]);
+  const [loadingBookingData, setLoadingBookingData] = useState(false);
+  const [isSubmittingBooking, setIsSubmittingBooking] = useState(false);
 
   useEffect(() => {
     if (!isAuthenticated() || !isSuperAdmin()) {
@@ -38,14 +50,132 @@ function SuperAdmin() {
     }
 
     fetchAdmins();
+    fetchBookingData();
   }, [navigate, isAuthenticated, isSuperAdmin]);
+
+  const fetchBookingData = async () => {
+    try {
+      setLoadingBookingData(true);
+      const [servicesRes, barbersRes] = await Promise.all([
+        fetch(`${SERVICES_BASE_URL}${API_ENDPOINTS.services}`, {
+          method: "GET",
+          headers: {
+            Accept: "*/*",
+            "Content-Type": "application/json",
+          },
+          mode: "cors",
+        }),
+        fetch(`${BARBERS_BASE_URL}${API_ENDPOINTS.barbers}`, {
+          method: "GET",
+          headers: {
+            Accept: "*/*",
+            "Content-Type": "application/json",
+          },
+          mode: "cors",
+        }),
+      ]);
+
+      if (servicesRes.ok) {
+        const servicesData = await servicesRes.json();
+        const servicesList = Array.isArray(servicesData)
+          ? servicesData
+          : servicesData.data || servicesData.services || [];
+        setServices(servicesList);
+      }
+
+      if (barbersRes.ok) {
+        const barbersData = await barbersRes.json();
+        const barbersList = Array.isArray(barbersData)
+          ? barbersData
+          : barbersData.data || barbersData.barbers || [];
+        setBarbers(barbersList);
+      }
+    } catch (err) {
+      console.error("Error fetching booking data:", err);
+    } finally {
+      setLoadingBookingData(false);
+    }
+  };
+
+  const handleBookingSubmit = async (e) => {
+    e.preventDefault();
+    setIsSubmittingBooking(true);
+    setError("");
+    setSuccess("");
+
+    try {
+      const today = new Date().toISOString().split("T")[0];
+      const bookingData = {
+        phone_number: bookingFormData.phone,
+        barber_id: parseInt(bookingFormData.barber_id),
+        service_ids: bookingFormData.service_ids.map((id) => parseInt(id)),
+        date: bookingFormData.date || today,
+        time: bookingFormData.time,
+        client_name: bookingFormData.name,
+      };
+
+      const response = await fetch(
+        `${BOOKINGS_BASE_URL}${API_ENDPOINTS.bookings}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "*/*",
+          },
+          body: JSON.stringify(bookingData),
+          mode: "cors",
+        }
+      );
+
+      const data = await response.json();
+
+      if (response.ok || response.status === 201) {
+        setSuccess("Bron muvaffaqiyatli qo'shildi!");
+        setBookingFormData({
+          barber_id: "",
+          service_ids: [],
+          date: today,
+          time: "",
+          name: "",
+          phone: "",
+        });
+        setTimeout(() => setSuccess(""), 3000);
+      } else {
+        setError(data.message || data.error || "Bron qo'shish muvaffaqiyatsiz");
+      }
+    } catch (err) {
+      console.error("Error creating booking:", err);
+      setError(err.message || "Tarmoq xatosi");
+    } finally {
+      setIsSubmittingBooking(false);
+    }
+  };
+
+  const handleServiceToggle = (serviceId) => {
+    const serviceIdString = String(serviceId);
+    setBookingFormData((prev) => {
+      const currentIds = prev.service_ids || [];
+      const isSelected = currentIds.includes(serviceIdString);
+      if (isSelected) {
+        return {
+          ...prev,
+          service_ids: currentIds.filter((id) => id !== serviceIdString),
+        };
+      } else {
+        return {
+          ...prev,
+          service_ids: [...currentIds, serviceIdString],
+        };
+      }
+    });
+  };
 
   const fetchAdmins = async () => {
     try {
       setLoading(true);
       setError("");
 
-      // Get token from localStorage
+        // Get token from localStorage
       const token = getAuthToken();
       if (!token) {
         throw new Error("Token topilmadi. Iltimos, qayta kirib ko'ring.");
@@ -55,7 +185,7 @@ function SuperAdmin() {
       // Use AUTH_BASE_URL (which is BASE_URL) since /users is at root level, not under /api
       console.log("Fetching users from:", `${AUTH_BASE_URL}${API_ENDPOINTS.users}`);
       const response = await fetch(`${AUTH_BASE_URL}${API_ENDPOINTS.users}`, {
-        method: "GET",
+            method: "GET",
         headers: {
           "Content-Type": "application/json",
           Accept: "*/*",
@@ -245,7 +375,7 @@ function SuperAdmin() {
             "Content-Type": "application/json",
             Accept: "*/*",
             Authorization: `Bearer ${token}`,
-          },
+        },
           mode: "cors",
         }
       );
@@ -292,12 +422,6 @@ function SuperAdmin() {
               Super Admin Boshqaruv Paneli
             </h1>
             <div className="flex gap-3">
-              <Button
-                onClick={() => navigate("/admin")}
-                size="sm"
-                className="bg-barber-olive hover:bg-barber-gold">
-                Admin paneli
-              </Button>
               <Button
                 onClick={logout}
                 size="sm"
@@ -479,14 +603,14 @@ function SuperAdmin() {
                               className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 text-xs">
                               Tahrirlash
                             </Button>
-                            <Button
-                              size="sm"
-                              onClick={() =>
-                                handleDeleteAdmin(admin.id || admin._id)
-                              }
-                              className="bg-red-600 hover:bg-red-700 text-white px-3 py-1 text-xs">
-                              O'chirish
-                            </Button>
+                          <Button
+                            size="sm"
+                            onClick={() =>
+                              handleDeleteAdmin(admin.id || admin._id)
+                            }
+                            className="bg-red-600 hover:bg-red-700 text-white px-3 py-1 text-xs">
+                            O'chirish
+                          </Button>
                           </div>
                         </td>
                       </tr>
@@ -611,7 +735,6 @@ function SuperAdmin() {
         </div>
       )}
 
-      <Footer />
       <Analytics />
     </div>
   );

@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Button, Input } from "@material-tailwind/react";
 import { Analytics } from "@vercel/analytics/react";
 import { useAuth } from "../context/AuthContext";
-import { AUTH_BASE_URL, API_ENDPOINTS, BARBERS_BASE_URL } from "../data/api";
+import { AUTH_BASE_URL, API_ENDPOINTS, BARBERS_BASE_URL, SERVICES_BASE_URL } from "../data/api";
 import { getAuthToken } from "../utils/api";
 import Footer from "../components/Footer";
 
@@ -36,6 +36,16 @@ function Barbers() {
     work_end_time: "18:00",
   });
   const [isSubmittingEdit, setIsSubmittingEdit] = useState(false);
+  const [managingServicesForBarber, setManagingServicesForBarber] = useState(null);
+  const [barberServices, setBarberServices] = useState([]);
+  const [loadingServices, setLoadingServices] = useState(false);
+  const [editingService, setEditingService] = useState(null);
+  const [editServiceFormData, setEditServiceFormData] = useState({
+    name: "",
+    price: "",
+    duration: "",
+  });
+  const [isSubmittingServiceEdit, setIsSubmittingServiceEdit] = useState(false);
 
   useEffect(() => {
     if (!isAuthenticated() || (!isAdmin() && !isSuperAdmin())) {
@@ -301,6 +311,132 @@ function Barbers() {
     if (error) setError("");
   };
 
+  const handleManageServices = async (barber) => {
+    setManagingServicesForBarber(barber);
+    setBarberServices([]);
+    setEditingService(null);
+    setError("");
+    
+    // Fetch services for this barber
+    await fetchBarberServices(barber.id || barber._id);
+  };
+
+  const fetchBarberServices = async (barberId) => {
+    try {
+      setLoadingServices(true);
+      const token = getAuthToken();
+      if (!token) {
+        throw new Error("Token topilmadi");
+      }
+
+      // Fetch all services and filter by barber_id if available
+      const response = await fetch(`${SERVICES_BASE_URL}${API_ENDPOINTS.services}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "*/*",
+          Authorization: `Bearer ${token}`,
+        },
+        mode: "cors",
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        const servicesList = Array.isArray(data)
+          ? data
+          : data.data || data.services || [];
+        
+        // Filter services by barber_id if the API supports it
+        // Otherwise, we'll show all services and let admin assign them
+        const filtered = servicesList.filter(
+          (service) => service.barber_id === barberId || !service.barber_id
+        );
+        setBarberServices(filtered);
+      }
+    } catch (err) {
+      console.error("Error fetching barber services:", err);
+      setError("Xizmatlarni yuklash muvaffaqiyatsiz");
+    } finally {
+      setLoadingServices(false);
+    }
+  };
+
+  const handleEditService = (service) => {
+    setEditingService(service);
+    setEditServiceFormData({
+      name: service.name || "",
+      price: service.price || "",
+      duration: service.duration || "",
+    });
+    setError("");
+  };
+
+  const handleUpdateService = async (e) => {
+    e.preventDefault();
+    if (!editingService || !managingServicesForBarber) return;
+
+    setIsSubmittingServiceEdit(true);
+    setError("");
+    setSuccess("");
+
+    try {
+      const token = getAuthToken();
+      if (!token) {
+        throw new Error("Token topilmadi");
+      }
+
+      const serviceId = editingService.id || editingService._id;
+      const barberId = managingServicesForBarber.id || managingServicesForBarber._id;
+
+      const response = await fetch(
+        `${SERVICES_BASE_URL}${API_ENDPOINTS.services}/${serviceId}`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "*/*",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            name: editServiceFormData.name,
+            price: parseInt(editServiceFormData.price),
+            duration: parseInt(editServiceFormData.duration),
+          }),
+          mode: "cors",
+        }
+      );
+
+      const data = await response.json();
+
+      if (response.ok) {
+        setSuccess("Xizmat muvaffaqiyatli yangilandi!");
+        setEditingService(null);
+        setEditServiceFormData({
+          name: "",
+          price: "",
+          duration: "",
+        });
+        await fetchBarberServices(barberId);
+        setTimeout(() => setSuccess(""), 3000);
+      } else {
+        setError(data.message || data.error || "Xizmatni yangilash muvaffaqiyatsiz");
+      }
+    } catch (err) {
+      console.error("Error updating service:", err);
+      setError(err.message || "Tarmoq xatosi");
+    } finally {
+      setIsSubmittingServiceEdit(false);
+    }
+  };
+
+  const formatCurrency = (amount) => {
+    return new Intl.NumberFormat("uz-UZ", {
+      style: "currency",
+      currency: "UZS",
+      minimumFractionDigits: 0,
+    }).format(amount);
+  };
+
   if (loading) {
     return (
       <div className="pt-16 sm:pt-20 md:pt-[92px] min-h-screen flex items-center justify-center">
@@ -555,12 +691,18 @@ function Barbers() {
                           </span>
                         </td>
                         <td className="px-4 py-3 text-sm">
-                          <div className="flex gap-2">
+                          <div className="flex gap-2 flex-wrap">
                             <Button
                               size="sm"
                               onClick={() => handleEditBarber(barber)}
                               className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 text-xs">
                               Tahrirlash
+                            </Button>
+                            <Button
+                              size="sm"
+                              onClick={() => handleManageServices(barber)}
+                              className="bg-green-600 hover:bg-green-700 text-white px-3 py-1 text-xs">
+                              Xizmatlar
                             </Button>
                             <Button
                               size="sm"
@@ -581,6 +723,208 @@ function Barbers() {
           </div>
         </div>
       </section>
+
+      {/* Manage Services Modal */}
+      {managingServicesForBarber && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-lg p-6 max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+            <div className="flex justify-between items-center mb-4">
+              <h3 className="text-lg font-bold text-black">
+                {managingServicesForBarber.name} - Xizmatlar boshqaruvi
+              </h3>
+              <Button
+                onClick={() => {
+                  setManagingServicesForBarber(null);
+                  setBarberServices([]);
+                  setShowAddServiceForm(false);
+                  setEditingService(null);
+                  setError("");
+                }}
+                variant="text"
+                className="text-gray-600 hover:text-gray-800">
+                ✕
+              </Button>
+            </div>
+
+            {error && (
+              <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg text-sm mb-4">
+                {error}
+              </div>
+            )}
+
+            {success && (
+              <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded-lg text-sm mb-4">
+                {success}
+              </div>
+            )}
+
+            {loadingServices ? (
+              <div className="text-center py-8">
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-barber-gold mx-auto mb-2"></div>
+                <p className="text-gray-600">Yuklanmoqda...</p>
+              </div>
+            ) : (
+              <div className="overflow-x-auto">
+                <table className="w-full">
+                  <thead className="bg-gray-100">
+                    <tr>
+                      <th className="px-4 py-2 text-left text-sm font-semibold">
+                        ID
+                      </th>
+                      <th className="px-4 py-2 text-left text-sm font-semibold">
+                        Xizmat nomi
+                      </th>
+                      <th className="px-4 py-2 text-left text-sm font-semibold">
+                        Narx
+                      </th>
+                      <th className="px-4 py-2 text-left text-sm font-semibold">
+                        Davomiyligi
+                      </th>
+                      <th className="px-4 py-2 text-left text-sm font-semibold">
+                        Amallar
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-gray-200">
+                    {barberServices.length === 0 ? (
+                      <tr>
+                        <td
+                          colSpan="5"
+                          className="px-4 py-4 text-center text-gray-500">
+                          Xizmatlar topilmadi
+                        </td>
+                      </tr>
+                    ) : (
+                      barberServices.map((service) => (
+                        <tr key={service.id || service._id} className="hover:bg-gray-50">
+                          <td className="px-4 py-2 text-sm">
+                            {service.id || service._id}
+                          </td>
+                          <td className="px-4 py-2 text-sm font-medium">
+                            {service.name || "N/A"}
+                          </td>
+                          <td className="px-4 py-2 text-sm">
+                            {formatCurrency(service.price || 0)}
+                          </td>
+                          <td className="px-4 py-2 text-sm">
+                            {service.duration
+                              ? `${service.duration} daqiqa`
+                              : "N/A"}
+                          </td>
+                          <td className="px-4 py-2 text-sm">
+                            <div className="flex gap-2">
+                              <Button
+                                size="sm"
+                                onClick={() => handleEditService(service)}
+                                className="bg-blue-600 hover:bg-blue-700 text-white px-2 py-1 text-xs">
+                                Tahrirlash
+                              </Button>
+                            </div>
+                          </td>
+                        </tr>
+                      ))
+                    )}
+                  </tbody>
+                </table>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* Edit Service Modal */}
+      {editingService && managingServicesForBarber && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-lg p-6 max-w-md w-full">
+            <h4 className="text-lg font-bold text-black mb-4">
+              Xizmatni tahrirlash
+            </h4>
+
+            {error && (
+              <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg text-sm mb-4">
+                {error}
+              </div>
+            )}
+
+            <form onSubmit={handleUpdateService} className="space-y-4">
+              <Input
+                type="text"
+                name="name"
+                value={editServiceFormData.name}
+                onChange={(e) =>
+                  setEditServiceFormData({
+                    ...editServiceFormData,
+                    name: e.target.value,
+                  })
+                }
+                label="Xizmat nomi"
+                required
+                size="lg"
+                disabled={isSubmittingServiceEdit}
+              />
+
+              <Input
+                type="number"
+                name="price"
+                value={editServiceFormData.price}
+                onChange={(e) =>
+                  setEditServiceFormData({
+                    ...editServiceFormData,
+                    price: e.target.value,
+                  })
+                }
+                label="Narx (UZS)"
+                required
+                min="0"
+                size="lg"
+                disabled={isSubmittingServiceEdit}
+              />
+
+              <Input
+                type="number"
+                name="duration"
+                value={editServiceFormData.duration}
+                onChange={(e) =>
+                  setEditServiceFormData({
+                    ...editServiceFormData,
+                    duration: e.target.value,
+                  })
+                }
+                label="Davomiyligi (daqiqa)"
+                required
+                min="1"
+                size="lg"
+                disabled={isSubmittingServiceEdit}
+              />
+
+              <div className="flex gap-3 justify-end pt-4">
+                <Button
+                  type="button"
+                  onClick={() => {
+                    setEditingService(null);
+                    setEditServiceFormData({
+                      name: "",
+                      price: "",
+                      duration: "",
+                    });
+                  }}
+                  variant="outlined"
+                  className="border-gray-300 text-gray-700"
+                  disabled={isSubmittingServiceEdit}>
+                  Bekor qilish
+                </Button>
+                <Button
+                  type="submit"
+                  className="bg-blue-600 hover:bg-blue-700 text-white"
+                  disabled={isSubmittingServiceEdit}
+                  loading={isSubmittingServiceEdit}>
+                  {isSubmittingServiceEdit ? "Yangilanmoqda..." : "Yangilash"}
+                </Button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
 
       {/* Edit Barber Modal */}
       {editingBarber && (
@@ -725,4 +1069,5 @@ function Barbers() {
 }
 
 export default Barbers;
+
 
