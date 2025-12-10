@@ -544,7 +544,7 @@ function Admin() {
       setSuccess("");
       console.log("Approving booking:", bookingId);
       const response = await apiRequest(
-        `${API_ENDPOINTS.bookingStatus}/${bookingId}/status`,
+        `${API_ENDPOINTS.bookings}/${bookingId}`,
         {
           method: "PATCH",
           body: JSON.stringify({ status: "approved" }),
@@ -593,7 +593,7 @@ function Admin() {
       setSuccess("");
       console.log("Rejecting booking:", bookingId);
       const response = await apiRequest(
-        `${API_ENDPOINTS.bookingStatus}/${bookingId}/status`,
+        `${API_ENDPOINTS.bookings}/${bookingId}`,
         {
           method: "PATCH",
           body: JSON.stringify({ status: "rejected" }),
@@ -693,7 +693,7 @@ function Admin() {
       setSuccess("");
       console.log("Updating booking status:", bookingId, status);
       const response = await apiRequest(
-        `${API_ENDPOINTS.bookingStatus}/${bookingId}/status`,
+        `${API_ENDPOINTS.bookings}/${bookingId}`,
         {
           method: "PATCH",
           body: JSON.stringify({ status }),

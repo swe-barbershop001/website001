@@ -111,16 +111,34 @@ function AnalyticsPage() {
     barberStats.forEach((barberStat) => {
       const bookings = barberStat.bookings || [];
       bookings.forEach((booking) => {
-        // Count services (all bookings)
-        if (booking.service) {
-          const serviceName = booking.service.name;
-          serviceCounts[serviceName] = (serviceCounts[serviceName] || 0) + 1;
-        }
-        
-        // Calculate revenue by date from completed bookings only
-        if (booking.date && booking.service && booking.status === "completed") {
-          const date = booking.date;
-          revenueByDate[date] = (revenueByDate[date] || 0) + (booking.service.price || 0);
+        if (booking.status === "completed") {
+          // Handle multiple services per booking
+          const services = booking.services && Array.isArray(booking.services) 
+            ? booking.services 
+            : booking.service 
+            ? [booking.service] 
+            : [];
+          
+          let bookingTotalPrice = 0;
+          
+          services.forEach((service) => {
+            // Count services from completed bookings only
+            if (service && service.name) {
+              const serviceName = service.name;
+              serviceCounts[serviceName] = (serviceCounts[serviceName] || 0) + 1;
+            }
+            
+            // Sum up prices for revenue calculation
+            if (service && service.price) {
+              bookingTotalPrice += parseFloat(service.price) || 0;
+            }
+          });
+          
+          // Calculate revenue by date from completed bookings only
+          if (booking.date && bookingTotalPrice > 0) {
+            const date = booking.date;
+            revenueByDate[date] = (revenueByDate[date] || 0) + bookingTotalPrice;
+          }
         }
       });
     });
@@ -136,8 +154,22 @@ function AnalyticsPage() {
       const bookings = stat.bookings || [];
       // Calculate revenue from completed bookings only
       const revenue = bookings.reduce((sum, booking) => {
-        if (booking.status === "completed" && booking.service && booking.service.price) {
-          return sum + booking.service.price;
+        if (booking.status === "completed") {
+          // Handle multiple services per booking
+          const services = booking.services && Array.isArray(booking.services) 
+            ? booking.services 
+            : booking.service 
+            ? [booking.service] 
+            : [];
+          
+          const bookingRevenue = services.reduce((serviceSum, service) => {
+            if (service && service.price) {
+              return serviceSum + (parseFloat(service.price) || 0);
+            }
+            return serviceSum;
+          }, 0);
+          
+          return sum + bookingRevenue;
         }
         return sum;
       }, 0);
@@ -173,13 +205,11 @@ function AnalyticsPage() {
     // Calculate profit (assuming 30% profit margin)
     const profit = Math.round(totalRevenue * 0.3);
 
-    // Calculate conversion rate (approved / total)
-    // Exclude completed bookings from total
+    // Calculate conversion rate (completed / total)
     const completedBookings = summary.bookings_by_status?.completed || 0;
-    const totalBookings = (summary.total_bookings || 0) - completedBookings;
-    const approvedBookings = summary.bookings_by_status?.approved || 0;
+    const totalBookings = summary.total_bookings || 0;
     const conversionRate = totalBookings > 0 
-      ? ((approvedBookings / totalBookings) * 100).toFixed(2)
+      ? ((completedBookings / totalBookings) * 100).toFixed(2)
       : 0;
 
     return {
@@ -192,6 +222,7 @@ function AnalyticsPage() {
       by_barbers: byBarbers,
       booking_status: {
         total: totalBookings,
+        completed: completedBookings,
         approved: summary.bookings_by_status?.approved || 0,
         pending: summary.bookings_by_status?.pending || 0,
         rejected: summary.bookings_by_status?.rejected || 0,
