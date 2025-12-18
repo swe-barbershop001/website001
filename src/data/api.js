@@ -37,4 +37,5 @@ export const API_ENDPOINTS = {
   bookingApprove: "/bookings",
   bookingReject: "/bookings",
   bookingStatus: "/bookings",
+  comments: "/bookings/comments",
 };

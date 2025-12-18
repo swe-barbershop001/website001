@@ -8,8 +8,8 @@ import {
 import { Button } from "@material-tailwind/react";
 import { motion } from "framer-motion";
 import { servicesData, whyChooseUs, contactInfo } from "../data";
-import { getImagesInOrder, imagePool } from "../data/images";
-import { API_ENDPOINTS, SERVICES_BASE_URL } from "../data/api";
+import { imagePool } from "../data/images";
+import { API_ENDPOINTS, SERVICES_BASE_URL, BOOKINGS_BASE_URL } from "../data/api";
 import { fetchWithTimeout } from "../utils/api";
 import ServiceCard from "../components/ServiceCard";
 import ContactForm from "../components/ContactForm";
@@ -23,9 +23,56 @@ function Home() {
   const [registerModalOpen, setRegisterModalOpen] = useState(false);
   const [services, setServices] = useState([]);
   const [loadingServices, setLoadingServices] = useState(true);
+  const [comments, setComments] = useState([]);
+  const [loadingComments, setLoadingComments] = useState(true);
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [lightboxIndex, setLightboxIndex] = useState(0);
   const [lightboxImages, setLightboxImages] = useState([]);
+
+  // Fetch comments from API
+  useEffect(() => {
+    const fetchComments = async () => {
+      try {
+        setLoadingComments(true);
+        const response = await fetchWithTimeout(
+          `${BOOKINGS_BASE_URL}${API_ENDPOINTS.comments}`,
+          {
+            method: "GET",
+            headers: {
+              Accept: "*/*",
+              "Content-Type": "application/json",
+            },
+            mode: "cors",
+          },
+          5000
+        );
+
+        if (response.ok) {
+          const data = await response.json();
+          // Transform API response to match display format
+          const transformedComments = Array.isArray(data)
+            ? data
+                .filter((item) => item.comment && item.comment.trim() !== "")
+                .map((item) => ({
+                  name: item.client_name || item.client?.name || item.name || "Mijoz",
+                  text: item.comment || item.message || "",
+                  id: item.id || item._id,
+                }))
+                .slice(0, 6) // Limit to 6 comments
+            : [];
+          setComments(transformedComments);
+        }
+      } catch (err) {
+        console.error("Error fetching comments:", err);
+        // Fallback to empty array on error
+        setComments([]);
+      } finally {
+        setLoadingComments(false);
+      }
+    };
+
+    fetchComments();
+  }, []);
 
   // Fetch services from API
   useEffect(() => {
@@ -461,7 +508,7 @@ function Home() {
             <div className="relative order-1 lg:order-2" data-aos="fade-left">
               <div className="w-full h-[300px] xs:h-[350px] sm:h-[400px] md:h-[450px] lg:h-[500px] rounded-2xl sm:rounded-3xl relative overflow-hidden">
                 <img
-                  src={imagePool[1]}
+                  src="/3Y4A9847.jpg"
                   alt="Expert barbers at 001 Barbershop providing consultation"
                   className="w-full h-full object-cover"
                   loading="lazy"
@@ -480,7 +527,7 @@ function Home() {
           data-aos="fade-up">
           <div className="max-w-[1440px] mx-auto px-4 sm:px-6 md:px-8 lg:px-12 xl:px-[127px]">
             <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white text-center mb-6 sm:mb-8 md:mb-12">
-              360° BARBER SHOP
+              BARBER SHOP
             </h2>
             <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 md:gap-6">
               {(() => {
@@ -522,62 +569,48 @@ function Home() {
             <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white text-center mb-6 sm:mb-8 md:mb-12">
               Mijozlar Fikrlari
             </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 md:gap-8">
-              {contactInfo.testimonials.map((comment, i) => (
-                <motion.div
-                  key={i}
-                  className="bg-white rounded-2xl sm:rounded-3xl p-5 sm:p-6 md:p-8 relative"
-                  data-aos="fade-up"
-                  data-aos-delay={i * 200}
-                  whileHover={{ y: -5 }}>
-                  <svg
-                    className="absolute top-4 sm:top-5 md:top-6 left-4 sm:left-5 md:left-6 w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 text-barber-gold"
-                    viewBox="0 0 30 30"
-                    fill="none"
-                    aria-hidden="true">
-                    <path
-                      d="M6 20h8l-2-8H8c-1.1 0-2 .9-2 2v6zm12 0h8l-2-8h-4c-1.1 0-2 .9-2 2v6z"
-                      fill="currentColor"
-                    />
-                  </svg>
-                  <div className="flex items-center gap-3 sm:gap-4 mt-5 sm:mt-6 md:mt-8 mb-3 sm:mb-4">
-                    <div className="w-10 h-10 sm:w-11 sm:h-11 md:w-12 md:h-12 bg-barber-gold rounded-full flex-shrink-0"></div>
-                    <h3 className="text-lg sm:text-xl font-bold text-black">
-                      {comment.name}
-                    </h3>
-                  </div>
-                  <p className="text-black text-sm sm:text-base">
-                    {comment.text}
-                  </p>
-                </motion.div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* Contact Us! Section */}
-        <section
-          className="w-full bg-barber-dark py-8 sm:py-10 md:py-12 lg:py-20"
-          data-aos="fade-up">
-          <div className="max-w-[1440px] mx-auto px-4 sm:px-6 md:px-8 lg:px-12 xl:px-[127px] grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 md:gap-12">
-            <div
-              className="w-full h-[300px] xs:h-[450px] sm:h-[400px] md:h-[450px] lg:h-[500px] xl:h-[600px] rounded-2xl sm:rounded-3xl overflow-hidden order-2 lg:order-1"
-              data-aos="fade-right">
-              <img
-                src={imagePool[4]}
-                alt="Contact 001 Barbershop in Tashkent"
-                className="w-full h-full object-cover"
-                loading="lazy"
-              />
-            </div>
-            <div
-              className="flex flex-col justify-center order-1 lg:order-2"
-              data-aos="fade-left">
-              <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4 sm:mb-6 md:mb-8">
-                Biz bilan bog'laning!
-              </h2>
-              <ContactForm />
-            </div>
+            {loadingComments ? (
+              <div className="text-center py-8">
+                <p className="text-white text-lg">Fikrlar yuklanmoqda...</p>
+              </div>
+            ) : comments.length > 0 ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 md:gap-8">
+                {comments.map((comment, i) => (
+                  <motion.div
+                    key={comment.id || i}
+                    className="bg-white rounded-2xl sm:rounded-3xl p-5 sm:p-6 md:p-8 relative"
+                    data-aos="fade-up"
+                    data-aos-delay={i * 200}
+                    whileHover={{ y: -5 }}>
+                    <svg
+                      className="absolute top-4 sm:top-5 md:top-6 left-4 sm:left-5 md:left-6 w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 text-barber-gold"
+                      viewBox="0 0 30 30"
+                      fill="none"
+                      aria-hidden="true">
+                      <path
+                        d="M6 20h8l-2-8H8c-1.1 0-2 .9-2 2v6zm12 0h8l-2-8h-4c-1.1 0-2 .9-2 2v6z"
+                        fill="currentColor"
+                      />
+                    </svg>
+                    <div className="flex items-center gap-3 sm:gap-4 mt-5 sm:mt-6 md:mt-8 mb-3 sm:mb-4">
+                      <div className="w-10 h-10 sm:w-11 sm:h-11 md:w-12 md:h-12 bg-barber-gold rounded-full flex-shrink-0"></div>
+                      <h3 className="text-lg sm:text-xl font-bold text-black">
+                        {comment.name}
+                      </h3>
+                    </div>
+                    <p className="text-black text-sm sm:text-base">
+                      {comment.text}
+                    </p>
+                  </motion.div>
+                ))}
+              </div>
+            ) : (
+              <div className="text-center py-8">
+                <p className="text-white text-lg opacity-70">
+                  Hozircha fikrlar mavjud emas
+                </p>
+              </div>
+            )}
           </div>
         </section>
       </div>

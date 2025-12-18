@@ -128,30 +128,7 @@ function Gallery() {
       </section>
 
       {/* Contact Section */}
-      <section
-        className="w-full bg-barber-dark py-8 sm:py-10 md:py-12 lg:py-16"
-        data-aos="fade-up">
-        <div className="max-w-[1440px] mx-auto px-4 sm:px-6 md:px-8 lg:px-12 xl:px-[127px] grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 md:gap-12">
-          <div
-            className="w-full h-[300px] xs:h-[450px] sm:h-[400px] md:h-[450px] lg:h-[500px] xl:h-[600px] rounded-2xl sm:rounded-3xl overflow-hidden order-2 lg:order-1"
-            data-aos="fade-right">
-            <img
-              src={imagePool[5]}
-              alt="Contact 001 Barbershop"
-              className="w-full h-full object-cover"
-              loading="lazy"
-            />
-          </div>
-          <div
-            className="flex flex-col justify-center order-1 lg:order-2"
-            data-aos="fade-left">
-            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4 sm:mb-6 md:mb-8">
-              Biz bilan bog'laning!
-            </h2>
-            <ContactForm />
-          </div>
-        </div>
-      </section>
+
 
       <Footer />
       <RegisterModal

@@ -126,7 +126,7 @@ function Barbers() {
         },
         body: JSON.stringify({
           name: formData.name,
-          tg_username: formData.tg_username,
+          tg_username: formData.tg_username?.replace(/^@/, '') || formData.tg_username,
           phone_number: formData.phone_number,
           password: formData.password,
           role: "barber",
@@ -199,7 +199,7 @@ function Barbers() {
       // Prepare update data (only include fields that have values)
       const updateData = {
         name: editFormData.name,
-        tg_username: editFormData.tg_username,
+        tg_username: editFormData.tg_username?.replace(/^@/, '') || editFormData.tg_username,
         phone_number: editFormData.phone_number,
         working: editFormData.working,
         work_start_time: editFormData.work_start_time,

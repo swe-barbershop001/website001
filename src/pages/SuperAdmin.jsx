@@ -241,7 +241,7 @@ function SuperAdmin() {
           },
           body: JSON.stringify({
             name: formData.name,
-            tg_username: formData.tg_username,
+            tg_username: formData.tg_username?.replace(/^@/, '') || formData.tg_username,
             phone_number: formData.phone_number,
             password: formData.password,
             role: "admin", // Set role as admin
@@ -306,7 +306,7 @@ function SuperAdmin() {
       // Prepare update data (only include fields that have values)
       const updateData = {
         name: editFormData.name,
-        tg_username: editFormData.tg_username,
+        tg_username: editFormData.tg_username?.replace(/^@/, '') || editFormData.tg_username,
         phone_number: editFormData.phone_number,
       };
 

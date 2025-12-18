@@ -782,7 +782,10 @@ function Admin() {
             Accept: "*/*",
             ...(token && { Authorization: `Bearer ${token}` }),
           },
-          body: JSON.stringify(adminForm),
+          body: JSON.stringify({
+            ...adminForm,
+            tg_username: adminForm.tg_username?.replace(/^@/, '') || adminForm.tg_username,
+          }),
           mode: "cors",
         }
       );

@@ -1,51 +1,48 @@
 import { useState } from 'react'
 import { Button, Input, Textarea } from '@material-tailwind/react'
-import { contactInfo } from '../data/contact'
+import { API_ENDPOINTS, BOOKINGS_BASE_URL } from '../data/api'
 
 function ContactForm() {
-  const [formData, setFormData] = useState({ name: '', email: '', message: '' })
+  const [formData, setFormData] = useState({ name: '', message: '' })
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [error, setError] = useState('')
+  const [success, setSuccess] = useState(false)
 
   const handleFormSubmit = async (e) => {
     e.preventDefault()
     setIsSubmitting(true)
-
-    // Format message for Telegram (plain text format for better compatibility)
-    const telegramMessage = `📋 Yangi Aloqa Formasi\n\n` +
-      `👤 Ism: ${formData.name}\n` +
-      `📧 Email: ${formData.email}\n` +
-      `💬 Xabar:\n${formData.message}\n\n` +
-      `📍 Manba: 001 Barbershop Veb-sayt`
+    setError('')
+    setSuccess(false)
 
     try {
-      // Copy message to clipboard
-      if (navigator.clipboard && navigator.clipboard.writeText) {
-        await navigator.clipboard.writeText(telegramMessage)
+      const response = await fetch(`${BOOKINGS_BASE_URL}${API_ENDPOINTS.comments}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: '*/*',
+        },
+        body: JSON.stringify({
+          name: formData.name,
+          comment: formData.message,
+        }),
+        mode: 'cors',
+      })
+
+      const data = await response.json()
+
+      if (response.ok || response.status === 201) {
+        setSuccess(true)
+        setFormData({ name: '', message: '' })
+        setTimeout(() => {
+          setSuccess(false)
+        }, 5000)
+      } else {
+        setError(data.message || data.error || 'Xabar yuborish muvaffaqiyatsiz')
       }
-      
-      // Open Telegram bot
-      const telegramUrl = contactInfo.telegramBot
-      window.open(telegramUrl, '_blank')
-      
-      // Show success message with instructions
-      setTimeout(() => {
-        alert('✅ Xabar buferga nusxalandi!\n\n📱 Telegram bot ochilmoqda...\n\nIltimos, xabarni yopishtiring (Ctrl+V / Cmd+V) va botga yuboring.')
-      }, 100)
-      
-      // Reset form after a short delay
-      setTimeout(() => {
-        setFormData({ name: '', email: '', message: '' })
-        setIsSubmitting(false)
-      }, 500)
-    } catch (error) {
-      // Fallback: just open Telegram and show message in alert
-      const telegramUrl = contactInfo.telegramBot
-      window.open(telegramUrl, '_blank')
-      
-      alert(`📱 Telegram bot ochilmoqda...\n\nIltimos, ushbu xabarni nusxalang va botga yuboring:\n\n${telegramMessage}`)
-      
-      // Reset form
-      setFormData({ name: '', email: '', message: '' })
+    } catch (err) {
+      console.error('Error sending comment:', err)
+      setError('Tarmoq xatosi. Iltimos, qayta urinib ko\'ring.')
+    } finally {
       setIsSubmitting(false)
     }
   }
@@ -74,21 +71,6 @@ function ContactForm() {
         disabled={isSubmitting}
         aria-label="Your name"
       />
-      <Input
-        type="email"
-        name="email"
-        value={formData.email}
-        onChange={handleInputChange}
-        placeholder="Email manzilingizni kiriting"
-        required
-        size="lg"
-        className="!text-black !bg-white"
-        labelProps={{
-          className: "hidden"
-        }}
-        disabled={isSubmitting}
-        aria-label="Your email address"
-      />
       <Textarea
         name="message"
         value={formData.message}
@@ -104,6 +86,16 @@ function ContactForm() {
         disabled={isSubmitting}
         aria-label="Your message"
       />
+      {error && (
+        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg text-sm">
+          {error}
+        </div>
+      )}
+      {success && (
+        <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded-lg text-sm">
+          ✅ Xabaringiz muvaffaqiyatli yuborildi!
+        </div>
+      )}
       <Button
         type="submit"
         disabled={isSubmitting}
@@ -115,15 +107,15 @@ function ContactForm() {
           'Yuborilmoqda...'
         ) : (
           <span className="flex items-center justify-center gap-2">
-            <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221l-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.446 1.394c-.14.18-.357.295-.6.295-.002 0-.003 0-.005 0l.213-3.054 5.56-5.022c.24-.213-.054-.334-.373-.121l-6.869 4.326-2.96-.924c-.64-.203-.658-.64.135-.954l11.566-4.458c.538-.196 1.006.128.832.941z"/>
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
             </svg>
-            Telegram orqali yuborish
+            Xabarni yuborish
           </span>
         )}
       </Button>
       <p className="text-white text-xs sm:text-sm opacity-70 text-center">
-        Xabaringiz bizning Telegram botimizga yuboriladi
+        Xabaringiz bizning serverga yuboriladi
       </p>
     </form>
   )
