@@ -23,6 +23,7 @@ function Barbers() {
     working: true,
     work_start_time: "09:00",
     work_end_time: "18:00",
+    profile_image: null,
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [editingBarber, setEditingBarber] = useState(null);
@@ -34,6 +35,7 @@ function Barbers() {
     working: true,
     work_start_time: "09:00",
     work_end_time: "18:00",
+    profile_image: null,
   });
   const [isSubmittingEdit, setIsSubmittingEdit] = useState(false);
   const [managingServicesForBarber, setManagingServicesForBarber] = useState(null);
@@ -116,24 +118,52 @@ function Barbers() {
         throw new Error("Token topilmadi. Iltimos, qayta kirib ko'ring.");
       }
 
+      // Create FormData for multipart/form-data
+      const formDataToSend = new FormData();
+      formDataToSend.append("name", formData.name);
+      formDataToSend.append("tg_username", formData.tg_username?.replace(/^@/, '') || formData.tg_username);
+      formDataToSend.append("phone_number", formData.phone_number);
+      formDataToSend.append("password", formData.password);
+      formDataToSend.append("role", "barber");
+      formDataToSend.append("working", formData.working.toString());
+      formDataToSend.append("work_start_time", formData.work_start_time);
+      formDataToSend.append("work_end_time", formData.work_end_time);
+      
+      // Add profile image if selected
+      if (formData.profile_image) {
+        // Ensure file has correct extension for backend validation
+        const file = formData.profile_image;
+        const fileName = file.name.toLowerCase();
+        let finalFileName = fileName;
+        
+        // If file doesn't have extension, add based on MIME type
+        if (!fileName.match(/\.(jpg|jpeg|png|gif)$/)) {
+          if (file.type === 'image/jpeg' || file.type === 'image/jpg') {
+            finalFileName = fileName.endsWith('.') ? fileName + 'jpg' : fileName + '.jpg';
+          } else if (file.type === 'image/png') {
+            finalFileName = fileName.endsWith('.') ? fileName + 'png' : fileName + '.png';
+          } else if (file.type === 'image/gif') {
+            finalFileName = fileName.endsWith('.') ? fileName + 'gif' : fileName + '.gif';
+          }
+        }
+        
+        // Create a new File object with the correct name if needed
+        const fileToSend = finalFileName !== fileName 
+          ? new File([file], finalFileName, { type: file.type })
+          : file;
+        
+        formDataToSend.append("profile_image", fileToSend);
+      }
+
       // Create new barber using POST /users with role: "barber"
       const response = await fetch(`${AUTH_BASE_URL}${API_ENDPOINTS.users}`, {
         method: "POST",
         headers: {
-          "Content-Type": "application/json",
           Accept: "*/*",
           Authorization: `Bearer ${token}`,
+          // Don't set Content-Type header - browser will set it with boundary for FormData
         },
-        body: JSON.stringify({
-          name: formData.name,
-          tg_username: formData.tg_username?.replace(/^@/, '') || formData.tg_username,
-          phone_number: formData.phone_number,
-          password: formData.password,
-          role: "barber",
-          working: formData.working,
-          work_start_time: formData.work_start_time,
-          work_end_time: formData.work_end_time,
-        }),
+        body: formDataToSend,
         mode: "cors",
       });
 
@@ -149,6 +179,7 @@ function Barbers() {
           working: true,
           work_start_time: "09:00",
           work_end_time: "18:00",
+          profile_image: null,
         });
         setShowAddForm(false);
         fetchBarbers(); // Refresh barber list
@@ -176,6 +207,7 @@ function Barbers() {
       working: barber.working !== undefined ? barber.working : true,
       work_start_time: barber.work_start_time || "09:00",
       work_end_time: barber.work_end_time || "18:00",
+      profile_image: null,
     });
     setError("");
   };
@@ -196,19 +228,44 @@ function Barbers() {
 
       const barberId = editingBarber.id || editingBarber._id;
 
-      // Prepare update data (only include fields that have values)
-      const updateData = {
-        name: editFormData.name,
-        tg_username: editFormData.tg_username?.replace(/^@/, '') || editFormData.tg_username,
-        phone_number: editFormData.phone_number,
-        working: editFormData.working,
-        work_start_time: editFormData.work_start_time,
-        work_end_time: editFormData.work_end_time,
-      };
+      // Create FormData for multipart/form-data
+      const formDataToSend = new FormData();
+      formDataToSend.append("name", editFormData.name);
+      formDataToSend.append("tg_username", editFormData.tg_username?.replace(/^@/, '') || editFormData.tg_username);
+      formDataToSend.append("phone_number", editFormData.phone_number);
+      formDataToSend.append("working", editFormData.working.toString());
+      formDataToSend.append("work_start_time", editFormData.work_start_time);
+      formDataToSend.append("work_end_time", editFormData.work_end_time);
 
       // Only include password if it's provided
       if (editFormData.password && editFormData.password.trim() !== "") {
-        updateData.password = editFormData.password;
+        formDataToSend.append("password", editFormData.password);
+      }
+
+      // Add profile image if selected
+      if (editFormData.profile_image) {
+        // Ensure file has correct extension for backend validation
+        const file = editFormData.profile_image;
+        const fileName = file.name.toLowerCase();
+        let finalFileName = fileName;
+        
+        // If file doesn't have extension, add based on MIME type
+        if (!fileName.match(/\.(jpg|jpeg|png|gif)$/)) {
+          if (file.type === 'image/jpeg' || file.type === 'image/jpg') {
+            finalFileName = fileName.endsWith('.') ? fileName + 'jpg' : fileName + '.jpg';
+          } else if (file.type === 'image/png') {
+            finalFileName = fileName.endsWith('.') ? fileName + 'png' : fileName + '.png';
+          } else if (file.type === 'image/gif') {
+            finalFileName = fileName.endsWith('.') ? fileName + 'gif' : fileName + '.gif';
+          }
+        }
+        
+        // Create a new File object with the correct name if needed
+        const fileToSend = finalFileName !== fileName 
+          ? new File([file], finalFileName, { type: file.type })
+          : file;
+        
+        formDataToSend.append("profile_image", fileToSend);
       }
 
       const response = await fetch(
@@ -216,11 +273,11 @@ function Barbers() {
         {
           method: "PATCH",
           headers: {
-            "Content-Type": "application/json",
             Accept: "*/*",
             Authorization: `Bearer ${token}`,
+            // Don't set Content-Type header - browser will set it with boundary for FormData
           },
-          body: JSON.stringify(updateData),
+          body: formDataToSend,
           mode: "cors",
         }
       );
@@ -238,6 +295,7 @@ function Barbers() {
           working: true,
           work_start_time: "09:00",
           work_end_time: "18:00",
+          profile_image: null,
         });
         fetchBarbers(); // Refresh barber list
         setTimeout(() => setSuccess(""), 3000);
@@ -586,6 +644,44 @@ function Barbers() {
                   </label>
                 </div>
 
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Profile rasm (ixtiyoriy)
+                  </label>
+                  <input
+                    type="file"
+                    accept="image/jpeg,image/png,image/jpg,image/gif,.jpg,.jpeg,.png,.gif"
+                    onChange={(e) => {
+                      const file = e.target.files[0];
+                      if (file) {
+                        // Validate file extension
+                        const fileName = file.name.toLowerCase();
+                        const validExtensions = ['.jpg', '.jpeg', '.png', '.gif'];
+                        const hasValidExtension = validExtensions.some(ext => fileName.endsWith(ext));
+                        
+                        if (!hasValidExtension) {
+                          setError("Faqat JPG, JPEG, PNG yoki GIF formatidagi rasmlar qabul qilinadi");
+                          return;
+                        }
+                        
+                        // Validate MIME type
+                        const validMimeTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/gif'];
+                        if (!validMimeTypes.includes(file.type)) {
+                          setError("Noto'g'ri fayl formati. Faqat rasm fayllari qabul qilinadi");
+                          return;
+                        }
+                      }
+                      setFormData({
+                        ...formData,
+                        profile_image: file || null,
+                      });
+                      setError(""); // Clear error if file is valid
+                    }}
+                    className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-barber-olive file:text-white hover:file:bg-barber-gold"
+                    disabled={isSubmitting}
+                  />
+                </div>
+
                 <div className="flex gap-3">
                   <Button
                     type="submit"
@@ -607,6 +703,7 @@ function Barbers() {
                         working: true,
                         work_start_time: "09:00",
                         work_end_time: "18:00",
+                        profile_image: null,
                       });
                       setError("");
                     }}
@@ -1028,6 +1125,44 @@ function Barbers() {
                 </label>
               </div>
 
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Profile rasm (ixtiyoriy)
+                </label>
+                <input
+                  type="file"
+                  accept="image/jpeg,image/png,image/jpg,image/gif,.jpg,.jpeg,.png,.gif"
+                  onChange={(e) => {
+                    const file = e.target.files[0];
+                    if (file) {
+                      // Validate file extension
+                      const fileName = file.name.toLowerCase();
+                      const validExtensions = ['.jpg', '.jpeg', '.png', '.gif'];
+                      const hasValidExtension = validExtensions.some(ext => fileName.endsWith(ext));
+                      
+                      if (!hasValidExtension) {
+                        setError("Faqat JPG, JPEG, PNG yoki GIF formatidagi rasmlar qabul qilinadi");
+                        return;
+                      }
+                      
+                      // Validate MIME type
+                      const validMimeTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/gif'];
+                      if (!validMimeTypes.includes(file.type)) {
+                        setError("Noto'g'ri fayl formati. Faqat rasm fayllari qabul qilinadi");
+                        return;
+                      }
+                    }
+                    setEditFormData({
+                      ...editFormData,
+                      profile_image: file || null,
+                    });
+                    setError(""); // Clear error if file is valid
+                  }}
+                  className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-barber-olive file:text-white hover:file:bg-barber-gold"
+                  disabled={isSubmittingEdit}
+                />
+              </div>
+
               <div className="flex gap-3 justify-end pt-4">
                 <Button
                   type="button"
@@ -1041,6 +1176,7 @@ function Barbers() {
                       working: true,
                       work_start_time: "09:00",
                       work_end_time: "18:00",
+                      profile_image: null,
                     });
                     setError("");
                   }}

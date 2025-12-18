@@ -19,6 +19,7 @@ function SuperAdmin() {
     tg_username: "",
     phone_number: "",
     password: "",
+    profile_image: null,
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [editingAdmin, setEditingAdmin] = useState(null);
@@ -27,6 +28,7 @@ function SuperAdmin() {
     tg_username: "",
     phone_number: "",
     password: "",
+    profile_image: null,
   });
   const [isSubmittingEdit, setIsSubmittingEdit] = useState(false);
   const today = new Date().toISOString().split("T")[0];
@@ -229,23 +231,27 @@ function SuperAdmin() {
     setSuccess("");
 
     try {
+      // Create FormData for multipart/form-data
+      const formDataToSend = new FormData();
+      formDataToSend.append("name", formData.name);
+      formDataToSend.append("tg_username", formData.tg_username?.replace(/^@/, '') || formData.tg_username);
+      formDataToSend.append("phone_number", formData.phone_number);
+      formDataToSend.append("password", formData.password);
+      formDataToSend.append("role", "admin");
+      
+      // Profile image not needed for admins
+
       // Register new admin with admin role
       const response = await fetch(
-        `${AUTH_BASE_URL}${API_ENDPOINTS.register}`,
+        `${AUTH_BASE_URL}${API_ENDPOINTS.users}`,
         {
           method: "POST",
           headers: {
-            "Content-Type": "application/json",
             Accept: "*/*",
             Authorization: `Bearer ${localStorage.getItem("token")}`,
+            // Don't set Content-Type header - browser will set it with boundary for FormData
           },
-          body: JSON.stringify({
-            name: formData.name,
-            tg_username: formData.tg_username?.replace(/^@/, '') || formData.tg_username,
-            phone_number: formData.phone_number,
-            password: formData.password,
-            role: "admin", // Set role as admin
-          }),
+          body: formDataToSend,
           mode: "cors",
         }
       );
@@ -259,6 +265,7 @@ function SuperAdmin() {
           tg_username: "",
           phone_number: "",
           password: "",
+          profile_image: null,
         });
         setShowAddForm(false);
         fetchAdmins(); // Refresh admin list
@@ -283,6 +290,7 @@ function SuperAdmin() {
       tg_username: admin.tg_username || "",
       phone_number: admin.phone_number || "",
       password: "", // Don't pre-fill password
+      profile_image: null,
     });
     setError("");
   };
@@ -303,28 +311,29 @@ function SuperAdmin() {
 
       const adminId = editingAdmin.id || editingAdmin._id;
       
-      // Prepare update data (only include fields that have values)
-      const updateData = {
-        name: editFormData.name,
-        tg_username: editFormData.tg_username?.replace(/^@/, '') || editFormData.tg_username,
-        phone_number: editFormData.phone_number,
-      };
+      // Create FormData for multipart/form-data
+      const formDataToSend = new FormData();
+      formDataToSend.append("name", editFormData.name);
+      formDataToSend.append("tg_username", editFormData.tg_username?.replace(/^@/, '') || editFormData.tg_username);
+      formDataToSend.append("phone_number", editFormData.phone_number);
 
       // Only include password if it's provided
       if (editFormData.password && editFormData.password.trim() !== "") {
-        updateData.password = editFormData.password;
+        formDataToSend.append("password", editFormData.password);
       }
+
+      // Profile image not needed for admins
 
       const response = await fetch(
         `${AUTH_BASE_URL}${API_ENDPOINTS.users}/${adminId}`,
         {
           method: "PATCH",
           headers: {
-            "Content-Type": "application/json",
             Accept: "*/*",
             Authorization: `Bearer ${token}`,
+            // Don't set Content-Type header - browser will set it with boundary for FormData
           },
-          body: JSON.stringify(updateData),
+          body: formDataToSend,
           mode: "cors",
         }
       );
@@ -339,6 +348,7 @@ function SuperAdmin() {
           tg_username: "",
           phone_number: "",
           password: "",
+          profile_image: null,
         });
         fetchAdmins(); // Refresh admin list
         setTimeout(() => setSuccess(""), 3000);
@@ -524,6 +534,7 @@ function SuperAdmin() {
                         tg_username: "",
                         phone_number: "",
                         password: "",
+                        profile_image: null,
                       });
                       setError("");
                     }}
@@ -714,6 +725,7 @@ function SuperAdmin() {
                       tg_username: "",
                       phone_number: "",
                       password: "",
+                      profile_image: null,
                     });
                     setError("");
                   }}

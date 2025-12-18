@@ -3,8 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "@material-tailwind/react";
 import { motion } from "framer-motion";
 import { Analytics } from "@vercel/analytics/react";
-import { barbersData, contactInfo } from "../data";
-import { imagePool, getImagesInOrder } from "../data/images";
+import { contactInfo } from "../data";
+import { imagePool } from "../data/images";
 import { API_BASE_URL, API_ENDPOINTS, BARBERS_BASE_URL } from "../data/api";
 import RegisterModal from "../components/RegisterModal";
 import Footer from "../components/Footer";
@@ -34,33 +34,27 @@ function Team() {
           ? data
           : data.data || data.barbers || [];
         
-        // Map barbers to use correct photos by name
-        // Photo mapping: assign photos based on barber name
-        const barberPhotoMap = {
-          "ALI": "/3Y4A0018.jpg",
-          "JOHN DOE": "/3Y4A9569.jpg",
-          "IBROHIM": "/3Y4A9468.jpg",
-          "UMARBEK": "/3Y4A9824.jpg",
-          // Add more mappings as needed
-        };
-        
-        // Fallback photos in order if name doesn't match
-        const barberPhotos = [
-          "/3Y4A9569.jpg",
-          "/3Y4A9569.jpg",
-          "/3Y4A9468.jpg",
-          "/3Y4A9824.jpg",
-          "/3Y4A0018.jpg",
-        ];
-        
-        barbersList = barbersList.map((barber, index) => {
-          const barberName = (barber.name || barber.fullName || "").toUpperCase();
-          const mappedPhoto = barberPhotoMap[barberName];
+        barbersList = barbersList.map((barber) => {
+          // Get profile image from backend only
+          let profileImage = null;
+          if (barber.profile_image) {
+            // If profile_image is a full URL, use it as is
+            if (barber.profile_image.startsWith('http://') || barber.profile_image.startsWith('https://')) {
+              profileImage = barber.profile_image;
+            } else {
+              // If it's a relative path, construct full URL
+              // Remove leading slash if present to avoid double slashes
+              const imagePath = barber.profile_image.startsWith('/') 
+                ? barber.profile_image.substring(1) 
+                : barber.profile_image;
+              profileImage = `${BARBERS_BASE_URL}/${imagePath}`;
+            }
+          }
           
           return {
             ...barber,
-            // Use image from API if provided, otherwise use name mapping, otherwise use order
-            image: barber.image || barber.photo || barber.avatar || mappedPhoto || barberPhotos[index] || getImagesInOrder(barbersList.length)[index],
+            // Only use profile_image from backend, no fallbacks
+            image: profileImage || null,
           };
         });
         
@@ -68,8 +62,8 @@ function Team() {
       } catch (err) {
         console.error("Error fetching barbers:", err);
         setError(err.message);
-        // Fallback to static data on error
-        setBarbers(barbersData);
+        // Don't fallback to static data with images
+        setBarbers([]);
       } finally {
         setLoading(false);
       }
@@ -78,8 +72,8 @@ function Team() {
     fetchBarbers();
   }, []);
 
-  // Use API barbers if available, otherwise fallback to static data
-  const displayBarbers = barbers.length > 0 ? barbers : barbersData;
+  // Use API barbers only, no static fallback
+  const displayBarbers = barbers;
   const [registerModalOpen, setRegisterModalOpen] = useState(false);
 
   const handleRegisterModal = () => setRegisterModalOpen((cur) => !cur);
@@ -160,16 +154,8 @@ function Team() {
                 barber.bio ||
                 barber.about ||
                 "Professional barber with years of experience.";
-              const barberImage =
-                barber.image ||
-                barber.photo ||
-                barber.avatar ||
-                getImagesInOrder(displayBarbers.length)[i];
-              const instagramUrl =
-                barber.social?.instagram ||
-                barber.instagram ||
-                barber.socialMedia?.instagram ||
-                "https://www.instagram.com/001_barbershop_";
+              // Get profile image from backend only, no fallbacks
+              let barberImage = barber.image || null;
 
               return (
                 <motion.div
@@ -178,14 +164,16 @@ function Team() {
                   data-aos="zoom-in"
                   data-aos-delay={i * 100}
                   whileHover={{ y: -10 }}>
-                  <div className="w-full h-[200px] xs:h-[220px] sm:h-[250px] md:h-[280px] lg:h-[300px] rounded-xl sm:rounded-2xl mb-3 sm:mb-4 overflow-hidden">
-                    <img
-                      src={barberImage}
-                      alt={barberName}
-                      className="w-full h-full object-cover"
-                      loading="lazy"
-                    />
-                  </div>
+                  {barberImage && (
+                    <div className="w-full h-[200px] xs:h-[220px] sm:h-[250px] md:h-[280px] lg:h-[300px] rounded-xl sm:rounded-2xl mb-3 sm:mb-4 overflow-hidden">
+                      <img
+                        src={barberImage}
+                        alt={barberName}
+                        className="w-full h-full object-cover"
+                        loading="lazy"
+                      />
+                    </div>
+                  )}
                   <h3 className="text-base sm:text-lg md:text-xl font-bold text-white mb-1 uppercase">
                     {barberName}
                   </h3>

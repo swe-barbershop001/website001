@@ -22,6 +22,7 @@ function Admin() {
     phone_number: "",
     password: "",
     role: "admin",
+    profile_image: null,
   });
   const [isSubmittingAdmin, setIsSubmittingAdmin] = useState(false);
   const [showStatistics, _setShowStatistics] = useState(false);
@@ -773,19 +774,27 @@ function Admin() {
 
     try {
       const token = localStorage.getItem("token");
+      
+      // Create FormData for multipart/form-data
+      const formDataToSend = new FormData();
+      formDataToSend.append("name", adminForm.name);
+      formDataToSend.append("tg_username", adminForm.tg_username?.replace(/^@/, '') || adminForm.tg_username);
+      formDataToSend.append("phone_number", adminForm.phone_number);
+      formDataToSend.append("password", adminForm.password);
+      formDataToSend.append("role", adminForm.role);
+      
+      // Profile image not needed for admins
+
       const response = await fetch(
-        `${AUTH_BASE_URL}${API_ENDPOINTS.register}`,
+        `${AUTH_BASE_URL}${API_ENDPOINTS.users}`,
         {
           method: "POST",
           headers: {
-            "Content-Type": "application/json",
             Accept: "*/*",
             ...(token && { Authorization: `Bearer ${token}` }),
+            // Don't set Content-Type header - browser will set it with boundary for FormData
           },
-          body: JSON.stringify({
-            ...adminForm,
-            tg_username: adminForm.tg_username?.replace(/^@/, '') || adminForm.tg_username,
-          }),
+          body: formDataToSend,
           mode: "cors",
         }
       );
@@ -799,6 +808,7 @@ function Admin() {
           phone_number: "",
           password: "",
           role: "admin",
+          profile_image: null,
         });
         setTimeout(() => setSuccess(""), 3000);
       } else {
