@@ -1,6 +1,6 @@
 // API configuration
 // Update this with your actual API base URL
-const BASE_URL = "https://api.001barbershop.uz";
+export const BASE_URL = "https://api.001barbershop.uz";
 
 export const API_BASE_URL =
   import.meta.env.VITE_API_BASE_URL || `${BASE_URL}/api`;
@@ -11,6 +11,8 @@ export const BARBERS_BASE_URL =
   import.meta.env.VITE_BARBERS_BASE_URL || BASE_URL;
 export const BOOKINGS_BASE_URL =
   import.meta.env.VITE_BOOKINGS_BASE_URL || BASE_URL;
+export const POSTS_BASE_URL =
+  import.meta.env.VITE_POSTS_BASE_URL || BASE_URL;
 
 // Socket.IO URL
 const getSocketIOUrl = () => {
@@ -38,4 +40,5 @@ export const API_ENDPOINTS = {
   bookingReject: "/bookings",
   bookingStatus: "/bookings",
   comments: "/bookings/comments",
+  broadcastPost: "/posts/broadcast",
 };

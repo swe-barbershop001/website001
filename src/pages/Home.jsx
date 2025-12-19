@@ -11,6 +11,8 @@ import { servicesData, whyChooseUs, contactInfo } from "../data";
 import { imagePool } from "../data/images";
 import { API_ENDPOINTS, SERVICES_BASE_URL, BOOKINGS_BASE_URL } from "../data/api";
 import { fetchWithTimeout } from "../utils/api";
+import { useLanguage } from "../context/LanguageContext";
+import { getTranslation, translations } from "../data/translations";
 import ServiceCard from "../components/ServiceCard";
 import ContactForm from "../components/ContactForm";
 import RegisterModal from "../components/RegisterModal";
@@ -20,6 +22,7 @@ import ImageLightbox from "../components/ImageLightbox";
 
 function Home() {
   const navigate = useNavigate();
+  const { language } = useLanguage();
   const [registerModalOpen, setRegisterModalOpen] = useState(false);
   const [services, setServices] = useState([]);
   const [loadingServices, setLoadingServices] = useState(true);
@@ -28,6 +31,9 @@ function Home() {
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [lightboxIndex, setLightboxIndex] = useState(0);
   const [lightboxImages, setLightboxImages] = useState([]);
+  
+  // Get translated whyChooseUs
+  const translatedWhyChooseUs = translations[language]?.whyChooseUs || whyChooseUs;
 
   // Fetch comments from API
   useEffect(() => {
@@ -349,14 +355,13 @@ function Home() {
           <div className="max-w-[1440px] mx-auto px-4 sm:px-6 md:px-8 lg:px-12 xl:px-[127px] grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 md:gap-12">
             <div className="text-white relative z-10" data-aos="fade-right">
               <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-3 sm:mb-4">
-                Почему выбирают нас?
+                {getTranslation(language, "home.whyChooseUs")}
               </h2>
               <p className="text-sm sm:text-base md:text-lg mb-4 sm:mb-6 opacity-90">
-                Кроме того, есть еще 5 причин, почему многие люди предпочитают{" "}
-                {contactInfo.tagline} в Ташкенте...
+                {getTranslation(language, "home.whyChooseUsDesc").replace("{tagline}", contactInfo.tagline)}
               </p>
               <ul className="space-y-2 sm:space-y-3 list-disc list-inside text-sm sm:text-base">
-                {whyChooseUs.map((reason, i) => (
+                {translatedWhyChooseUs.map((reason, i) => (
                   <li key={i}>{reason}</li>
                 ))}
               </ul>
@@ -365,16 +370,30 @@ function Home() {
               className="bg-white rounded-2xl sm:rounded-3xl p-5 sm:p-6 md:p-8 relative z-10"
               data-aos="fade-left">
               <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-black mb-4 sm:mb-6">
-                ЧАСЫ РАБОТЫ
+                {getTranslation(language, "home.workingHours")}
               </h2>
               <div className="space-y-2 sm:space-y-3 mb-4 sm:mb-6 md:mb-8">
-                {contactInfo.workingHours.map((schedule, i) => (
-                  <div
-                    key={i}
-                    className="text-black font-medium text-sm sm:text-base">
-                    {schedule.day} {schedule.hours}
-                  </div>
-                ))}
+                {contactInfo.workingHours.map((schedule, i) => {
+                  // Map Russian day names to translation keys
+                  const dayMap = {
+                    "ВОСКРЕСЕНЬЕ": "sunday",
+                    "ПОНЕДЕЛЬНИК": "monday",
+                    "ВТОРНИК": "tuesday",
+                    "СРЕДА": "wednesday",
+                    "ЧЕТВЕРГ": "thursday",
+                    "ПЯТНИЦА": "friday",
+                    "СУББОТА": "saturday",
+                  };
+                  const dayKey = dayMap[schedule.day] || schedule.day.toLowerCase();
+                  const translatedDay = getTranslation(language, `workingHours.${dayKey}`) || schedule.day;
+                  return (
+                    <div
+                      key={i}
+                      className="text-black font-medium text-sm sm:text-base">
+                      {translatedDay} {schedule.hours}
+                    </div>
+                  );
+                })}
               </div>
               <Button
                 size="lg"
@@ -382,7 +401,7 @@ function Home() {
                 onClick={() => navigate("/booking")}
                 className="w-full px-5 sm:px-6 md:px-8 py-2.5 sm:py-3 md:py-4 bg-white border-2 border-black rounded-xl sm:rounded-2xl font-semibold text-sm sm:text-base text-black hover:bg-gray-50"
                 aria-label="Book an appointment online">
-                Записаться онлайн
+                {getTranslation(language, "nav.booking")}
               </Button>
             </div>
           </div>
@@ -395,16 +414,16 @@ function Home() {
           data-aos="fade-up">
           <div className="max-w-[1440px] mx-auto px-4 sm:px-6 md:px-8 lg:px-12 xl:px-[127px]">
               <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-black text-center mb-6 sm:mb-8 md:mb-12">
-              Цены
+              {getTranslation(language, "home.prices")}
             </h2>
             {loadingServices ? (
               <div className="text-center py-8">
                 <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-600 mx-auto mb-4"></div>
-                <p className="text-black">Загрузка цен...</p>
+                <p className="text-black">{getTranslation(language, "home.loadingPrices")}</p>
               </div>
             ) : homePricing.length === 0 ? (
               <div className="text-center py-8">
-                <p className="text-gray-600">Цены не найдены</p>
+                <p className="text-gray-600">{getTranslation(language, "home.pricesNotFound")}</p>
               </div>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 md:gap-12 max-w-4xl mx-auto">

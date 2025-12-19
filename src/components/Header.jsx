@@ -4,13 +4,17 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import { Button } from "@material-tailwind/react";
 import { useAuth } from "../context/AuthContext";
+import { useLanguage } from "../context/LanguageContext";
+import { getTranslation } from "../data/translations";
 import { contactInfo } from "../data/contact";
 import Logo from "./Logo";
+import LanguageSwitcher from "./LanguageSwitcher";
 
 function Header() {
   const location = useLocation();
   const navigate = useNavigate();
   const { isAuthenticated, user, logout, isAdmin, isSuperAdmin } = useAuth();
+  const { language } = useLanguage();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
@@ -73,7 +77,7 @@ function Header() {
         />
 
         {/* Desktop Navigation */}
-        <nav className="hidden md:flex gap-6 lg:gap-8">
+        <nav className="hidden md:flex gap-6 lg:gap-8 items-center">
           {!isAdmin() && !isSuperAdmin() && (
             <>
               <Link
@@ -84,7 +88,7 @@ function Header() {
                     : "text-black hover:text-barber-gold"
                 }`}
                 aria-label="Navigate to Home">
-                Bosh sahifa
+                {getTranslation(language, "nav.home")}
               </Link>
               <Link
                 to="/team"
@@ -94,7 +98,7 @@ function Header() {
                     : "text-black hover:text-barber-gold"
                 }`}
                 aria-label="Navigate to Our Team">
-                Jamoa
+                {getTranslation(language, "nav.team")}
               </Link>
               <Link
                 to="/gallery"
@@ -104,7 +108,7 @@ function Header() {
                     : "text-black hover:text-barber-gold"
                 }`}
                 aria-label="Navigate to Gallery">
-                Galereya
+                {getTranslation(language, "nav.gallery")}
               </Link>
               <Link
                 to="/delivery"
@@ -114,7 +118,7 @@ function Header() {
                     : "text-black hover:text-barber-gold"
                 }`}
                 aria-label="Navigate to Delivery">
-                Aloqa
+                {getTranslation(language, "nav.contact")}
               </Link>
             </>
           )}
@@ -126,9 +130,10 @@ function Header() {
                   ? "text-barber-gold"
                   : "text-black hover:text-barber-gold"
               }`}>
-              Bron qilish
+              {getTranslation(language, "nav.booking")}
             </Link>
           )}
+          <LanguageSwitcher />
           {isAuthenticated() && (
             <>
               {isAdmin() && !isSuperAdmin() && (
@@ -140,7 +145,7 @@ function Header() {
                         ? "text-barber-gold"
                         : "text-black hover:text-barber-gold"
                     }`}>
-                    Admin
+                    {getTranslation(language, "nav.admin")}
                   </Link>
                   <Link
                     to="/barbers"
@@ -149,7 +154,7 @@ function Header() {
                         ? "text-barber-gold"
                         : "text-black hover:text-barber-gold"
                     }`}>
-                    Barberlar
+                    {getTranslation(language, "nav.barbers")}
                   </Link>
                   <Link
                     to="/services"
@@ -158,7 +163,7 @@ function Header() {
                         ? "text-barber-gold"
                         : "text-black hover:text-barber-gold"
                     }`}>
-                    Xizmatlar
+                    {getTranslation(language, "nav.services")}
                   </Link>
                   <Link
                     to="/analytics"
@@ -167,7 +172,16 @@ function Header() {
                         ? "text-barber-gold"
                         : "text-black hover:text-barber-gold"
                     }`}>
-                    Statistika
+                    {getTranslation(language, "nav.statistics")}
+                  </Link>
+                  <Link
+                    to="/broadcast"
+                    className={`text-sm mt-1 lg:text-base font-medium transition-colors ${
+                      isActive("/broadcast")
+                        ? "text-barber-gold"
+                        : "text-black hover:text-barber-gold"
+                    }`}>
+                    {getTranslation(language, "nav.broadcast")}
                   </Link>
                 </>
               )}
@@ -180,7 +194,7 @@ function Header() {
                         ? "text-barber-gold"
                         : "text-black hover:text-barber-gold"
                     }`}>
-                    Admin
+                    {getTranslation(language, "nav.admin")}
                   </Link>
                   <Link
                     to="/super-admin"
@@ -189,7 +203,7 @@ function Header() {
                         ? "text-barber-gold"
                         : "text-black hover:text-barber-gold"
                     }`}>
-                    Super Admin
+                    {getTranslation(language, "nav.superAdmin")}
                   </Link>
                   <Link
                     to="/barbers"
@@ -198,16 +212,16 @@ function Header() {
                         ? "text-barber-gold"
                         : "text-black hover:text-barber-gold"
                     }`}>
-                    Barberlar
+                    {getTranslation(language, "nav.barbers")}
                   </Link>
                   <Link
                     to="/services"
-                    className={`text-sm mt-1 mt-1lg:text-base font-medium transition-colors ${
+                    className={`text-sm mt-1 lg:text-base font-medium transition-colors ${
                       isActive("/services")
                         ? "text-barber-gold"
                         : "text-black hover:text-barber-gold"
                     }`}>
-                    Xizmatlar
+                    {getTranslation(language, "nav.services")}
                   </Link>
                   <Link
                     to="/analytics"
@@ -216,7 +230,16 @@ function Header() {
                         ? "text-barber-gold"
                         : "text-black hover:text-barber-gold"
                     }`}>
-                    Statistika
+                    {getTranslation(language, "nav.statistics")}
+                  </Link>
+                  <Link
+                    to="/broadcast"
+                    className={`text-sm mt-1 lg:text-base font-medium transition-colors ${
+                      isActive("/broadcast")
+                        ? "text-barber-gold"
+                        : "text-black hover:text-barber-gold"
+                    }`}>
+                    {getTranslation(language, "nav.broadcast")}
                   </Link>
                 </>
               )}
@@ -227,7 +250,7 @@ function Header() {
                   navigate("/");
                 }}
                 className=" bg-barber-olive hover:bg-barber-gold text-white">
-                Chiqish
+                {getTranslation(language, "nav.logout")}
               </Button>
             </>
           )}
@@ -267,7 +290,7 @@ function Header() {
                         ? "text-barber-gold"
                         : "text-black hover:text-barber-gold"
                     }`}>
-                    Bosh sahifa
+                    {getTranslation(language, "nav.home")}
                   </button>
                   <button
                     onClick={() => {
@@ -279,7 +302,7 @@ function Header() {
                         ? "text-barber-gold"
                         : "text-black hover:text-barber-gold"
                     }`}>
-                    Jamoa
+                    {getTranslation(language, "nav.team")}
                   </button>
                   <button
                     onClick={() => {
@@ -291,7 +314,7 @@ function Header() {
                         ? "text-barber-gold"
                         : "text-black hover:text-barber-gold"
                     }`}>
-                    Galereya
+                    {getTranslation(language, "nav.gallery")}
                   </button>
                   <button
                     onClick={() => {
@@ -303,7 +326,7 @@ function Header() {
                         ? "text-barber-gold"
                         : "text-black hover:text-barber-gold"
                     }`}>
-                    Aloqa
+                    {getTranslation(language, "nav.contact")}
                   </button>
                 </>
               )}
@@ -318,9 +341,12 @@ function Header() {
                       ? "text-barber-gold"
                       : "text-black hover:text-barber-gold"
                   }`}>
-                  Bron qilish
+                  {getTranslation(language, "nav.booking")}
                 </button>
               )}
+              <div className="py-2">
+                <LanguageSwitcher />
+              </div>
               {isAuthenticated() && (
                 <>
                   {isAdmin() && !isSuperAdmin() && (
@@ -335,7 +361,7 @@ function Header() {
                             ? "text-barber-gold"
                             : "text-black hover:text-barber-gold"
                         }`}>
-                        Admin
+                        {getTranslation(language, "nav.admin")}
                       </button>
                       <button
                         onClick={() => {
@@ -347,7 +373,7 @@ function Header() {
                             ? "text-barber-gold"
                             : "text-black hover:text-barber-gold"
                         }`}>
-                        Barberlar
+                        {getTranslation(language, "nav.barbers")}
                       </button>
                       <button
                         onClick={() => {
@@ -359,7 +385,7 @@ function Header() {
                             ? "text-barber-gold"
                             : "text-black hover:text-barber-gold"
                         }`}>
-                        Xizmatlar
+                        {getTranslation(language, "nav.services")}
                       </button>
                       <button
                         onClick={() => {
@@ -371,7 +397,19 @@ function Header() {
                             ? "text-barber-gold"
                             : "text-black hover:text-barber-gold"
                         }`}>
-                        Statistika
+                        {getTranslation(language, "nav.statistics")}
+                      </button>
+                      <button
+                        onClick={() => {
+                          closeMobileMenu();
+                          navigate("/broadcast");
+                        }}
+                        className={`text-base font-medium py-2 text-left transition-colors ${
+                          isActive("/broadcast")
+                            ? "text-barber-gold"
+                            : "text-black hover:text-barber-gold"
+                        }`}>
+                        {getTranslation(language, "nav.broadcast")}
                       </button>
                     </>
                   )}
@@ -387,7 +425,7 @@ function Header() {
                             ? "text-barber-gold"
                             : "text-black hover:text-barber-gold"
                         }`}>
-                        Admin
+                        {getTranslation(language, "nav.admin")}
                       </button>
                       <button
                         onClick={() => {
@@ -399,7 +437,7 @@ function Header() {
                             ? "text-barber-gold"
                             : "text-black hover:text-barber-gold"
                         }`}>
-                        Super Admin
+                        {getTranslation(language, "nav.superAdmin")}
                       </button>
                       <button
                         onClick={() => {
@@ -411,7 +449,7 @@ function Header() {
                             ? "text-barber-gold"
                             : "text-black hover:text-barber-gold"
                         }`}>
-                        Barberlar
+                        {getTranslation(language, "nav.barbers")}
                       </button>
                       <button
                         onClick={() => {
@@ -423,7 +461,7 @@ function Header() {
                             ? "text-barber-gold"
                             : "text-black hover:text-barber-gold"
                         }`}>
-                        Xizmatlar
+                        {getTranslation(language, "nav.services")}
                       </button>
                       <button
                         onClick={() => {
@@ -435,7 +473,19 @@ function Header() {
                             ? "text-barber-gold"
                             : "text-black hover:text-barber-gold"
                         }`}>
-                        Statistika
+                        {getTranslation(language, "nav.statistics")}
+                      </button>
+                      <button
+                        onClick={() => {
+                          closeMobileMenu();
+                          navigate("/broadcast");
+                        }}
+                        className={`text-base font-medium py-2 text-left transition-colors ${
+                          isActive("/broadcast")
+                            ? "text-barber-gold"
+                            : "text-black hover:text-barber-gold"
+                        }`}>
+                        {getTranslation(language, "nav.broadcast")}
                       </button>
                     </>
                   )}
@@ -446,7 +496,7 @@ function Header() {
                       navigate("/");
                     }}
                     className="text-base font-medium py-2 text-left text-red-600 hover:text-red-700 transition-colors">
-                    Chiqish
+                    {getTranslation(language, "nav.logout")}
                   </button>
                 </>
               )}
