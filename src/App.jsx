@@ -17,8 +17,26 @@ import Services from './pages/Services'
 import BroadcastPost from './pages/BroadcastPost'
 import Users from './pages/Users'
 import NotFound from './pages/NotFound'
+import { useEffect } from 'react'
 
 function App() {
+  // #region agent log
+  useEffect(()=>{
+    const analyticsCheck=()=>{
+      const analyticsInfo={hasAnalytics:true,windowSentry:typeof window!=='undefined'?!!window.Sentry:false};
+      fetch('http://127.0.0.1:7244/ingest/e9ac047d-2973-4d8a-be65-54e78070a4b6',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'App.jsx:23',message:'Analytics component check',data:analyticsInfo,timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
+    };
+    analyticsCheck();
+    setTimeout(analyticsCheck,2000);
+  },[]);
+  // #endregion
+  
+  // #region agent log
+  useEffect(()=>{
+    fetch('http://127.0.0.1:7244/ingest/e9ac047d-2973-4d8a-be65-54e78070a4b6',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'App.jsx:32',message:'Analytics component about to render',data:{timestamp:Date.now()},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
+  },[]);
+  // #endregion
+
   return (
     <Router>
       <ScrollToTop />

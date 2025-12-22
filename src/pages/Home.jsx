@@ -124,6 +124,16 @@ function Home() {
           ? data
           : data.data || data.services || [];
 
+        // Debug: Log first service to see what fields are available
+        if (servicesList.length > 0) {
+          console.log("First service from API:", servicesList[0]);
+          console.log("Image URL fields:", {
+            image_url: servicesList[0].image_url,
+            imageUrl: servicesList[0].imageUrl,
+            image: servicesList[0].image
+          });
+        }
+
         // Map API response to expected format with icon mapping
         const mappedServices = (servicesList || []).map((service, index) => {
           // Map service name to icon type (handles both English and Uzbek)
@@ -174,10 +184,22 @@ function Home() {
             }).format(numPrice);
           };
 
+          // Get image URL - check multiple possible field names and handle relative URLs
+          let imageUrl = service.image_url || service.imageUrl || service.image || null;
+          
+          // If image URL is relative, make it absolute using the API base URL
+          if (imageUrl && !imageUrl.startsWith('http') && !imageUrl.startsWith('//') && !imageUrl.startsWith('/')) {
+            imageUrl = `${SERVICES_BASE_URL}${imageUrl.startsWith('/') ? '' : '/'}${imageUrl}`;
+          } else if (imageUrl && imageUrl.startsWith('/') && !imageUrl.startsWith('//')) {
+            // If it starts with /, prepend the base URL
+            imageUrl = `${SERVICES_BASE_URL}${imageUrl}`;
+          }
+
           return {
             id: service.id || service._id || index + 1,
             name: service.name || service.title || "Service",
             icon: service.icon || getIconType(service.name || service.title),
+            image_url: imageUrl,
             description:
               service.description ||
               service.desc ||

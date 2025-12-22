@@ -29,6 +29,7 @@ export const API_ENDPOINTS = {
   users: "/users",
   barbers: "/users/barbers",
   services: "/barber-services",
+  serviceCategories: "/service-categories",
   bookings: "/bookings",
   bookingsMy: "/bookings/my",
   bookingsMultiple: "/bookings/multiple",

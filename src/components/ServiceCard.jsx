@@ -1,9 +1,11 @@
+import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { Button } from '@material-tailwind/react'
 import { useNavigate } from 'react-router-dom'
 
 function ServiceCard({ service, index }) {
   const navigate = useNavigate()
+  const [imageError, setImageError] = useState(false)
 
   const handleServiceClick = () => {
     navigate('/booking')
@@ -49,6 +51,17 @@ function ServiceCard({ service, index }) {
     }
   }
 
+  // Get image URL from service
+  const imageUrl = service.image_url || service.imageUrl || service.image;
+  
+  // Debug logging
+  if (service.name && !imageUrl) {
+    console.log(`Service "${service.name}" has no image URL. Available fields:`, Object.keys(service));
+  }
+  if (imageUrl) {
+    console.log(`Service "${service.name}" image URL:`, imageUrl);
+  }
+
   return (
     <motion.div
       className="flex flex-col items-center gap-4 sm:gap-6 md:gap-8"
@@ -56,8 +69,19 @@ function ServiceCard({ service, index }) {
       data-aos-delay={index * 100}
       whileHover={{ y: -10 }}
     >
-      <div className="w-[80px] h-[80px] xs:w-[90px] xs:h-[90px] sm:w-[100px] sm:h-[100px] md:w-[121px] md:h-[119px] bg-black rounded-lg flex items-center justify-center">
-        {getIcon()}
+      <div className="w-[80px] h-[80px] xs:w-[90px] xs:h-[90px] sm:w-[100px] sm:h-[100px] md:w-[121px] md:h-[119px] bg-black rounded-lg flex items-center justify-center overflow-hidden">
+        {imageUrl && !imageError ? (
+          <img
+            src={imageUrl}
+            alt={service.name || "Service"}
+            className="w-full h-full object-cover"
+            onError={() => setImageError(true)}
+          />
+        ) : (
+          <div className="w-full h-full flex items-center justify-center">
+            {getIcon()}
+          </div>
+        )}
       </div>
       <h3 className="text-base sm:text-lg md:text-xl font-semibold text-black text-center">{service.name}</h3>
       {service.price && (

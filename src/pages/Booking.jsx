@@ -22,6 +22,7 @@ function Booking() {
     phone: "",
   });
   const [services, setServices] = useState([]);
+  const [categories, setCategories] = useState([]);
   const [barbers, setBarbers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -31,6 +32,7 @@ function Booking() {
   const [useCustomTime, setUseCustomTime] = useState(false);
   const [customTime, setCustomTime] = useState("");
   const [currentMonth, setCurrentMonth] = useState(new Date());
+  const [selectedCategory, setSelectedCategory] = useState("all"); // YouTube-style category filter
 
   // Get today's date in YYYY-MM-DD format
   const today = new Date().toISOString().split("T")[0];
@@ -67,7 +69,7 @@ function Booking() {
   const timeSlotsByHour = generateTimeSlotsByHour();
 
   useEffect(() => {
-    // Fetch services and barbers from API
+    // Fetch services, categories, and barbers from API
     const fetchData = async () => {
       try {
         console.log(
@@ -75,13 +77,29 @@ function Booking() {
           `${SERVICES_BASE_URL}${API_ENDPOINTS.services}`
         );
         console.log(
+          "Fetching categories from:",
+          `${SERVICES_BASE_URL}${API_ENDPOINTS.serviceCategories}`
+        );
+        console.log(
           "Fetching barbers from:",
           `${BARBERS_BASE_URL}${API_ENDPOINTS.barbers}`
         );
 
-        const [servicesRes, barbersRes] = await Promise.all([
+        const [servicesRes, categoriesRes, barbersRes] = await Promise.all([
           fetchWithTimeout(
             `${SERVICES_BASE_URL}${API_ENDPOINTS.services}`,
+            {
+              method: "GET",
+              headers: {
+                Accept: "*/*",
+                "Content-Type": "application/json",
+              },
+              mode: "cors",
+            },
+            5000
+          ),
+          fetchWithTimeout(
+            `${SERVICES_BASE_URL}${API_ENDPOINTS.serviceCategories}`,
             {
               method: "GET",
               headers: {
@@ -107,12 +125,18 @@ function Booking() {
         ]);
 
         console.log("Services response status:", servicesRes.status);
+        console.log("Categories response status:", categoriesRes.status);
         console.log("Barbers response status:", barbersRes.status);
 
         if (!servicesRes.ok) {
           const errorText = await servicesRes.text();
           console.error("Services fetch error:", errorText);
           throw new Error(`Failed to fetch services: ${servicesRes.status}`);
+        }
+
+        if (!categoriesRes.ok) {
+          console.warn("Categories fetch failed:", categoriesRes.status);
+          // Categories are optional, so we don't throw an error
         }
 
         if (!barbersRes.ok) {
@@ -122,28 +146,62 @@ function Booking() {
         }
 
         const servicesData = await servicesRes.json();
+        const categoriesData = categoriesRes.ok ? await categoriesRes.json() : [];
         const barbersData = await barbersRes.json();
 
         console.log("Services data:", servicesData);
+        console.log("Categories data:", categoriesData);
         console.log("Barbers data:", barbersData);
+        
+        // Debug: Log first service to see image fields
+        if (servicesData && (Array.isArray(servicesData) ? servicesData : servicesData.data || servicesData.services || []).length > 0) {
+          const firstService = Array.isArray(servicesData) ? servicesData[0] : (servicesData.data || servicesData.services || [])[0];
+          console.log("First service image fields:", {
+            image_url: firstService.image_url,
+            imageUrl: firstService.imageUrl,
+            image: firstService.image
+          });
+        }
 
         // Handle services response - API returns array directly
         let servicesList = Array.isArray(servicesData)
           ? servicesData
           : servicesData.data || servicesData.services || [];
 
-        // Map services to include formatted price
-        const mappedServices = (servicesList || []).map((service) => ({
-          ...service,
-          _id: String(service.id),
-          title: service.name,
-          // Format price if it's a number string
-          price: service.price
-            ? `${parseFloat(service.price).toLocaleString("uz-UZ")} UZS`
-            : "",
-        }));
+        // Map services to include formatted price and preserve image URLs
+        const mappedServices = (servicesList || []).map((service) => {
+          // Get image URL and handle relative URLs
+          let imageUrl = service.image_url || service.imageUrl || service.image || null;
+          
+          // If image URL is relative, make it absolute using the API base URL
+          if (imageUrl && !imageUrl.startsWith('http') && !imageUrl.startsWith('//') && !imageUrl.startsWith('/')) {
+            imageUrl = `${SERVICES_BASE_URL}${imageUrl.startsWith('/') ? '' : '/'}${imageUrl}`;
+          } else if (imageUrl && imageUrl.startsWith('/') && !imageUrl.startsWith('//')) {
+            // If it starts with /, prepend the base URL
+            imageUrl = `${SERVICES_BASE_URL}${imageUrl}`;
+          }
+
+          return {
+            ...service,
+            _id: String(service.id),
+            title: service.name,
+            image_url: imageUrl,
+            imageUrl: imageUrl,
+            image: imageUrl,
+            // Format price if it's a number string
+            price: service.price
+              ? `${parseFloat(service.price).toLocaleString("uz-UZ")} UZS`
+              : "",
+          };
+        });
 
         setServices(mappedServices);
+
+        // Handle categories response
+        let categoriesList = Array.isArray(categoriesData)
+          ? categoriesData
+          : categoriesData.data || categoriesData.categories || [];
+        setCategories(categoriesList);
 
         // Handle barbers response
         let barbersList = Array.isArray(barbersData)
@@ -425,8 +483,8 @@ function Booking() {
     if (!day) return;
     const year = currentMonth.getFullYear();
     const month = currentMonth.getMonth();
-    const selectedDate = new Date(year, month, day);
-    const dateString = selectedDate.toISOString().split("T")[0];
+    // Format date string manually to avoid timezone issues
+    const dateString = `${year}-${String(month + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
     setFormData((prev) => ({
       ...prev,
       date: dateString,
@@ -449,7 +507,8 @@ function Booking() {
     if (!day || !formData.date) return false;
     const year = currentMonth.getFullYear();
     const month = currentMonth.getMonth();
-    const dateString = new Date(year, month, day).toISOString().split("T")[0];
+    // Format date string manually to avoid timezone issues
+    const dateString = `${year}-${String(month + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
     return formData.date === dateString;
   };
 
@@ -457,7 +516,8 @@ function Booking() {
     if (!day) return false;
     const year = currentMonth.getFullYear();
     const month = currentMonth.getMonth();
-    const dateString = new Date(year, month, day).toISOString().split("T")[0];
+    // Format date string manually to avoid timezone issues
+    const dateString = `${year}-${String(month + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
     return dateString === today;
   };
 
@@ -465,7 +525,8 @@ function Booking() {
     if (!day) return false;
     const year = currentMonth.getFullYear();
     const month = currentMonth.getMonth();
-    const dateString = new Date(year, month, day).toISOString().split("T")[0];
+    // Format date string manually to avoid timezone issues
+    const dateString = `${year}-${String(month + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
     return dateString < today;
   };
 
@@ -878,71 +939,150 @@ function Booking() {
                       {formData.service_ids.length > 0 &&
                         `(${formData.service_ids.length} выбрано)`}
                     </label>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                      {services.map((service) => {
-                        const serviceId = String(service.id || service._id);
-                        const isSelected =
-                          formData.service_ids &&
-                          formData.service_ids.includes(serviceId);
-                        const serviceName =
-                          service.name || service.title || "Service";
-                        const servicePrice =
-                          service.price ||
-                          (service.price_raw
-                            ? `${parseFloat(service.price_raw).toLocaleString(
-                                "uz-UZ"
-                              )} UZS`
-                            : "");
-                        const serviceDuration = service.duration
-                          ? `${service.duration} min`
-                          : "";
-
-                        return (
+                    
+                    {/* YouTube-style Category Tabs */}
+                    {categories.length > 0 && (
+                      <div className="mb-6 overflow-x-auto pb-2">
+                        <div className="flex gap-2 min-w-max">
+                          {/* All Categories Button */}
                           <button
-                            key={serviceId}
                             type="button"
-                            onClick={() => handleServiceToggle(serviceId)}
-                            className={`p-4 rounded-lg border-2 transition-all text-left relative ${
-                              isSelected
-                                ? "border-barber-olive bg-barber-olive/10"
-                                : "border-gray-300 hover:border-barber-olive/50"
+                            onClick={() => setSelectedCategory("all")}
+                            className={`px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-all ${
+                              selectedCategory === "all"
+                                ? "bg-barber-olive text-white shadow-md"
+                                : "bg-gray-100 text-gray-700 hover:bg-gray-200"
                             }`}>
-                            {/* Checkbox indicator */}
-                            <div
-                              className={`absolute top-3 right-3 w-6 h-6 rounded border-2 flex items-center justify-center ${
-                                isSelected
-                                  ? "border-barber-olive bg-barber-olive"
-                                  : "border-gray-300 bg-white"
-                              }`}>
-                              {isSelected && (
-                                <svg
-                                  className="w-4 h-4 text-white"
-                                  fill="currentColor"
-                                  viewBox="0 0 20 20">
-                                  <path
-                                    fillRule="evenodd"
-                                    d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                                    clipRule="evenodd"
-                                  />
-                                </svg>
-                              )}
-                            </div>
-                            <h3 className="font-bold text-lg text-black mb-1 pr-8">
-                              {serviceName}
-                            </h3>
-                            {servicePrice && (
-                              <p className="text-sm font-semibold text-barber-olive mb-1">
-                                {servicePrice}
-                              </p>
-                            )}
-                            {serviceDuration && (
-                              <p className="text-sm text-gray-600">
-                                {serviceDuration}
-                              </p>
-                            )}
+                            Все
                           </button>
-                        );
-                      })}
+                          
+                          {/* Category Buttons */}
+                          {categories.map((category) => {
+                            const categoryId = String(category.id || category._id);
+                            const isSelected = selectedCategory === categoryId;
+                            
+                            return (
+                              <button
+                                key={categoryId}
+                                type="button"
+                                onClick={() => setSelectedCategory(categoryId)}
+                                className={`px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-all flex items-center gap-2 ${
+                                  isSelected
+                                    ? "bg-barber-olive text-white shadow-md"
+                                    : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                                }`}>
+                                {category.icon && <span>{category.icon}</span>}
+                                <span>{category.name}</span>
+                              </button>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Filtered Services Grid */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      {(() => {
+                        // Filter services based on selected category
+                        let filteredServices = services;
+                        
+                        if (selectedCategory !== "all" && categories.length > 0) {
+                          filteredServices = services.filter((service) => {
+                            const serviceCategoryId = String(service.category_id);
+                            return serviceCategoryId === selectedCategory;
+                          });
+                        }
+
+                        if (filteredServices.length === 0) {
+                          return (
+                            <div className="col-span-2 text-center py-8 text-gray-500">
+                              <p>Услуги не найдены в этой категории</p>
+                            </div>
+                          );
+                        }
+
+                        return filteredServices.map((service) => {
+                          const serviceId = String(service.id || service._id);
+                          const isSelected =
+                            formData.service_ids &&
+                            formData.service_ids.includes(serviceId);
+                          const serviceName =
+                            service.name || service.title || "Service";
+                          const servicePrice =
+                            service.price ||
+                            (service.price_raw
+                              ? `${parseFloat(service.price_raw).toLocaleString(
+                                  "uz-UZ"
+                                )} UZS`
+                              : "");
+                          const serviceDuration = service.duration
+                            ? `${service.duration} min`
+                            : "";
+
+                          const serviceImageUrl = service.image_url || service.imageUrl || service.image;
+
+                          return (
+                            <button
+                              key={serviceId}
+                              type="button"
+                              onClick={() => handleServiceToggle(serviceId)}
+                              className={`p-4 rounded-lg border-2 transition-all text-left relative overflow-hidden ${
+                                isSelected
+                                  ? "border-barber-olive bg-barber-olive/10"
+                                  : "border-gray-300 hover:border-barber-olive/50"
+                              }`}>
+                              {/* Service Image */}
+                              {serviceImageUrl ? (
+                                <div className="w-full h-32 mb-3 rounded-lg overflow-hidden bg-gray-100 relative">
+                                  <img
+                                    src={serviceImageUrl}
+                                    alt={serviceName}
+                                    className="w-full h-full object-cover"
+                                    onError={(e) => {
+                                      e.target.parentElement.style.display = 'none';
+                                    }}
+                                    loading="lazy"
+                                  />
+                                </div>
+                              ) : null}
+                              
+                              {/* Checkbox indicator */}
+                              <div
+                                className={`absolute top-3 right-3 w-6 h-6 rounded border-2 flex items-center justify-center z-10 ${
+                                  isSelected
+                                    ? "border-barber-olive bg-barber-olive"
+                                    : "border-gray-300 bg-white"
+                                }`}>
+                                {isSelected && (
+                                  <svg
+                                    className="w-4 h-4 text-white"
+                                    fill="currentColor"
+                                    viewBox="0 0 20 20">
+                                    <path
+                                      fillRule="evenodd"
+                                      d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                                      clipRule="evenodd"
+                                    />
+                                  </svg>
+                                )}
+                              </div>
+                              <h3 className="font-bold text-lg text-black mb-1 pr-8">
+                                {serviceName}
+                              </h3>
+                              {servicePrice && (
+                                <p className="text-sm font-semibold text-barber-olive mb-1">
+                                  {servicePrice}
+                                </p>
+                              )}
+                              {serviceDuration && (
+                                <p className="text-sm text-gray-600">
+                                  {serviceDuration}
+                                </p>
+                              )}
+                            </button>
+                          );
+                        });
+                      })()}
                     </div>
                   </div>
 
