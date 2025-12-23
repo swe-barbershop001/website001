@@ -5,7 +5,7 @@ import {
   BOOKINGS_BASE_URL,
   API_ENDPOINTS,
   SERVICES_BASE_URL,
-  BARBERS_BASE_URL,
+  AUTH_BASE_URL,
 } from "../data/api";
 import { contactInfo } from "../data/contact";
 import Footer from "../components/Footer";
@@ -82,7 +82,7 @@ function Booking() {
         );
         console.log(
           "Fetching barbers from:",
-          `${BARBERS_BASE_URL}${API_ENDPOINTS.barbers}`
+          `${AUTH_BASE_URL}${API_ENDPOINTS.createBarber}`
         );
 
         const [servicesRes, categoriesRes, barbersRes] = await Promise.all([
@@ -111,7 +111,7 @@ function Booking() {
             5000
           ),
           fetchWithTimeout(
-            `${BARBERS_BASE_URL}${API_ENDPOINTS.barbers}`,
+            `${AUTH_BASE_URL}${API_ENDPOINTS.createBarber}`,
             {
               method: "GET",
               headers: {
