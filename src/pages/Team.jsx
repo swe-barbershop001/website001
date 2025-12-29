@@ -8,9 +8,12 @@ import { imagePool } from "../data/images";
 import { API_BASE_URL, API_ENDPOINTS, BARBERS_BASE_URL } from "../data/api";
 import RegisterModal from "../components/RegisterModal";
 import Footer from "../components/Footer";
+import { useLanguage } from "../context/LanguageContext";
+import { getTranslation } from "../data/translations";
 
 function Team() {
   const navigate = useNavigate();
+  const { language } = useLanguage();
   const [barbers, setBarbers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -85,30 +88,27 @@ function Team() {
         className="w-full bg-white py-8 sm:py-10 md:py-12 lg:py-16"
         data-aos="fade-up">
         <div className="max-w-[1440px] mx-auto px-4 sm:px-6 md:px-8 lg:px-12 xl:px-[127px] grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 md:gap-12 items-center">
-          <div className="order-2 lg:order-1" data-aos="fade-right">
+          <div className="order-2 lg:order-1" data-aos="fade-up">
             <div className="text-xs sm:text-sm font-semibold text-barber-gold mb-3 sm:mb-4 tracking-wider">
-              BIZ HAQIMIZDA
+              {getTranslation(language, "team.aboutUs")}
             </div>
             <h1 className="text-3xl xs:text-4xl sm:text-5xl md:text-5xl lg:text-6xl font-bold text-black mb-4 sm:mb-6 md:mb-8 leading-tight">
-              Litsenziyalangan Professional Barberlar
+              {getTranslation(language, "team.title")}
             </h1>
             <p className="text-black text-base sm:text-lg mb-4 sm:mb-6 opacity-80">
-              Toshkentdagi tajribali barberlar jamoamiz har bir soch olishga
-              yillik tajriba va ehtiros olib keladi. {contactInfo.description}{" "}
-              Biz eng yuqori sifatli parvarish xizmatlarini taqdim etishga
-              sodiqmiz.
+              {getTranslation(language, "team.description")}
             </p>
             <Button
               size="lg"
               onClick={() => navigate("/booking")}
               className="w-full sm:w-auto px-5 sm:px-6 md:px-8 py-2.5 sm:py-3 md:py-4 bg-black text-white rounded-xl sm:rounded-2xl font-semibold text-sm sm:text-base hover:bg-gray-800"
               aria-label="Book an appointment">
-              VAQT BELGILASH
+              {getTranslation(language, "team.bookAppointment")}
             </Button>
           </div>
           <div
             className="w-full h-[400px] xs:h-[450px] sm:h-[500px] md:h-[600px] lg:h-[700px] rounded-2xl sm:rounded-3xl overflow-hidden order-1 lg:order-2"
-            data-aos="fade-left">
+            data-aos="fade-up">
             <img
               src={imagePool[0]}
               alt="Professional barbers at 001 Barbershop"
@@ -125,19 +125,19 @@ function Team() {
         data-aos="fade-up">
         <div className="max-w-[1440px] mx-auto px-4 sm:px-6 md:px-8 lg:px-12 xl:px-[127px]">
           <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white text-center mb-6 sm:mb-8 md:mb-12">
-            Bizning Barberlarimiz
+            {getTranslation(language, "team.ourBarbers")}
           </h2>
 
           {loading && (
             <div className="text-center py-12">
-              <p className="text-white text-lg">Barberlar yuklanmoqda...</p>
+              <p className="text-white text-lg">{getTranslation(language, "team.loadingBarbers")}</p>
             </div>
           )}
 
           {error && !loading && (
             <div className="text-center py-4 mb-6">
               <p className="text-yellow-300 text-sm">
-                ⚠️ {error}. Standart ma'lumotlar ishlatilmoqda.
+                {getTranslation(language, "team.errorMessage").replace("{error}", error)}
               </p>
             </div>
           )}
@@ -196,15 +196,10 @@ function Team() {
         data-aos="fade-up">
         <div className="max-w-[1440px] mx-auto px-4 sm:px-6 md:px-8 lg:px-12 xl:px-[127px]">
           <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-3 sm:mb-4 md:mb-6 text-left">
-            To'liq xizmat ko'rsatadigan barbershop va erkaklar parvarish
-            studiyasi
+            {getTranslation(language, "team.fullService")}
           </h2>
           <p className="text-white text-sm sm:text-base md:text-lg mb-4 sm:mb-6 md:mb-8 text-left opacity-90 max-w-3xl">
-            Toshkentdagi {contactInfo.tagline} da biz to'liq parvarish
-            xizmatlari assortimentini taklif qilamiz. Klassik soch olishdan
-            zamonaviy uslublargacha, issiq sochiq bilan qirqishdan soqol
-            tuzatishgacha, bizning malakali barberlarimiz sizga eng yaxshi
-            ko'rinish va his qilishda yordam berish uchun bu yerda.
+            {getTranslation(language, "team.fullServiceDesc").replace("{tagline}", contactInfo.tagline)}
           </p>
           <div className="flex flex-col xs:flex-row gap-3 sm:gap-4 justify-start">
             <Button
@@ -213,7 +208,7 @@ function Team() {
               onClick={() => navigate("/#narxlar")}
               className="w-full xs:w-auto px-5 sm:px-6 md:px-8 py-2.5 sm:py-3 md:py-4 bg-white text-black rounded-xl sm:rounded-2xl font-semibold text-sm sm:text-base hover:bg-gray-100"
               aria-label="View pricing">
-              Narxlarni ko'rish
+              {getTranslation(language, "team.viewPricing")}
             </Button>
             <Button
               size="lg"
@@ -221,7 +216,7 @@ function Team() {
               onClick={() => navigate("/booking")}
               className="w-full xs:w-auto px-5 sm:px-6 md:px-8 py-2.5 sm:py-3 md:py-4 bg-transparent border-2 border-white text-white rounded-xl sm:rounded-2xl font-semibold text-sm sm:text-base hover:bg-white hover:text-black"
               aria-label="Book an appointment online">
-              Onlayn bron qilish
+              {getTranslation(language, "team.bookOnline")}
             </Button>
           </div>
         </div>

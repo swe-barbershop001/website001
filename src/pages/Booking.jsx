@@ -10,8 +10,11 @@ import {
 import { contactInfo } from "../data/contact";
 import Footer from "../components/Footer";
 import { fetchWithTimeout } from "../utils/api";
+import { useLanguage } from "../context/LanguageContext";
+import { getTranslation } from "../data/translations";
 
 function Booking() {
+  const { language } = useLanguage();
   const [currentStep, setCurrentStep] = useState(1);
   const [formData, setFormData] = useState({
     barber_id: "",
@@ -219,13 +222,9 @@ function Booking() {
       } catch (err) {
         console.error("Error fetching data:", err);
         if (err.message && err.message.includes("timeout")) {
-          setError(
-            "Backend не ответил (5 секунд). Пожалуйста, попробуйте еще раз."
-          );
+          setError(getTranslation(language, "booking.backendTimeout"));
         } else {
-          setError(
-            "Не удалось загрузить данные с backend. Пожалуйста, попробуйте еще раз."
-          );
+          setError(getTranslation(language, "booking.failedToLoad"));
         }
         setServices([]);
         setBarbers([]);
@@ -291,7 +290,7 @@ function Booking() {
         const errorMessage =
           data.message ||
           data.error ||
-          `Запись не удалась (${response.status}). Пожалуйста, попробуйте еще раз.`;
+          getTranslation(language, "booking.bookingFailed").replace("{status}", response.status);
         setError(errorMessage);
         console.error("Booking failed:", data);
       }
@@ -299,7 +298,7 @@ function Booking() {
       console.error("Booking error:", err);
       setError(
         err.message ||
-          "Ошибка сети. Пожалуйста, проверьте подключение к интернету и попробуйте еще раз."
+          getTranslation(language, "booking.networkError")
       );
     } finally {
       setIsSubmitting(false);
@@ -365,12 +364,10 @@ function Booking() {
           });
           setError("");
         } else {
-          setError("Время должно быть с 8:00 до 21:00");
+          setError(getTranslation(language, "booking.timeRange"));
         }
       } else if (value.length === 5) {
-        setError(
-          "Неверный формат времени. Пожалуйста, введите в формате ЧЧ:ММ (например: 14:30)"
-        );
+        setError(getTranslation(language, "booking.invalidTimeFormat"));
       }
     } else {
       setFormData({
@@ -404,14 +401,14 @@ function Booking() {
     if (currentStep === 1) {
       // Validate step 1: barber, date, and time must be selected
       if (!formData.barber_id || !formData.date || !formData.time) {
-        setError("Пожалуйста, выберите барбера, дату и время");
+        setError(getTranslation(language, "booking.selectBarberDateTime"));
         return;
       }
       setCurrentStep(2);
     } else if (currentStep === 2) {
       // Validate step 2: at least one service must be selected
       if (!formData.service_ids || formData.service_ids.length === 0) {
-        setError("Пожалуйста, выберите хотя бы одну услугу");
+        setError(getTranslation(language, "booking.selectAtLeastOneService"));
         return;
       }
       setCurrentStep(3);
@@ -430,29 +427,8 @@ function Booking() {
   const formatDateDisplay = (dateString) => {
     if (!dateString) return "";
     const date = new Date(dateString + "T00:00:00");
-    const days = [
-      "Воскресенье",
-      "Понедельник",
-      "Вторник",
-      "Среда",
-      "Четверг",
-      "Пятница",
-      "Суббота",
-    ];
-    const months = [
-      "Январь",
-      "Февраль",
-      "Март",
-      "Апрель",
-      "Май",
-      "Июнь",
-      "Июль",
-      "Август",
-      "Сентябрь",
-      "Октябрь",
-      "Ноябрь",
-      "Декабрь",
-    ];
+    const days = getTranslation(language, "booking.dayNames").split(",");
+    const months = getTranslation(language, "booking.months").split(",");
     return `${days[date.getDay()]}, ${date.getDate()} ${
       months[date.getMonth()]
     }`;
@@ -530,28 +506,15 @@ function Booking() {
     return dateString < today;
   };
 
-  const monthNames = [
-    "Январь",
-    "Февраль",
-    "Март",
-    "Апрель",
-    "Май",
-    "Июнь",
-    "Июль",
-    "Август",
-    "Сентябрь",
-    "Октябрь",
-    "Ноябрь",
-    "Декабрь",
-  ];
-  const dayNames = ["Вс", "Пн", "Вт", "Ср", "Чт", "Пт", "Сб"];
+  const monthNames = getTranslation(language, "booking.months").split(",");
+  const dayNames = getTranslation(language, "booking.days").split(",");
 
   if (loading) {
     return (
       <div className="pt-16 sm:pt-20 md:pt-[92px] min-h-screen flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-barber-gold mx-auto mb-4"></div>
-          <p className="text-black">Загрузка...</p>
+          <p className="text-black">{getTranslation(language, "booking.loading")}</p>
         </div>
       </div>
     );
@@ -563,7 +526,7 @@ function Booking() {
         <div className="max-w-[1440px] mx-auto px-4 sm:px-6 md:px-8 lg:px-12 xl:px-[127px]">
           <div className="max-w-4xl mx-auto">
             <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-black mb-6 text-center">
-              Запись на прием
+              {getTranslation(language, "booking.title")}
             </h1>
 
             {/* Step Indicator */}
@@ -582,7 +545,7 @@ function Booking() {
                     {currentStep > 1 ? "✓" : "1"}
                   </div>
                   <span className="ml-2 text-sm font-medium hidden sm:inline">
-                    Барбер и время
+                    {getTranslation(language, "booking.step1")}
                   </span>
                 </div>
                 <div
@@ -602,7 +565,7 @@ function Booking() {
                     {currentStep > 2 ? "✓" : "2"}
                   </div>
                   <span className="ml-2 text-sm font-medium hidden sm:inline">
-                    Услуга
+                    {getTranslation(language, "booking.step2")}
                   </span>
                 </div>
                 <div
@@ -622,7 +585,7 @@ function Booking() {
                     3
                   </div>
                   <span className="ml-2 text-sm font-medium hidden sm:inline">
-                    Данные
+                    {getTranslation(language, "booking.step3")}
                   </span>
                 </div>
               </div>
@@ -636,7 +599,7 @@ function Booking() {
 
             {success && (
               <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded-lg text-sm mb-4">
-                ✅ Запись успешно создана!
+                ✅ {getTranslation(language, "booking.success")}
               </div>
             )}
 
@@ -645,13 +608,13 @@ function Booking() {
               {currentStep === 1 && (
                 <div className="space-y-6">
                   <h2 className="text-xl sm:text-2xl font-bold text-black mb-4">
-                    Выберите барбера и время
+                    {getTranslation(language, "booking.selectBarber")} & {getTranslation(language, "booking.selectTime")}
                   </h2>
 
                   {/* Barbers Selection */}
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-3">
-                      Выберите барбера
+                      {getTranslation(language, "booking.selectBarber")}
                     </label>
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                       {barbers.map((barber) => {
@@ -690,7 +653,7 @@ function Booking() {
                   {formData.barber_id && (
                     <div className="mb-4">
                       <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Выберите дату
+                        {getTranslation(language, "booking.selectDate")}
                       </label>
                       <div className="bg-white border border-gray-200 rounded-lg p-2 shadow-sm max-w-md mx-auto">
                         {/* Calendar Header */}
@@ -798,7 +761,7 @@ function Booking() {
                     <div>
                       <div className="flex items-center justify-between mb-3">
                         <label className="block text-sm font-medium text-gray-700">
-                          Выберите время
+                          {getTranslation(language, "booking.selectTime")}
                         </label>
                         <button
                           type="button"
@@ -808,7 +771,7 @@ function Booking() {
                               ? "bg-barber-olive text-white"
                               : "bg-gray-100 text-gray-700 hover:bg-gray-200"
                           }`}>
-                          {useCustomTime ? "Часы" : "Другое время"}
+                          {useCustomTime ? getTranslation(language, "booking.hours") : getTranslation(language, "booking.customTime")}
                         </button>
                       </div>
 
@@ -876,8 +839,8 @@ function Booking() {
                             onChange={(e) =>
                               handleCustomTimeChange(e.target.value)
                             }
-                            label="Введите другое время"
-                            placeholder="ЧЧ:ММ (например: 14:30)"
+                            label={getTranslation(language, "booking.enterCustomTime")}
+                            placeholder={getTranslation(language, "booking.timePlaceholder")}
                             size="lg"
                             disabled={isSubmitting}
                             min="08:00"
@@ -918,7 +881,7 @@ function Booking() {
               {currentStep === 2 && (
                 <div className="space-y-6">
                   <h2 className="text-xl sm:text-2xl font-bold text-black mb-4">
-                    Выберите услугу
+                    {getTranslation(language, "booking.selectServices")}
                   </h2>
 
                   {/* Selected Barber and Time Summary */}
@@ -935,9 +898,9 @@ function Booking() {
                   {/* Services Selection */}
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-3">
-                      Выберите услугу{" "}
+                      {getTranslation(language, "booking.selectServices")}{" "}
                       {formData.service_ids.length > 0 &&
-                        `(${formData.service_ids.length} выбрано)`}
+                        `(${formData.service_ids.length} ${getTranslation(language, "booking.selected")})`}
                     </label>
                     
                     {/* YouTube-style Category Tabs */}
@@ -996,7 +959,7 @@ function Booking() {
                         if (filteredServices.length === 0) {
                           return (
                             <div className="col-span-2 text-center py-8 text-gray-500">
-                              <p>Услуги не найдены в этой категории</p>
+                              <p>{getTranslation(language, "booking.noServicesInCategory")}</p>
                             </div>
                           );
                         }
@@ -1136,7 +1099,7 @@ function Booking() {
                     {formData.service_ids &&
                       formData.service_ids.length > 0 && (
                         <div className="text-sm text-black">
-                          <span className="font-semibold">Услуги:</span>
+                          <span className="font-semibold">{getTranslation(language, "booking.services")}:</span>
                           <ul className="list-disc list-inside mt-1 ml-2">
                             {formData.service_ids.map((serviceId) => {
                               const service = services.find(
@@ -1159,8 +1122,8 @@ function Booking() {
                     name="name"
                     value={formData.name}
                     onChange={(e) => handleInputChange("name", e.target.value)}
-                    label="Имя"
-                    placeholder="Введите ваше имя"
+                    label={getTranslation(language, "booking.name")}
+                    placeholder={getTranslation(language, "booking.namePlaceholder")}
                     required
                     size="lg"
                     disabled={isSubmitting}
@@ -1172,8 +1135,8 @@ function Booking() {
                     name="phone"
                     value={formData.phone}
                     onChange={(e) => handleInputChange("phone", e.target.value)}
-                    label="Номер телефона"
-                    placeholder="+998 XX XXX XX XX"
+                    label={getTranslation(language, "booking.phone")}
+                    placeholder={getTranslation(language, "booking.phonePlaceholder")}
                     required
                     size="lg"
                     disabled={isSubmitting}
@@ -1197,7 +1160,7 @@ function Booking() {
                       size="lg"
                       className="bg-barber-olive hover:bg-barber-gold text-white font-semibold"
                       loading={isSubmitting}>
-                      {isSubmitting ? "Создание записи..." : "Записаться"}
+                      {isSubmitting ? getTranslation(language, "booking.creating") : getTranslation(language, "booking.createBooking")}
                     </Button>
                   </div>
                 </form>

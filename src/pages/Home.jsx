@@ -9,7 +9,11 @@ import { Button } from "@material-tailwind/react";
 import { motion } from "framer-motion";
 import { servicesData, whyChooseUs, contactInfo } from "../data";
 import { imagePool } from "../data/images";
-import { API_ENDPOINTS, SERVICES_BASE_URL, BOOKINGS_BASE_URL } from "../data/api";
+import {
+  API_ENDPOINTS,
+  SERVICES_BASE_URL,
+  BOOKINGS_BASE_URL,
+} from "../data/api";
 import { fetchWithTimeout } from "../utils/api";
 import { useLanguage } from "../context/LanguageContext";
 import { getTranslation, translations } from "../data/translations";
@@ -31,9 +35,10 @@ function Home() {
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [lightboxIndex, setLightboxIndex] = useState(0);
   const [lightboxImages, setLightboxImages] = useState([]);
-  
+
   // Get translated whyChooseUs
-  const translatedWhyChooseUs = translations[language]?.whyChooseUs || whyChooseUs;
+  const translatedWhyChooseUs =
+    translations[language]?.whyChooseUs || whyChooseUs;
 
   // Fetch comments from API
   useEffect(() => {
@@ -60,7 +65,11 @@ function Home() {
             ? data
                 .filter((item) => item.comment && item.comment.trim() !== "")
                 .map((item) => ({
-                  name: item.client_name || item.client?.name || item.name || "Клиент",
+                  name:
+                    item.client_name ||
+                    item.client?.name ||
+                    item.name ||
+                    getTranslation(language, "home.client"),
                   text: item.comment || item.message || "",
                   id: item.id || item._id,
                 }))
@@ -130,7 +139,7 @@ function Home() {
           console.log("Image URL fields:", {
             image_url: servicesList[0].image_url,
             imageUrl: servicesList[0].imageUrl,
-            image: servicesList[0].image
+            image: servicesList[0].image,
           });
         }
 
@@ -185,12 +194,24 @@ function Home() {
           };
 
           // Get image URL - check multiple possible field names and handle relative URLs
-          let imageUrl = service.image_url || service.imageUrl || service.image || null;
-          
+          let imageUrl =
+            service.image_url || service.imageUrl || service.image || null;
+
           // If image URL is relative, make it absolute using the API base URL
-          if (imageUrl && !imageUrl.startsWith('http') && !imageUrl.startsWith('//') && !imageUrl.startsWith('/')) {
-            imageUrl = `${SERVICES_BASE_URL}${imageUrl.startsWith('/') ? '' : '/'}${imageUrl}`;
-          } else if (imageUrl && imageUrl.startsWith('/') && !imageUrl.startsWith('//')) {
+          if (
+            imageUrl &&
+            !imageUrl.startsWith("http") &&
+            !imageUrl.startsWith("//") &&
+            !imageUrl.startsWith("/")
+          ) {
+            imageUrl = `${SERVICES_BASE_URL}${
+              imageUrl.startsWith("/") ? "" : "/"
+            }${imageUrl}`;
+          } else if (
+            imageUrl &&
+            imageUrl.startsWith("/") &&
+            !imageUrl.startsWith("//")
+          ) {
             // If it starts with /, prepend the base URL
             imageUrl = `${SERVICES_BASE_URL}${imageUrl}`;
           }
@@ -266,13 +287,17 @@ function Home() {
     <div>
       <Analytics />
       {/* Hero Section - Full Page */}
-      <section className="w-full h-screen relative overflow-hidden" style={{ backgroundColor: '#292d33' }}>
+      <section
+        className="w-full h-screen relative overflow-hidden"
+        style={{ backgroundColor: "#292d33" }}
+      >
         {/* Content Container */}
         <div className="relative z-10 h-full max-w-[1440px] mx-auto px-4 sm:px-6 md:px-8 lg:px-12 xl:px-[126px] flex flex-col lg:flex-row items-center justify-center lg:justify-between pt-20 sm:pt-[104px] md:pt-[124px] lg:pt-0 gap-4 sm:gap-6 md:gap-8 lg:gap-12">
           {/* Image - First on Mobile, Right on Desktop */}
           <div
             className="flex-1 w-full lg:w-auto lg:max-w-[680px] flex items-center justify-center order-1 lg:order-2 mt-[30px] lg:mt-0"
-            data-aos="fade-left">
+            data-aos="fade-up"
+          >
             <div className="relative w-full h-[300px] xs:h-[650px] sm:h-[400px] md:h-[500px] lg:h-[800px] xl:h-[900px] 2xl:h-[1000px] rounded-2xl sm:rounded-3xl lg:rounded-[35px] overflow-hidden shadow-2xl">
               <img
                 src={imagePool[0]}
@@ -286,18 +311,19 @@ function Home() {
           {/* Content - Second on Mobile, Left on Desktop */}
           <div
             className="flex-1 flex flex-col justify-center lg:justify-start lg:pt-[100px] z-10 w-full lg:w-auto order-2 lg:order-1 text-center md:text-left"
-            data-aos="fade-right">
+            data-aos="fade-up"
+          >
             <div className="text-xs sm:text-sm font-semibold text-white mb-3 sm:mb-4 tracking-wider">
-              ДОБРО ПОЖАЛОВАТЬ
+              {getTranslation(language, "home.welcome")}
             </div>
             <h1 className="text-2xl xs:text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-white mb-2 sm:mb-3 md:mb-4 leading-tight">
               {contactInfo.tagline}
             </h1>
             <p className="text-base xs:text-lg sm:text-xl md:text-2xl text-white mb-2 sm:mb-3 opacity-90">
-              {contactInfo.description}
+              {getTranslation(language, "contact.description")}
             </p>
             <p className="text-sm xs:text-base sm:text-lg md:text-xl text-white mb-4 sm:mb-6 md:mb-8 opacity-80">
-              {contactInfo.subtitle}
+              {getTranslation(language, "contact.subtitle")}
             </p>
             <div className="space-y-2 sm:space-y-3 md:space-y-4 mb-6 sm:mb-8 md:mb-10 flex flex-col items-center sm:items-center md:items-start">
               <div className="flex items-center gap-2 sm:gap-3 text-white text-sm sm:text-base md:text-lg">
@@ -305,7 +331,9 @@ function Home() {
                   className="w-5 h-5 sm:w-6 sm:h-6 flex-shrink-0 text-white"
                   aria-hidden="true"
                 />
-                <span className="break-words text-white">{contactInfo.address}</span>
+                <span className="break-words text-white">
+                  {getTranslation(language, "contact.address")}
+                </span>
               </div>
               <div className="flex items-center gap-2 sm:gap-3 text-white text-sm sm:text-base md:text-lg">
                 <PhoneIcon
@@ -314,7 +342,8 @@ function Home() {
                 />
                 <a
                   href={`tel:${contactInfo.phone}`}
-                  className="hover:text-barber-gold transition-colors break-all text-white">
+                  className="hover:text-barber-gold transition-colors break-all text-white"
+                >
                   {contactInfo.phone}
                 </a>
               </div>
@@ -325,7 +354,8 @@ function Home() {
                 />
                 <a
                   href={`mailto:${contactInfo.email}`}
-                  className="hover:text-barber-gold transition-colors break-all text-white">
+                  className="hover:text-barber-gold transition-colors break-all text-white"
+                >
                   {contactInfo.email}
                 </a>
               </div>
@@ -336,8 +366,9 @@ function Home() {
                 variant="outlined"
                 onClick={() => navigate("/booking")}
                 className="px-6 sm:px-8 md:px-10 py-3 sm:py-4 md:py-5 bg-transparent border-2 border-white rounded-xl sm:rounded-2xl font-semibold text-sm sm:text-base md:text-lg text-white hover:bg-white hover:text-gray-800"
-                aria-label="Book an appointment online">
-                Записаться онлайн
+                aria-label="Book an appointment online"
+              >
+                {getTranslation(language, "home.bookOnline")}
               </Button>
             </div>
           </div>
@@ -345,8 +376,8 @@ function Home() {
 
         {/* Scroll Indicator */}
         <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-10 animate-bounce hidden lg:block">
-          <div className="w-6 h-10 border-2 border-black rounded-full flex justify-center">
-            <div className="w-1 h-3 bg-black rounded-full mt-2"></div>
+          <div className="w-6 h-10 border-2 border-white rounded-full flex justify-center">
+            <div className="w-1 h-3 bg-white rounded-full mt-2"></div>
           </div>
         </div>
       </section>
@@ -355,11 +386,14 @@ function Home() {
         {/* Services Overview Section */}
         <section
           className="w-full bg-white py-8 sm:py-10 md:py-12 lg:py-16"
-          data-aos="fade-up">
+          data-aos="fade-up"
+        >
           <div className="max-w-[1440px] mx-auto px-4 sm:px-6 md:px-8 lg:px-12 xl:px-[127px]">
             {loadingServices && (
               <div className="text-center py-8">
-                <p className="text-black text-lg">Загрузка услуг...</p>
+                <p className="text-black text-lg">
+                  {getTranslation(language, "home.loadingServices")}
+                </p>
               </div>
             )}
             <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 md:gap-8">
@@ -373,14 +407,18 @@ function Home() {
         {/* Why Choose Us & Working Hours Section */}
         <section
           className="w-full bg-barber-dark py-8 sm:py-10 md:py-12 lg:py-20 relative"
-          data-aos="fade-up">
+          data-aos="fade-up"
+        >
           <div className="max-w-[1440px] mx-auto px-4 sm:px-6 md:px-8 lg:px-12 xl:px-[127px] grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 md:gap-12">
-            <div className="text-white relative z-10" data-aos="fade-right">
+            <div className="text-white relative z-10" data-aos="fade-up">
               <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-3 sm:mb-4">
                 {getTranslation(language, "home.whyChooseUs")}
               </h2>
               <p className="text-sm sm:text-base md:text-lg mb-4 sm:mb-6 opacity-90">
-                {getTranslation(language, "home.whyChooseUsDesc").replace("{tagline}", contactInfo.tagline)}
+                {getTranslation(language, "home.whyChooseUsDesc").replace(
+                  "{tagline}",
+                  contactInfo.tagline
+                )}
               </p>
               <ul className="space-y-2 sm:space-y-3 list-disc list-inside text-sm sm:text-base">
                 {translatedWhyChooseUs.map((reason, i) => (
@@ -390,7 +428,8 @@ function Home() {
             </div>
             <div
               className="bg-white rounded-2xl sm:rounded-3xl p-5 sm:p-6 md:p-8 relative z-10"
-              data-aos="fade-left">
+              data-aos="fade-up"
+            >
               <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-black mb-4 sm:mb-6">
                 {getTranslation(language, "home.workingHours")}
               </h2>
@@ -398,20 +437,24 @@ function Home() {
                 {contactInfo.workingHours.map((schedule, i) => {
                   // Map Russian day names to translation keys
                   const dayMap = {
-                    "ВОСКРЕСЕНЬЕ": "sunday",
-                    "ПОНЕДЕЛЬНИК": "monday",
-                    "ВТОРНИК": "tuesday",
-                    "СРЕДА": "wednesday",
-                    "ЧЕТВЕРГ": "thursday",
-                    "ПЯТНИЦА": "friday",
-                    "СУББОТА": "saturday",
+                    ВОСКРЕСЕНЬЕ: "sunday",
+                    ПОНЕДЕЛЬНИК: "monday",
+                    ВТОРНИК: "tuesday",
+                    СРЕДА: "wednesday",
+                    ЧЕТВЕРГ: "thursday",
+                    ПЯТНИЦА: "friday",
+                    СУББОТА: "saturday",
                   };
-                  const dayKey = dayMap[schedule.day] || schedule.day.toLowerCase();
-                  const translatedDay = getTranslation(language, `workingHours.${dayKey}`) || schedule.day;
+                  const dayKey =
+                    dayMap[schedule.day] || schedule.day.toLowerCase();
+                  const translatedDay =
+                    getTranslation(language, `workingHours.${dayKey}`) ||
+                    schedule.day;
                   return (
                     <div
                       key={i}
-                      className="text-black font-medium text-sm sm:text-base">
+                      className="text-black font-medium text-sm sm:text-base"
+                    >
                       {translatedDay} {schedule.hours}
                     </div>
                   );
@@ -422,7 +465,8 @@ function Home() {
                 variant="outlined"
                 onClick={() => navigate("/booking")}
                 className="w-full px-5 sm:px-6 md:px-8 py-2.5 sm:py-3 md:py-4 bg-white border-2 border-black rounded-xl sm:rounded-2xl font-semibold text-sm sm:text-base text-black hover:bg-gray-50"
-                aria-label="Book an appointment online">
+                aria-label="Book an appointment online"
+              >
                 {getTranslation(language, "nav.booking")}
               </Button>
             </div>
@@ -433,19 +477,24 @@ function Home() {
         <section
           id="narxlar"
           className="w-full bg-white py-8 sm:py-10 md:py-12 lg:py-20"
-          data-aos="fade-up">
+          data-aos="fade-up"
+        >
           <div className="max-w-[1440px] mx-auto px-4 sm:px-6 md:px-8 lg:px-12 xl:px-[127px]">
-              <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-black text-center mb-6 sm:mb-8 md:mb-12">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-black text-center mb-6 sm:mb-8 md:mb-12">
               {getTranslation(language, "home.prices")}
             </h2>
             {loadingServices ? (
               <div className="text-center py-8">
                 <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-600 mx-auto mb-4"></div>
-                <p className="text-black">{getTranslation(language, "home.loadingPrices")}</p>
+                <p className="text-black">
+                  {getTranslation(language, "home.loadingPrices")}
+                </p>
               </div>
             ) : homePricing.length === 0 ? (
               <div className="text-center py-8">
-                <p className="text-gray-600">{getTranslation(language, "home.pricesNotFound")}</p>
+                <p className="text-gray-600">
+                  {getTranslation(language, "home.pricesNotFound")}
+                </p>
               </div>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 md:gap-12 max-w-4xl mx-auto">
@@ -455,7 +504,8 @@ function Home() {
                       key={item.id}
                       className="flex justify-between items-center py-2 sm:py-3 border-b border-gray-200"
                       data-aos="fade-up"
-                      data-aos-delay={i * 50}>
+                      data-aos-delay={i * 50}
+                    >
                       <span className="text-black font-medium text-sm sm:text-base">
                         {item.name}
                       </span>
@@ -471,7 +521,8 @@ function Home() {
                       key={item.id}
                       className="flex justify-between items-center py-2 sm:py-3 border-b border-gray-200"
                       data-aos="fade-up"
-                      data-aos-delay={i * 50}>
+                      data-aos-delay={i * 50}
+                    >
                       <span className="text-black font-medium text-sm sm:text-base">
                         {item.name}
                       </span>
@@ -489,9 +540,10 @@ function Home() {
         {/* Welcome to the Upscale Barber Studio Section */}
         <section
           className="w-full bg-barber-dark py-8 sm:py-10 md:py-12 lg:py-20"
-          data-aos="fade-up">
+          data-aos="fade-up"
+        >
           <div className="max-w-[1440px] mx-auto px-4 sm:px-6 md:px-8 lg:px-12 xl:px-[127px] grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 md:gap-12 items-center">
-            <div className="relative order-2 lg:order-1" data-aos="fade-right">
+            <div className="relative order-2 lg:order-1" data-aos="fade-up">
               <div className="w-full h-[300px] xs:h-[350px] sm:h-[400px] md:h-[450px] lg:h-[500px] rounded-2xl sm:rounded-3xl relative overflow-hidden">
                 <img
                   src={imagePool[1]}
@@ -506,21 +558,21 @@ function Home() {
             </div>
             <div
               className="bg-barber-light rounded-2xl sm:rounded-3xl p-5 sm:p-6 md:p-8 lg:p-12 order-1 lg:order-2"
-              data-aos="fade-left">
+              data-aos="fade-up"
+            >
               <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-black mb-3 sm:mb-4 md:mb-6">
-                Добро пожаловать в барбершоп премиум-класса
+                {getTranslation(language, "home.welcomeToPremium")}
               </h2>
               <p className="text-black mb-4 sm:mb-6 md:mb-8 leading-relaxed text-sm sm:text-base">
-                В нашем барбершопе вы найдете профессиональные услуги и комфортную
-                атмосферу. Наши специалисты предоставляют высококачественные услуги
-                с индивидуальным подходом к каждому клиенту.
+                {getTranslation(language, "home.welcomeToPremiumDesc")}
               </p>
               <Button
                 size="lg"
                 onClick={() => navigate("/booking")}
                 className="w-full sm:w-auto px-5 sm:px-6 md:px-8 py-2.5 sm:py-3 md:py-4 bg-black text-white rounded-xl sm:rounded-2xl font-semibold text-sm sm:text-base hover:bg-gray-800"
-                aria-label="Book an appointment online">
-                Записаться онлайн
+                aria-label="Book an appointment online"
+              >
+                {getTranslation(language, "home.bookOnline")}
               </Button>
             </div>
           </div>
@@ -529,23 +581,24 @@ function Home() {
         {/* Free Consultation Section */}
         <section
           className="w-full bg-white py-8 sm:py-10 md:py-12 lg:py-20"
-          data-aos="fade-up">
+          data-aos="fade-up"
+        >
           <div className="max-w-[1440px] mx-auto px-4 sm:px-6 md:px-8 lg:px-12 xl:px-[127px] grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 md:gap-12 items-center">
-            <div className="order-2 lg:order-1" data-aos="fade-right">
+            <div className="order-2 lg:order-1" data-aos="fade-up">
               <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-black mb-4 sm:mb-6 md:mb-8 leading-tight">
-                Свяжитесь с нашими профессиональными барберами
-                для бесплатной индивидуальной консультации
+                {getTranslation(language, "home.contactBarbers")}
               </h2>
               <Button
                 size="lg"
                 variant="outlined"
                 onClick={() => navigate("/booking")}
                 className="w-full sm:w-auto px-5 sm:px-6 md:px-8 py-2.5 sm:py-3 md:py-4 bg-white border-2 border-black rounded-xl sm:rounded-2xl font-semibold text-sm sm:text-base text-black hover:bg-gray-50"
-                aria-label="Book an appointment online">
-                Записаться онлайн
+                aria-label="Book an appointment online"
+              >
+                {getTranslation(language, "home.bookOnline")}
               </Button>
             </div>
-            <div className="relative order-1 lg:order-2" data-aos="fade-left">
+            <div className="relative order-1 lg:order-2" data-aos="fade-up">
               <div className="w-full h-[300px] xs:h-[350px] sm:h-[400px] md:h-[450px] lg:h-[500px] rounded-2xl sm:rounded-3xl relative overflow-hidden">
                 <img
                   src="/3Y4A9847.jpg"
@@ -564,10 +617,11 @@ function Home() {
         {/* 360° BARBER SHOP Section */}
         <section
           className="w-full bg-barber-olive py-8 sm:py-10 md:py-12 lg:py-20"
-          data-aos="fade-up">
+          data-aos="fade-up"
+        >
           <div className="max-w-[1440px] mx-auto px-4 sm:px-6 md:px-8 lg:px-12 xl:px-[127px]">
             <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white text-center mb-6 sm:mb-8 md:mb-12">
-              BARBER SHOP
+              {getTranslation(language, "home.barberShop")}
             </h2>
             <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 md:gap-6">
               {(() => {
@@ -587,7 +641,8 @@ function Home() {
                     data-aos="zoom-in"
                     data-aos-delay={i * 100}
                     whileHover={{ scale: 1.05 }}
-                    onClick={() => handleImageClick(i, barberShopImages)}>
+                    onClick={() => handleImageClick(i, barberShopImages)}
+                  >
                     <img
                       src={imgSrc}
                       alt={`001 Barbershop 360° view ${i + 1}`}
@@ -604,14 +659,17 @@ function Home() {
         {/* People Comments Section */}
         <section
           className="w-full bg-barber-olive py-8 sm:py-10 md:py-12 lg:py-20"
-          data-aos="fade-up">
+          data-aos="fade-up"
+        >
           <div className="max-w-[1440px] mx-auto px-4 sm:px-6 md:px-8 lg:px-12 xl:px-[127px]">
             <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white text-center mb-6 sm:mb-8 md:mb-12">
-              Отзывы клиентов
+              {getTranslation(language, "home.clientReviews")}
             </h2>
             {loadingComments ? (
               <div className="text-center py-8">
-                <p className="text-white text-lg">Загрузка отзывов...</p>
+                <p className="text-white text-lg">
+                  {getTranslation(language, "home.loadingReviews")}
+                </p>
               </div>
             ) : comments.length > 0 ? (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 md:gap-8">
@@ -621,12 +679,14 @@ function Home() {
                     className="bg-white rounded-2xl sm:rounded-3xl p-5 sm:p-6 md:p-8 relative"
                     data-aos="fade-up"
                     data-aos-delay={i * 200}
-                    whileHover={{ y: -5 }}>
+                    whileHover={{ y: -5 }}
+                  >
                     <svg
                       className="absolute top-4 sm:top-5 md:top-6 left-4 sm:left-5 md:left-6 w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 text-barber-gold"
                       viewBox="0 0 30 30"
                       fill="none"
-                      aria-hidden="true">
+                      aria-hidden="true"
+                    >
                       <path
                         d="M6 20h8l-2-8H8c-1.1 0-2 .9-2 2v6zm12 0h8l-2-8h-4c-1.1 0-2 .9-2 2v6z"
                         fill="currentColor"
@@ -647,7 +707,7 @@ function Home() {
             ) : (
               <div className="text-center py-8">
                 <p className="text-white text-lg opacity-70">
-                  Пока нет отзывов
+                  {getTranslation(language, "home.noReviews")}
                 </p>
               </div>
             )}

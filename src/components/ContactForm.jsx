@@ -1,8 +1,11 @@
 import { useState } from 'react'
 import { Button, Input, Textarea } from '@material-tailwind/react'
 import { API_ENDPOINTS, BOOKINGS_BASE_URL } from '../data/api'
+import { useLanguage } from '../context/LanguageContext'
+import { getTranslation } from '../data/translations'
 
 function ContactForm() {
+  const { language } = useLanguage()
   const [formData, setFormData] = useState({ name: '', message: '' })
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [error, setError] = useState('')
@@ -37,11 +40,11 @@ function ContactForm() {
           setSuccess(false)
         }, 5000)
       } else {
-        setError(data.message || data.error || 'Не удалось отправить сообщение')
+        setError(data.message || data.error || getTranslation(language, 'forms.failedToSend'))
       }
     } catch (err) {
       console.error('Error sending comment:', err)
-      setError('Ошибка сети. Пожалуйста, попробуйте еще раз.')
+      setError(getTranslation(language, 'forms.networkError'))
     } finally {
       setIsSubmitting(false)
     }
@@ -61,7 +64,7 @@ function ContactForm() {
         name="name"
         value={formData.name}
         onChange={handleInputChange}
-        placeholder="Введите ваше имя"
+        placeholder={getTranslation(language, "forms.namePlaceholder")}
         required
         size="lg"
         className="!text-black !bg-white"
@@ -75,7 +78,7 @@ function ContactForm() {
         name="message"
         value={formData.message}
         onChange={handleInputChange}
-        placeholder="Введите ваше сообщение"
+        placeholder={getTranslation(language, "forms.messagePlaceholder")}
         rows={5}
         required
         size="lg"
@@ -93,7 +96,7 @@ function ContactForm() {
       )}
       {success && (
         <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded-lg text-sm">
-          ✅ Ваше сообщение успешно отправлено!
+          {getTranslation(language, "forms.messageSent")}
         </div>
       )}
       <Button
@@ -104,18 +107,18 @@ function ContactForm() {
         loading={isSubmitting}
       >
         {isSubmitting ? (
-          'Отправляется...'
+          getTranslation(language, "forms.sending")
         ) : (
           <span className="flex items-center justify-center gap-2">
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
             </svg>
-            Отправить сообщение
+            {getTranslation(language, "forms.sendMessage")}
           </span>
         )}
       </Button>
       <p className="text-white text-xs sm:text-sm opacity-70 text-center">
-        Ваше сообщение будет отправлено на наш сервер
+        {getTranslation(language, "forms.messageWillBeSent")}
       </p>
     </form>
   )

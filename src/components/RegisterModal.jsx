@@ -1,8 +1,11 @@
 import { useState } from 'react'
 import { Button, Input, Dialog, DialogHeader, DialogBody, DialogFooter } from '@material-tailwind/react'
 import { AUTH_BASE_URL, API_ENDPOINTS } from '../data/api'
+import { useLanguage } from '../context/LanguageContext'
+import { getTranslation } from '../data/translations'
 
 function RegisterModal({ open, handleOpen }) {
+  const { language } = useLanguage()
   const [formData, setFormData] = useState({ 
     name: '', 
     tg_username: '', 
@@ -39,13 +42,13 @@ function RegisterModal({ open, handleOpen }) {
 
       // Handle different error status codes
       if (response.status === 400) {
-        setError(data.message || data.error || 'Регистрация не удалась. Проверьте введенные данные.')
+        setError(data.message || data.error || getTranslation(language, 'forms.registrationFailed'))
       } else if (response.status === 401) {
-        setError('Ошибка авторизации. Пожалуйста, попробуйте еще раз.')
+        setError(getTranslation(language, 'forms.authError'))
       } else if (response.status === 403) {
-        setError('Доступ запрещен. Пожалуйста, свяжитесь с администратором.')
+        setError(getTranslation(language, 'forms.accessDenied'))
       } else if (response.status === 409) {
-        setError(data.message || data.error || 'Пользователь с такими данными уже существует.')
+        setError(data.message || data.error || getTranslation(language, 'forms.userExists'))
       } else if (response.ok || response.status === 201) {
         setSuccess(true)
         setFormData({ name: '', tg_username: '', phone_number: '' })
@@ -54,10 +57,10 @@ function RegisterModal({ open, handleOpen }) {
           handleOpen()
         }, 2000)
       } else {
-        setError(data.message || data.error || 'Регистрация не удалась. Пожалуйста, попробуйте еще раз.')
+        setError(data.message || data.error || getTranslation(language, 'forms.registrationFailed'))
       }
     } catch (error) {
-      setError('Ошибка сети. Пожалуйста, проверьте подключение и попробуйте еще раз.')
+      setError(getTranslation(language, 'forms.networkError'))
       console.error('Registration error:', error)
     } finally {
       setIsSubmitting(false)
@@ -81,7 +84,7 @@ function RegisterModal({ open, handleOpen }) {
 
   return (
     <Dialog open={open} handler={handleOpen} size="md" className="max-w-md">
-      <DialogHeader className="text-2xl font-bold text-black">Регистрация для онлайн-записи</DialogHeader>
+      <DialogHeader className="text-2xl font-bold text-black">{getTranslation(language, "forms.registerForBooking")}</DialogHeader>
       <DialogBody>
         <form onSubmit={handleFormSubmit} className="space-y-4">
           {error && (
@@ -92,7 +95,7 @@ function RegisterModal({ open, handleOpen }) {
           
           {success && (
             <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded-lg text-sm">
-              ✅ Регистрация успешна! Теперь вы можете войти в систему.
+              {getTranslation(language, "forms.registrationSuccess")}
             </div>
           )}
 
@@ -101,7 +104,7 @@ function RegisterModal({ open, handleOpen }) {
             name="name"
             value={formData.name}
             onChange={handleInputChange}
-            label="Полное имя"
+            label={getTranslation(language, "forms.fullName")}
             required
             size="lg"
             disabled={isSubmitting}
@@ -112,7 +115,7 @@ function RegisterModal({ open, handleOpen }) {
             name="tg_username"
             value={formData.tg_username}
             onChange={handleInputChange}
-            label="Имя пользователя Telegram"
+            label={getTranslation(language, "forms.telegramUsername")}
             placeholder="@username"
             size="lg"
             disabled={isSubmitting}
@@ -123,7 +126,7 @@ function RegisterModal({ open, handleOpen }) {
             name="phone_number"
             value={formData.phone_number}
             onChange={handleInputChange}
-            label="Номер телефона"
+            label={getTranslation(language, "forms.phoneNumber")}
             placeholder="+998901234567"
             required
             size="lg"
@@ -137,7 +140,7 @@ function RegisterModal({ open, handleOpen }) {
             className="w-full bg-barber-olive hover:bg-barber-gold text-white font-semibold"
             loading={isSubmitting}
           >
-            {isSubmitting ? 'Регистрация...' : 'Зарегистрироваться'}
+            {isSubmitting ? getTranslation(language, "forms.registering") : getTranslation(language, "forms.register")}
           </Button>
         </form>
       </DialogBody>
@@ -148,7 +151,7 @@ function RegisterModal({ open, handleOpen }) {
           onClick={handleClose}
           className="mr-1"
         >
-          Закрыть
+          {getTranslation(language, "forms.close")}
         </Button>
       </DialogFooter>
     </Dialog>

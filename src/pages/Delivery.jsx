@@ -3,23 +3,26 @@ import { motion } from "framer-motion";
 import { Analytics } from "@vercel/analytics/react";
 import { contactInfo } from "../data/contact";
 import Footer from "../components/Footer";
+import { useLanguage } from "../context/LanguageContext";
+import { getTranslation } from "../data/translations";
 
 function Delivery() {
+  const { language } = useLanguage();
   return (
     <div className="pt-16 sm:pt-20 md:pt-[92px] min-h-screen bg-gradient-to-b from-barber-dark to-barber-olive">
       <section className="w-full py-8 sm:py-10 md:py-12 lg:py-16">
         <div className="max-w-[1440px] mx-auto px-4 sm:px-6 md:px-8 lg:px-12 xl:px-[127px]">
           <div className="max-w-2xl mx-auto">
             {/* Header */}
-            <div className="text-center mb-8 sm:mb-12" data-aos="fade-down">
+            <div className="text-center mb-8 sm:mb-12" data-aos="fade-up">
               <h1 className="text-2xl xs:text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-2">
                 {contactInfo.tagline}
               </h1>
               <p className="text-white opacity-90 text-base sm:text-lg mb-2">
-                {contactInfo.description}
+                {getTranslation(language, "contact.description")}
               </p>
               <p className="text-white opacity-80 text-sm sm:text-base">
-                {contactInfo.subtitle}
+                {getTranslation(language, "contact.subtitle")}
               </p>
             </div>
 
@@ -51,7 +54,7 @@ function Delivery() {
                     Instagram
                   </h2>
                   <p className="text-gray-600 text-sm sm:text-base mb-3">
-                    Следите за нами в Instagram для последних обновлений, фотографий и специальных предложений
+                    {getTranslation(language, "delivery.followInstagram")}
                   </p>
                   <div className="flex items-center justify-center sm:justify-start gap-2 text-barber-olive font-semibold text-sm sm:text-base">
                     <span>@001_barbershop_</span>
@@ -77,7 +80,7 @@ function Delivery() {
               className="bg-white rounded-2xl sm:rounded-3xl p-6 sm:p-8 md:p-10 shadow-2xl"
               data-aos="fade-up">
               <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-black mb-6 text-center">
-                Контактная информация
+                {getTranslation(language, "delivery.contactInfo")}
               </h2>
               <div className="space-y-4">
                 <div className="flex items-start gap-4">
@@ -102,9 +105,9 @@ function Delivery() {
                     </svg>
                   </div>
                   <div>
-                    <h3 className="font-semibold text-black mb-1">Адрес</h3>
+                    <h3 className="font-semibold text-black mb-1">{getTranslation(language, "delivery.address")}</h3>
                     <p className="text-gray-600 text-sm sm:text-base">
-                      {contactInfo.address}
+                      {getTranslation(language, "contact.address")}
                     </p>
                   </div>
                 </div>
@@ -125,7 +128,7 @@ function Delivery() {
                     </svg>
                   </div>
                   <div>
-                    <h3 className="font-semibold text-black mb-1">Телефон</h3>
+                    <h3 className="font-semibold text-black mb-1">{getTranslation(language, "delivery.phone")}</h3>
                     <a
                       href={`tel:${contactInfo.phone}`}
                       className="text-gray-600 hover:text-barber-olive transition-colors text-sm sm:text-base">
@@ -150,7 +153,7 @@ function Delivery() {
                     </svg>
                   </div>
                   <div>
-                    <h3 className="font-semibold text-black mb-1">Электронная почта</h3>
+                    <h3 className="font-semibold text-black mb-1">{getTranslation(language, "delivery.email")}</h3>
                     <a
                       href={`mailto:${contactInfo.email}`}
                       className="text-gray-600 hover:text-barber-olive transition-colors text-sm sm:text-base">

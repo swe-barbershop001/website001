@@ -1,8 +1,11 @@
 import { useState } from 'react'
 import { Button, Input } from '@material-tailwind/react'
 import { AUTH_BASE_URL, API_ENDPOINTS } from '../data/api'
+import { useLanguage } from '../context/LanguageContext'
+import { getTranslation } from '../data/translations'
 
 function RegisterForm() {
+  const { language } = useLanguage()
   const [formData, setFormData] = useState({ 
     name: '', 
     tg_username: '', 
@@ -39,13 +42,13 @@ function RegisterForm() {
 
       // Handle different error status codes
       if (response.status === 400) {
-        setError(data.message || data.error || 'Регистрация не удалась. Проверьте введенные данные.')
+        setError(data.message || data.error || getTranslation(language, 'forms.registrationFailed'))
       } else if (response.status === 401) {
-        setError('Ошибка авторизации. Пожалуйста, попробуйте еще раз.')
+        setError(getTranslation(language, 'forms.authError'))
       } else if (response.status === 403) {
-        setError('Доступ запрещен. Пожалуйста, свяжитесь с администратором.')
+        setError(getTranslation(language, 'forms.accessDenied'))
       } else if (response.status === 409) {
-        setError(data.message || data.error || 'Пользователь с такими данными уже существует.')
+        setError(data.message || data.error || getTranslation(language, 'forms.userExists'))
       } else if (response.ok || response.status === 201) {
         setSuccess(true)
         setFormData({ name: '', tg_username: '', phone_number: '' })
@@ -53,10 +56,10 @@ function RegisterForm() {
           setSuccess(false)
         }, 5000)
       } else {
-        setError(data.message || data.error || 'Регистрация не удалась. Пожалуйста, попробуйте еще раз.')
+        setError(data.message || data.error || getTranslation(language, 'forms.registrationFailed'))
       }
     } catch (error) {
-      setError('Ошибка сети. Пожалуйста, проверьте подключение и попробуйте еще раз.')
+      setError(getTranslation(language, 'forms.networkError'))
       console.error('Registration error:', error)
     } finally {
       setIsSubmitting(false)
@@ -82,7 +85,7 @@ function RegisterForm() {
       
       {success && (
         <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded-lg text-sm">
-          ✅ Регистрация успешна! Теперь вы можете войти.
+          {getTranslation(language, "forms.registrationSuccess")}
         </div>
       )}
 
@@ -91,7 +94,7 @@ function RegisterForm() {
         name="name"
         value={formData.name}
         onChange={handleInputChange}
-        placeholder="Введите ваше имя"
+        placeholder={getTranslation(language, "forms.namePlaceholder")}
         required
         size="lg"
         className="!text-black !bg-white"
@@ -107,7 +110,7 @@ function RegisterForm() {
         name="tg_username"
         value={formData.tg_username}
         onChange={handleInputChange}
-        placeholder="Введите имя пользователя Telegram (например, @username)"
+        placeholder={getTranslation(language, "forms.telegramUsernamePlaceholder")}
         size="lg"
         className="!text-black !bg-white"
         labelProps={{
@@ -122,7 +125,7 @@ function RegisterForm() {
         name="phone_number"
         value={formData.phone_number}
         onChange={handleInputChange}
-        placeholder="Введите номер телефона (например, +998901234567)"
+        placeholder={getTranslation(language, "forms.phoneNumberPlaceholder")}
         required
         size="lg"
         className="!text-black !bg-white"
@@ -140,11 +143,11 @@ function RegisterForm() {
         className="w-full bg-barber-olive hover:bg-barber-gold text-white font-semibold rounded-xl sm:rounded-2xl text-sm sm:text-base py-3 sm:py-3.5 md:py-4"
         loading={isSubmitting}
       >
-        {isSubmitting ? 'Регистрация...' : 'Зарегистрироваться'}
+        {isSubmitting ? getTranslation(language, "forms.registering") : getTranslation(language, "forms.register")}
       </Button>
       
       <p className="text-white text-xs sm:text-sm opacity-70 text-center">
-        Создайте аккаунт для онлайн-записи
+        {getTranslation(language, "forms.createAccount")}
       </p>
     </form>
   )
