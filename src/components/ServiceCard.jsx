@@ -69,7 +69,7 @@ function ServiceCard({ service, index }) {
       data-aos-delay={index * 100}
       whileHover={{ y: -10 }}
     >
-      <div className="w-[80px] h-[80px] xs:w-[90px] xs:h-[90px] sm:w-[100px] sm:h-[100px] md:w-[121px] md:h-[119px] bg-black rounded-lg flex items-center justify-center overflow-hidden">
+      <div className="w-[80px] h-[80px] xs:w-[90px] xs:h-[90px] sm:w-[100px] sm:h-[100px] md:w-[121px] md:h-[119px] bg-black dark:bg-gray-800 rounded-lg flex items-center justify-center overflow-hidden">
         {imageUrl && !imageError ? (
           <img
             src={imageUrl}
@@ -83,17 +83,17 @@ function ServiceCard({ service, index }) {
           </div>
         )}
       </div>
-      <h3 className="text-base sm:text-lg md:text-xl font-semibold text-black text-center">{service.name}</h3>
+      <h3 className="text-base sm:text-lg md:text-xl font-semibold text-black dark:text-white text-center">{service.name}</h3>
       {service.price && (
-        <p className="text-sm text-gray-600 text-center">{service.price}</p>
+        <p className="text-sm text-gray-600 dark:text-gray-400 text-center">{service.price}</p>
       )}
       {service.duration && !service.price && (
-        <p className="text-sm text-gray-600 text-center">{service.duration} min</p>
+        <p className="text-sm text-gray-600 dark:text-gray-400 text-center">{service.duration} min</p>
       )}
       <Button
         size="lg"
         onClick={handleServiceClick}
-        className="w-full max-w-[180px] sm:max-w-[200px] h-[50px] xs:h-[55px] sm:h-[60px] md:h-[77px] bg-black text-white rounded-xl sm:rounded-2xl font-semibold text-sm sm:text-base hover:bg-gray-800"
+        className="w-full max-w-[180px] sm:max-w-[200px] h-[50px] xs:h-[55px] sm:h-[60px] md:h-[77px] bg-black dark:bg-white text-white dark:text-black rounded-xl sm:rounded-2xl font-semibold text-sm sm:text-base hover:bg-gray-800 dark:hover:bg-gray-200"
         aria-label={`Learn more about ${service.name}`}
       >
         BATAFSIL

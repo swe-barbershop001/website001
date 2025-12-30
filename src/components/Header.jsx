@@ -69,7 +69,7 @@ function Header() {
         duration: 0.3,
         ease: "easeInOut",
       }}
-      className="fixed top-0 left-0 right-0 bg-white z-50 shadow-md h-16 sm:h-20 md:h-[92px]">
+      className="fixed top-0 left-0 right-0 bg-white dark:bg-gray-900 z-50 shadow-md h-16 sm:h-20 md:h-[92px]">
       <div className="max-w-[1440px] mx-auto px-4 sm:px-6 md:px-8 lg:px-12 xl:px-[93px] h-full flex justify-between items-center">
         <Logo
           onClick={closeMobileMenu}
@@ -85,7 +85,7 @@ function Header() {
                 className={`text-sm lg:text-base font-medium transition-colors ${
                   isActive("/")
                     ? "text-barber-gold"
-                    : "text-black hover:text-barber-gold"
+                    : "text-black dark:text-white hover:text-barber-gold"
                 }`}
                 aria-label="Navigate to Home">
                 {getTranslation(language, "nav.home")}
@@ -95,7 +95,7 @@ function Header() {
                 className={`text-sm lg:text-base font-medium transition-colors ${
                   isActive("/team")
                     ? "text-barber-gold"
-                    : "text-black hover:text-barber-gold"
+                    : "text-black dark:text-white hover:text-barber-gold"
                 }`}
                 aria-label="Navigate to Our Team">
                 {getTranslation(language, "nav.team")}
@@ -105,7 +105,7 @@ function Header() {
                 className={`text-sm lg:text-base font-medium transition-colors ${
                   isActive("/gallery")
                     ? "text-barber-gold"
-                    : "text-black hover:text-barber-gold"
+                    : "text-black dark:text-white hover:text-barber-gold"
                 }`}
                 aria-label="Navigate to Gallery">
                 {getTranslation(language, "nav.gallery")}
@@ -115,7 +115,7 @@ function Header() {
                 className={`text-sm lg:text-base font-medium transition-colors ${
                   isActive("/delivery")
                     ? "text-barber-gold"
-                    : "text-black hover:text-barber-gold"
+                    : "text-black dark:text-white hover:text-barber-gold"
                 }`}
                 aria-label="Navigate to Delivery">
                 {getTranslation(language, "nav.contact")}
@@ -128,7 +128,7 @@ function Header() {
               className={`text-sm lg:text-base font-medium transition-colors ${
                 isActive("/booking")
                   ? "text-barber-gold"
-                  : "text-black hover:text-barber-gold"
+                  : "text-black dark:text-white hover:text-barber-gold"
               }`}>
               {getTranslation(language, "nav.booking")}
             </Link>
@@ -249,7 +249,7 @@ function Header() {
 
         {/* Mobile Menu Button */}
         <button
-          className="md:hidden p-2 text-black hover:text-barber-gold transition-colors"
+          className="md:hidden p-2 text-black dark:text-white hover:text-barber-gold transition-colors"
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
           aria-label="Toggle mobile menu">
           {mobileMenuOpen ? (
@@ -267,7 +267,7 @@ function Header() {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
-            className="md:hidden bg-white border-t border-gray-200 shadow-lg">
+            className="md:hidden bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700 shadow-lg">
             <nav className="flex flex-col px-4 py-4 space-y-4">
               {!isAdmin() && !isSuperAdmin() && (
                 <>
@@ -279,7 +279,7 @@ function Header() {
                     className={`text-base font-medium py-2 text-left transition-colors ${
                       isActive("/")
                         ? "text-barber-gold"
-                        : "text-black hover:text-barber-gold"
+                        : "text-black dark:text-white hover:text-barber-gold"
                     }`}>
                     {getTranslation(language, "nav.home")}
                   </button>
@@ -291,7 +291,7 @@ function Header() {
                     className={`text-base font-medium py-2 text-left transition-colors ${
                       isActive("/team")
                         ? "text-barber-gold"
-                        : "text-black hover:text-barber-gold"
+                        : "text-black dark:text-white hover:text-barber-gold"
                     }`}>
                     {getTranslation(language, "nav.team")}
                   </button>
@@ -303,7 +303,7 @@ function Header() {
                     className={`text-base font-medium py-2 text-left transition-colors ${
                       isActive("/gallery")
                         ? "text-barber-gold"
-                        : "text-black hover:text-barber-gold"
+                        : "text-black dark:text-white hover:text-barber-gold"
                     }`}>
                     {getTranslation(language, "nav.gallery")}
                   </button>
@@ -315,7 +315,7 @@ function Header() {
                     className={`text-base font-medium py-2 text-left transition-colors ${
                       isActive("/delivery")
                         ? "text-barber-gold"
-                        : "text-black hover:text-barber-gold"
+                        : "text-black dark:text-white hover:text-barber-gold"
                     }`}>
                     {getTranslation(language, "nav.contact")}
                   </button>
@@ -330,13 +330,13 @@ function Header() {
                   className={`text-base font-medium py-2 text-left transition-colors ${
                     isActive("/booking")
                       ? "text-barber-gold"
-                      : "text-black hover:text-barber-gold"
+                      : "text-black dark:text-white hover:text-barber-gold"
                   }`}>
                   {getTranslation(language, "nav.booking")}
                 </button>
               )}
               <div className="py-2">
-                <LanguageSwitcher />
+                <LanguageSwitcher variant="mobile" />
               </div>
               {isAuthenticated() && (
                 <>

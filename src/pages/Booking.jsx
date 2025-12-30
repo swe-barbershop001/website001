@@ -511,21 +511,21 @@ function Booking() {
 
   if (loading) {
     return (
-      <div className="pt-16 sm:pt-20 md:pt-[92px] min-h-screen flex items-center justify-center">
+      <div className="pt-16 sm:pt-20 md:pt-[92px] min-h-screen flex items-center justify-center bg-white dark:bg-gray-900">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-barber-gold mx-auto mb-4"></div>
-          <p className="text-black">{getTranslation(language, "booking.loading")}</p>
+          <p className="text-black dark:text-white">{getTranslation(language, "booking.loading")}</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="pt-16 sm:pt-20 md:pt-[92px] min-h-screen bg-white">
+    <div className="pt-16 sm:pt-20 md:pt-[92px] min-h-screen bg-white dark:bg-gray-900">
       <section className="w-full py-8 sm:py-10 md:py-12 lg:py-16">
         <div className="max-w-[1440px] mx-auto px-4 sm:px-6 md:px-8 lg:px-12 xl:px-[127px]">
           <div className="max-w-4xl mx-auto">
-            <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-black mb-6 text-center">
+            <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-black dark:text-white mb-6 text-center">
               {getTranslation(language, "booking.title")}
             </h1>
 
@@ -534,13 +534,13 @@ function Booking() {
               <div className="flex items-center space-x-4">
                 <div
                   className={`flex items-center ${
-                    currentStep >= 1 ? "text-barber-olive" : "text-gray-400"
+                    currentStep >= 1 ? "text-barber-olive" : "text-gray-400 dark:text-gray-500"
                   }`}>
                   <div
                     className={`w-10 h-10 rounded-full flex items-center justify-center border-2 ${
                       currentStep >= 1
                         ? "border-barber-olive bg-barber-olive text-white"
-                        : "border-gray-300 bg-white"
+                        : "border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800"
                     }`}>
                     {currentStep > 1 ? "✓" : "1"}
                   </div>
@@ -550,7 +550,7 @@ function Booking() {
                 </div>
                 <div
                   className={`w-12 h-0.5 ${
-                    currentStep >= 2 ? "bg-barber-olive" : "bg-gray-300"
+                    currentStep >= 2 ? "bg-barber-olive" : "bg-gray-300 dark:bg-gray-600"
                   }`}></div>
                 <div
                   className={`flex items-center ${
@@ -592,28 +592,28 @@ function Booking() {
             </div>
 
             {error && (
-              <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg text-sm mb-4">
+              <div className="bg-red-100 dark:bg-red-900/30 border border-red-400 dark:border-red-600 text-red-700 dark:text-red-300 px-4 py-3 rounded-lg text-sm mb-4">
                 {error}
               </div>
             )}
 
             {success && (
-              <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded-lg text-sm mb-4">
+              <div className="bg-green-100 dark:bg-green-900/30 border border-green-400 dark:border-green-600 text-green-700 dark:text-green-300 px-4 py-3 rounded-lg text-sm mb-4">
                 ✅ {getTranslation(language, "booking.success")}
               </div>
             )}
 
-            <div className="bg-white rounded-2xl sm:rounded-3xl p-6 sm:p-8 md:p-10 shadow-lg border border-gray-200">
+            <div className="bg-white dark:bg-gray-800 rounded-2xl sm:rounded-3xl p-6 sm:p-8 md:p-10 shadow-lg border border-gray-200 dark:border-gray-700">
               {/* Step 1: Barber and Time Selection */}
               {currentStep === 1 && (
                 <div className="space-y-6">
-                  <h2 className="text-xl sm:text-2xl font-bold text-black mb-4">
+                  <h2 className="text-xl sm:text-2xl font-bold text-black dark:text-white mb-4">
                     {getTranslation(language, "booking.selectBarber")} & {getTranslation(language, "booking.selectTime")}
                   </h2>
 
                   {/* Barbers Selection */}
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-3">
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
                       {getTranslation(language, "booking.selectBarber")}
                     </label>
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -629,13 +629,13 @@ function Booking() {
                             }
                             className={`p-4 rounded-lg border-2 transition-all text-left ${
                               isSelected
-                                ? "border-barber-olive bg-barber-olive/10"
-                                : "border-gray-300 hover:border-barber-olive/50"
+                                ? "border-barber-olive bg-barber-olive/10 dark:bg-barber-olive/20"
+                                : "border-gray-300 dark:border-gray-600 hover:border-barber-olive/50"
                             }`}>
-                            <h3 className="font-bold text-lg text-black mb-1">
+                            <h3 className="font-bold text-lg text-black dark:text-white mb-1">
                               {barber.name || barber.fullName || "Barber"}
                             </h3>
-                            <p className="text-sm text-gray-600">
+                            <p className="text-sm text-gray-600 dark:text-gray-400">
                               Время работы: 8:00 - 21:00
                             </p>
                             {isSelected && (
@@ -652,18 +652,18 @@ function Booking() {
                   {/* Date Selection Calendar */}
                   {formData.barber_id && (
                     <div className="mb-4">
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                         {getTranslation(language, "booking.selectDate")}
                       </label>
-                      <div className="bg-white border border-gray-200 rounded-lg p-2 shadow-sm max-w-md mx-auto">
+                      <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-2 shadow-sm max-w-md mx-auto">
                         {/* Calendar Header */}
                         <div className="flex items-center justify-between mb-2">
                           <button
                             type="button"
                             onClick={handlePrevMonth}
-                            className="p-1 hover:bg-gray-100 rounded transition-colors">
+                            className="p-1 hover:bg-gray-100 dark:hover:bg-gray-700 rounded transition-colors">
                             <svg
-                              className="w-4 h-4 text-gray-600"
+                              className="w-4 h-4 text-gray-600 dark:text-gray-300"
                               fill="none"
                               stroke="currentColor"
                               viewBox="0 0 24 24">
@@ -675,16 +675,16 @@ function Booking() {
                               />
                             </svg>
                           </button>
-                          <h3 className="text-sm font-semibold text-black">
+                          <h3 className="text-sm font-semibold text-black dark:text-white">
                             {monthNames[currentMonth.getMonth()]}{" "}
                             {currentMonth.getFullYear()}
                           </h3>
                           <button
                             type="button"
                             onClick={handleNextMonth}
-                            className="p-1 hover:bg-gray-100 rounded transition-colors">
+                            className="p-1 hover:bg-gray-100 dark:hover:bg-gray-700 rounded transition-colors">
                             <svg
-                              className="w-4 h-4 text-gray-600"
+                              className="w-4 h-4 text-gray-600 dark:text-gray-300"
                               fill="none"
                               stroke="currentColor"
                               viewBox="0 0 24 24">
@@ -703,7 +703,7 @@ function Booking() {
                           {dayNames.map((day) => (
                             <div
                               key={day}
-                              className="text-center text-[10px] font-semibold text-gray-500 py-1">
+                              className="text-center text-[10px] font-semibold text-gray-500 dark:text-gray-400 py-1">
                               {day}
                             </div>
                           ))}
@@ -734,8 +734,8 @@ function Booking() {
                                     : isToday
                                     ? "bg-barber-gold/20 text-black border border-barber-gold"
                                     : isPast
-                                    ? "text-gray-300 cursor-not-allowed"
-                                    : "text-gray-700 hover:bg-gray-100 hover:border-barber-olive/50 border border-transparent"
+                                    ? "text-gray-300 dark:text-gray-600 cursor-not-allowed"
+                                    : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 hover:border-barber-olive/50 border border-transparent"
                                 }`}>
                                 {day}
                               </button>
@@ -743,8 +743,8 @@ function Booking() {
                           })}
                         </div>
                         {formData.date && (
-                          <div className="mt-2 pt-2 border-t border-gray-200">
-                            <p className="text-xs text-gray-600">
+                          <div className="mt-2 pt-2 border-t border-gray-200 dark:border-gray-700">
+                            <p className="text-xs text-gray-600 dark:text-gray-400">
                               Выбранная дата:
                             </p>
                             <p className="text-sm font-bold text-barber-olive">
@@ -760,7 +760,7 @@ function Booking() {
                   {formData.barber_id && (
                     <div>
                       <div className="flex items-center justify-between mb-3">
-                        <label className="block text-sm font-medium text-gray-700">
+                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
                           {getTranslation(language, "booking.selectTime")}
                         </label>
                         <button
@@ -769,7 +769,7 @@ function Booking() {
                           className={`text-xs px-3 py-1.5 rounded-lg transition-all ${
                             useCustomTime
                               ? "bg-barber-olive text-white"
-                              : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                              : "bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600"
                           }`}>
                           {useCustomTime ? getTranslation(language, "booking.hours") : getTranslation(language, "booking.customTime")}
                         </button>
@@ -800,7 +800,7 @@ function Booking() {
                                   className={`relative px-4 py-3 rounded-xl text-sm font-semibold transition-all duration-200 ${
                                     isSelected
                                       ? "bg-barber-olive text-white shadow-lg transform scale-105"
-                                      : "bg-gray-100 text-gray-700 hover:bg-gray-200 hover:shadow-md border border-gray-300"
+                                      : "bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 hover:shadow-md border border-gray-300 dark:border-gray-600"
                                   }`}
                                   disabled={isSubmitting}>
                                   <div className="text-center">
@@ -846,15 +846,15 @@ function Booking() {
                             min="08:00"
                             max="21:00"
                           />
-                          <p className="text-xs text-gray-500">
+                          <p className="text-xs text-gray-500 dark:text-gray-400">
                             Пожалуйста, введите время с 8:00 до 21:00
                           </p>
                           {formData.time && (
-                            <div className="p-3 bg-barber-olive/10 border border-barber-olive rounded-lg">
-                              <p className="text-sm text-gray-600">
+                            <div className="p-3 bg-barber-olive/10 dark:bg-barber-olive/20 border border-barber-olive rounded-lg">
+                              <p className="text-sm text-gray-600 dark:text-gray-400">
                                 Выбранное время:
                               </p>
-                              <p className="text-base font-bold text-black">
+                              <p className="text-base font-bold text-black dark:text-white">
                                 {formData.time}
                               </p>
                             </div>
@@ -880,15 +880,15 @@ function Booking() {
               {/* Step 2: Service Selection */}
               {currentStep === 2 && (
                 <div className="space-y-6">
-                  <h2 className="text-xl sm:text-2xl font-bold text-black mb-4">
+                  <h2 className="text-xl sm:text-2xl font-bold text-black dark:text-white mb-4">
                     {getTranslation(language, "booking.selectServices")}
                   </h2>
 
                   {/* Selected Barber and Time Summary */}
                   {selectedBarber && (
-                    <div className="bg-gray-50 rounded-lg p-4 mb-4">
-                      <p className="text-sm text-gray-600 mb-1">Выбрано:</p>
-                      <p className="font-semibold text-black">
+                    <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4 mb-4">
+                      <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">Выбрано:</p>
+                      <p className="font-semibold text-black dark:text-white">
                         {selectedBarber.name || selectedBarber.fullName} -{" "}
                         {formData.date} {formData.time}
                       </p>
@@ -897,7 +897,7 @@ function Booking() {
 
                   {/* Services Selection */}
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-3">
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
                       {getTranslation(language, "booking.selectServices")}{" "}
                       {formData.service_ids.length > 0 &&
                         `(${formData.service_ids.length} ${getTranslation(language, "booking.selected")})`}
@@ -914,7 +914,7 @@ function Booking() {
                             className={`px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-all ${
                               selectedCategory === "all"
                                 ? "bg-barber-olive text-white shadow-md"
-                                : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                                : "bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600"
                             }`}>
                             Все
                           </button>
@@ -932,7 +932,7 @@ function Booking() {
                                 className={`px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-all flex items-center gap-2 ${
                                   isSelected
                                     ? "bg-barber-olive text-white shadow-md"
-                                    : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                                    : "bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600"
                                 }`}>
                                 {category.icon && <span>{category.icon}</span>}
                                 <span>{category.name}</span>
@@ -958,7 +958,7 @@ function Booking() {
 
                         if (filteredServices.length === 0) {
                           return (
-                            <div className="col-span-2 text-center py-8 text-gray-500">
+                            <div className="col-span-2 text-center py-8 text-gray-500 dark:text-gray-400">
                               <p>{getTranslation(language, "booking.noServicesInCategory")}</p>
                             </div>
                           );
@@ -991,12 +991,12 @@ function Booking() {
                               onClick={() => handleServiceToggle(serviceId)}
                               className={`p-4 rounded-lg border-2 transition-all text-left relative overflow-hidden ${
                                 isSelected
-                                  ? "border-barber-olive bg-barber-olive/10"
-                                  : "border-gray-300 hover:border-barber-olive/50"
+                                  ? "border-barber-olive bg-barber-olive/10 dark:bg-barber-olive/20"
+                                  : "border-gray-300 dark:border-gray-600 hover:border-barber-olive/50"
                               }`}>
                               {/* Service Image */}
                               {serviceImageUrl ? (
-                                <div className="w-full h-32 mb-3 rounded-lg overflow-hidden bg-gray-100 relative">
+                                <div className="w-full h-32 mb-3 rounded-lg overflow-hidden bg-gray-100 dark:bg-gray-700 relative">
                                   <img
                                     src={serviceImageUrl}
                                     alt={serviceName}
@@ -1014,7 +1014,7 @@ function Booking() {
                                 className={`absolute top-3 right-3 w-6 h-6 rounded border-2 flex items-center justify-center z-10 ${
                                   isSelected
                                     ? "border-barber-olive bg-barber-olive"
-                                    : "border-gray-300 bg-white"
+                                    : "border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800"
                                 }`}>
                                 {isSelected && (
                                   <svg
@@ -1029,7 +1029,7 @@ function Booking() {
                                   </svg>
                                 )}
                               </div>
-                              <h3 className="font-bold text-lg text-black mb-1 pr-8">
+                              <h3 className="font-bold text-lg text-black dark:text-white mb-1 pr-8">
                                 {serviceName}
                               </h3>
                               {servicePrice && (
@@ -1038,7 +1038,7 @@ function Booking() {
                                 </p>
                               )}
                               {serviceDuration && (
-                                <p className="text-sm text-gray-600">
+                                <p className="text-sm text-gray-600 dark:text-gray-400">
                                   {serviceDuration}
                                 </p>
                               )}
@@ -1055,7 +1055,7 @@ function Booking() {
                       onClick={handlePrevious}
                       variant="outlined"
                       size="lg"
-                      className="border-gray-300 text-gray-700 hover:bg-gray-50">
+                      className="border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700">
                       Назад
                     </Button>
                     <Button
@@ -1076,29 +1076,29 @@ function Booking() {
               {/* Step 3: Personal Details */}
               {currentStep === 3 && (
                 <form onSubmit={handleFormSubmit} className="space-y-6">
-                  <h2 className="text-xl sm:text-2xl font-bold text-black mb-4">
+                  <h2 className="text-xl sm:text-2xl font-bold text-black dark:text-white mb-4">
                     Личные данные
                   </h2>
 
                   {/* Summary */}
-                  <div className="bg-gray-50 rounded-lg p-4 mb-4">
-                    <p className="text-sm text-gray-600 mb-2">
+                  <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4 mb-4">
+                    <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">
                       Информация о записи:
                     </p>
                     {selectedBarber && (
-                      <p className="text-sm text-black mb-1">
+                      <p className="text-sm text-black dark:text-white mb-1">
                         <span className="font-semibold">Барбер:</span>{" "}
                         {selectedBarber.name || selectedBarber.fullName}
                       </p>
                     )}
-                    <p className="text-sm text-black mb-1">
+                    <p className="text-sm text-black dark:text-white mb-1">
                       <span className="font-semibold">Дата и время:</span>{" "}
                       {formatDateDisplay(formData.date || today)}{" "}
                       {formData.time}
                     </p>
                     {formData.service_ids &&
                       formData.service_ids.length > 0 && (
-                        <div className="text-sm text-black">
+                        <div className="text-sm text-black dark:text-white">
                           <span className="font-semibold">{getTranslation(language, "booking.services")}:</span>
                           <ul className="list-disc list-inside mt-1 ml-2">
                             {formData.service_ids.map((serviceId) => {

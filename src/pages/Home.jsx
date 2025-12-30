@@ -287,15 +287,12 @@ function Home() {
     <div>
       <Analytics />
       {/* Hero Section - Full Page */}
-      <section
-        className="w-full h-screen relative overflow-hidden"
-        style={{ backgroundColor: "#292d33" }}
-      >
+      <section className="w-full h-screen relative overflow-hidden bg-barber-dark dark:bg-gray-900">
         {/* Content Container */}
         <div className="relative z-10 h-full max-w-[1440px] mx-auto px-4 sm:px-6 md:px-8 lg:px-12 xl:px-[126px] flex flex-col lg:flex-row items-center justify-center lg:justify-between pt-20 sm:pt-[104px] md:pt-[124px] lg:pt-0 gap-4 sm:gap-6 md:gap-8 lg:gap-12">
           {/* Image - First on Mobile, Right on Desktop */}
           <div
-            className="flex-1 w-full lg:w-auto lg:max-w-[680px] flex items-center justify-center order-1 lg:order-2 mt-[30px] lg:mt-0"
+            className="flex-1 w-full lg:w-auto lg:max-w-[680px] flex items-center justify-center order-1 lg:order-2  lg:mt-0"
             data-aos="fade-up"
           >
             <div className="relative w-full h-[300px] xs:h-[650px] sm:h-[400px] md:h-[500px] lg:h-[800px] xl:h-[900px] 2xl:h-[1000px] rounded-2xl sm:rounded-3xl lg:rounded-[35px] overflow-hidden shadow-2xl">
@@ -385,13 +382,13 @@ function Home() {
       <div>
         {/* Services Overview Section */}
         <section
-          className="w-full bg-white py-8 sm:py-10 md:py-12 lg:py-16"
+          className="w-full bg-white dark:bg-gray-900 py-8 sm:py-10 md:py-12 lg:py-16"
           data-aos="fade-up"
         >
           <div className="max-w-[1440px] mx-auto px-4 sm:px-6 md:px-8 lg:px-12 xl:px-[127px]">
             {loadingServices && (
               <div className="text-center py-8">
-                <p className="text-black text-lg">
+                <p className="text-black dark:text-white text-lg">
                   {getTranslation(language, "home.loadingServices")}
                 </p>
               </div>
@@ -427,10 +424,10 @@ function Home() {
               </ul>
             </div>
             <div
-              className="bg-white rounded-2xl sm:rounded-3xl p-5 sm:p-6 md:p-8 relative z-10"
+              className="bg-white dark:bg-gray-800 rounded-2xl sm:rounded-3xl p-5 sm:p-6 md:p-8 relative z-10"
               data-aos="fade-up"
             >
-              <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-black mb-4 sm:mb-6">
+              <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-black dark:text-white mb-4 sm:mb-6">
                 {getTranslation(language, "home.workingHours")}
               </h2>
               <div className="space-y-2 sm:space-y-3 mb-4 sm:mb-6 md:mb-8">
@@ -453,7 +450,7 @@ function Home() {
                   return (
                     <div
                       key={i}
-                      className="text-black font-medium text-sm sm:text-base"
+                      className="text-black dark:text-white font-medium text-sm sm:text-base"
                     >
                       {translatedDay} {schedule.hours}
                     </div>
@@ -464,7 +461,7 @@ function Home() {
                 size="lg"
                 variant="outlined"
                 onClick={() => navigate("/booking")}
-                className="w-full px-5 sm:px-6 md:px-8 py-2.5 sm:py-3 md:py-4 bg-white border-2 border-black rounded-xl sm:rounded-2xl font-semibold text-sm sm:text-base text-black hover:bg-gray-50"
+                className="w-full px-5 sm:px-6 md:px-8 py-2.5 sm:py-3 md:py-4 bg-white dark:bg-gray-800 border-2 border-black dark:border-white rounded-xl sm:rounded-2xl font-semibold text-sm sm:text-base text-black dark:text-white hover:bg-gray-50 dark:hover:bg-gray-700"
                 aria-label="Book an appointment online"
               >
                 {getTranslation(language, "nav.booking")}
@@ -476,23 +473,23 @@ function Home() {
         {/* Our Pricing Section */}
         <section
           id="narxlar"
-          className="w-full bg-white py-8 sm:py-10 md:py-12 lg:py-20"
+          className="w-full bg-white dark:bg-gray-900 py-8 sm:py-10 md:py-12 lg:py-20"
           data-aos="fade-up"
         >
           <div className="max-w-[1440px] mx-auto px-4 sm:px-6 md:px-8 lg:px-12 xl:px-[127px]">
-            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-black text-center mb-6 sm:mb-8 md:mb-12">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-black dark:text-white text-center mb-6 sm:mb-8 md:mb-12">
               {getTranslation(language, "home.prices")}
             </h2>
             {loadingServices ? (
               <div className="text-center py-8">
                 <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-600 mx-auto mb-4"></div>
-                <p className="text-black">
+                <p className="text-black dark:text-white">
                   {getTranslation(language, "home.loadingPrices")}
                 </p>
               </div>
             ) : homePricing.length === 0 ? (
               <div className="text-center py-8">
-                <p className="text-gray-600">
+                <p className="text-gray-600 dark:text-gray-400">
                   {getTranslation(language, "home.pricesNotFound")}
                 </p>
               </div>
@@ -502,14 +499,14 @@ function Home() {
                   {homePricing.slice(0, 4).map((item, i) => (
                     <div
                       key={item.id}
-                      className="flex justify-between items-center py-2 sm:py-3 border-b border-gray-200"
+                      className="flex justify-between items-center py-2 sm:py-3 border-b border-gray-200 dark:border-gray-700"
                       data-aos="fade-up"
                       data-aos-delay={i * 50}
                     >
-                      <span className="text-black font-medium text-sm sm:text-base">
+                      <span className="text-black dark:text-white font-medium text-sm sm:text-base">
                         {item.name}
                       </span>
-                      <span className="text-gray-600 font-semibold text-sm sm:text-base">
+                      <span className="text-gray-600 dark:text-gray-400 font-semibold text-sm sm:text-base">
                         {item.price}
                       </span>
                     </div>
@@ -519,14 +516,14 @@ function Home() {
                   {homePricing.slice(4, 8).map((item, i) => (
                     <div
                       key={item.id}
-                      className="flex justify-between items-center py-2 sm:py-3 border-b border-gray-200"
+                      className="flex justify-between items-center py-2 sm:py-3 border-b border-gray-200 dark:border-gray-700"
                       data-aos="fade-up"
                       data-aos-delay={i * 50}
                     >
-                      <span className="text-black font-medium text-sm sm:text-base">
+                      <span className="text-black dark:text-white font-medium text-sm sm:text-base">
                         {item.name}
                       </span>
-                      <span className="text-gray-600 font-semibold text-sm sm:text-base">
+                      <span className="text-gray-600 dark:text-gray-400 font-semibold text-sm sm:text-base">
                         {item.price}
                       </span>
                     </div>
@@ -552,24 +549,24 @@ function Home() {
                   loading="lazy"
                 />
                 {/* Decorative shapes */}
-                <div className="absolute -top-8 -left-8 sm:-top-10 sm:-left-10 w-32 h-32 sm:w-40 sm:h-40 bg-barber-gold rounded-full opacity-50"></div>
-                <div className="absolute -bottom-8 -right-8 sm:-bottom-10 sm:-right-10 w-24 h-24 sm:w-32 sm:h-32 bg-teal-400 rounded-full opacity-50"></div>
+                <div className="absolute -top-8 -left-8 sm:-top-10 sm:-left-10 w-32 h-32 sm:w-40 sm:h-40 bg-barber-gold dark:bg-barber-gold rounded-full opacity-50 dark:opacity-40"></div>
+                <div className="absolute -bottom-8 -right-8 sm:-bottom-10 sm:-right-10 w-24 h-24 sm:w-32 sm:h-32 bg-teal-400 dark:bg-teal-500 rounded-full opacity-50 dark:opacity-40"></div>
               </div>
             </div>
             <div
-              className="bg-barber-light rounded-2xl sm:rounded-3xl p-5 sm:p-6 md:p-8 lg:p-12 order-1 lg:order-2"
+              className="bg-barber-light dark:bg-gray-800 rounded-2xl sm:rounded-3xl p-5 sm:p-6 md:p-8 lg:p-12 order-1 lg:order-2"
               data-aos="fade-up"
             >
-              <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-black mb-3 sm:mb-4 md:mb-6">
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-black dark:text-white mb-3 sm:mb-4 md:mb-6">
                 {getTranslation(language, "home.welcomeToPremium")}
               </h2>
-              <p className="text-black mb-4 sm:mb-6 md:mb-8 leading-relaxed text-sm sm:text-base">
+              <p className="text-black dark:text-white mb-4 sm:mb-6 md:mb-8 leading-relaxed text-sm sm:text-base">
                 {getTranslation(language, "home.welcomeToPremiumDesc")}
               </p>
               <Button
                 size="lg"
                 onClick={() => navigate("/booking")}
-                className="w-full sm:w-auto px-5 sm:px-6 md:px-8 py-2.5 sm:py-3 md:py-4 bg-black text-white rounded-xl sm:rounded-2xl font-semibold text-sm sm:text-base hover:bg-gray-800"
+                className="w-full sm:w-auto px-5 sm:px-6 md:px-8 py-2.5 sm:py-3 md:py-4 bg-black dark:bg-white text-white dark:text-black rounded-xl sm:rounded-2xl font-semibold text-sm sm:text-base hover:bg-gray-800 dark:hover:bg-gray-200"
                 aria-label="Book an appointment online"
               >
                 {getTranslation(language, "home.bookOnline")}
@@ -580,19 +577,19 @@ function Home() {
 
         {/* Free Consultation Section */}
         <section
-          className="w-full bg-white py-8 sm:py-10 md:py-12 lg:py-20"
+          className="w-full bg-white dark:bg-gray-900 py-8 sm:py-10 md:py-12 lg:py-20"
           data-aos="fade-up"
         >
           <div className="max-w-[1440px] mx-auto px-4 sm:px-6 md:px-8 lg:px-12 xl:px-[127px] grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 md:gap-12 items-center">
             <div className="order-2 lg:order-1" data-aos="fade-up">
-              <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-black mb-4 sm:mb-6 md:mb-8 leading-tight">
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-black dark:text-white mb-4 sm:mb-6 md:mb-8 leading-tight">
                 {getTranslation(language, "home.contactBarbers")}
               </h2>
               <Button
                 size="lg"
                 variant="outlined"
                 onClick={() => navigate("/booking")}
-                className="w-full sm:w-auto px-5 sm:px-6 md:px-8 py-2.5 sm:py-3 md:py-4 bg-white border-2 border-black rounded-xl sm:rounded-2xl font-semibold text-sm sm:text-base text-black hover:bg-gray-50"
+                className="w-full sm:w-auto px-5 sm:px-6 md:px-8 py-2.5 sm:py-3 md:py-4 bg-white dark:bg-gray-800 border-2 border-black dark:border-white rounded-xl sm:rounded-2xl font-semibold text-sm sm:text-base text-black dark:text-white hover:bg-gray-50 dark:hover:bg-gray-700"
                 aria-label="Book an appointment online"
               >
                 {getTranslation(language, "home.bookOnline")}
@@ -607,8 +604,8 @@ function Home() {
                   loading="lazy"
                 />
                 {/* Decorative shapes */}
-                <div className="absolute -top-8 -left-8 sm:-top-10 sm:-left-10 w-32 h-32 sm:w-40 sm:h-40 bg-barber-gold rounded-full opacity-50"></div>
-                <div className="absolute -bottom-8 -right-8 sm:-bottom-10 sm:-right-10 w-24 h-24 sm:w-32 sm:h-32 bg-teal-400 rounded-full opacity-50"></div>
+                <div className="absolute -top-8 -left-8 sm:-top-10 sm:-left-10 w-32 h-32 sm:w-40 sm:h-40 bg-barber-gold dark:bg-barber-gold rounded-full opacity-50 dark:opacity-40"></div>
+                <div className="absolute -bottom-8 -right-8 sm:-bottom-10 sm:-right-10 w-24 h-24 sm:w-32 sm:h-32 bg-teal-400 dark:bg-teal-500 rounded-full opacity-50 dark:opacity-40"></div>
               </div>
             </div>
           </div>
@@ -676,7 +673,7 @@ function Home() {
                 {comments.map((comment, i) => (
                   <motion.div
                     key={comment.id || i}
-                    className="bg-white rounded-2xl sm:rounded-3xl p-5 sm:p-6 md:p-8 relative"
+                    className="bg-white dark:bg-gray-800 rounded-2xl sm:rounded-3xl p-5 sm:p-6 md:p-8 relative"
                     data-aos="fade-up"
                     data-aos-delay={i * 200}
                     whileHover={{ y: -5 }}
@@ -694,11 +691,11 @@ function Home() {
                     </svg>
                     <div className="flex items-center gap-3 sm:gap-4 mt-5 sm:mt-6 md:mt-8 mb-3 sm:mb-4">
                       <div className="w-10 h-10 sm:w-11 sm:h-11 md:w-12 md:h-12 bg-barber-gold rounded-full flex-shrink-0"></div>
-                      <h3 className="text-lg sm:text-xl font-bold text-black">
+                      <h3 className="text-lg sm:text-xl font-bold text-black dark:text-white">
                         {comment.name}
                       </h3>
                     </div>
-                    <p className="text-black text-sm sm:text-base">
+                    <p className="text-black dark:text-white text-sm sm:text-base">
                       {comment.text}
                     </p>
                   </motion.div>

@@ -1,7 +1,7 @@
+import { Link } from 'react-router-dom'
 import { contactInfo } from '../data/contact'
 import { useLanguage } from '../context/LanguageContext'
 import { getTranslation } from '../data/translations'
-import Logo from './Logo'
 
 function Footer() {
   const { language } = useLanguage();
@@ -12,7 +12,17 @@ function Footer() {
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 sm:gap-8 mb-6 sm:mb-8">
           <div>
             <div className="mb-3 sm:mb-4">
-              <Logo linkTo="/" variant="dark" />
+              <Link
+                to="/"
+                className="hover:opacity-80 transition-opacity inline-block"
+                aria-label="001 Barbershop Home"
+              >
+                <img
+                  src="/logo_for_footer.png"
+                  alt="001 Barbershop Logo"
+                  className="h-8 sm:h-10 md:h-12 lg:h-14 xl:h-16 w-auto object-contain"
+                />
+              </Link>
             </div>
             <p className="text-white opacity-80 text-sm sm:text-base">
               {getTranslation(language, "contact.tagline")}

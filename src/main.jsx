@@ -6,6 +6,7 @@ import App from './App.jsx'
 import AOS from 'aos'
 import { AuthProvider } from './context/AuthContext'
 import { LanguageProvider } from './context/LanguageContext'
+import { AppThemeProvider } from './context/ThemeContext'
 
 function AppWithAOS() {
   useEffect(() => {
@@ -113,10 +114,12 @@ if(typeof window!=='undefined'){
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <LanguageProvider>
-      <AuthProvider>
-        <AppWithAOS />
-      </AuthProvider>
-    </LanguageProvider>
+    <AppThemeProvider>
+      <LanguageProvider>
+        <AuthProvider>
+          <AppWithAOS />
+        </AuthProvider>
+      </LanguageProvider>
+    </AppThemeProvider>
   </StrictMode>,
 )
