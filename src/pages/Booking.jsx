@@ -23,6 +23,7 @@ function Booking() {
     time: "",
     name: "",
     phone: "",
+    telegram: "",
   });
   const [services, setServices] = useState([]);
   const [categories, setCategories] = useState([]);
@@ -244,8 +245,11 @@ function Booking() {
 
     try {
       // Match API structure: phone_number, client_name, service_ids (array), barber_id, date, time
+      // Use phone if available, otherwise use telegram
+      const contactInfo = formData.phone || formData.telegram || "";
+      
       const bookingData = {
-        phone_number: formData.phone,
+        phone_number: contactInfo,
         barber_id: parseInt(formData.barber_id),
         service_ids: formData.service_ids.map((id) => parseInt(id)), // Array of selected service IDs
         date: formData.date || today,
@@ -280,6 +284,7 @@ function Booking() {
           time: "",
           name: "",
           phone: "",
+          telegram: "",
         });
         setSelectedBarber(null);
         setCurrentStep(1);
@@ -323,6 +328,50 @@ function Booking() {
       setUseCustomTime(false);
       setCustomTime("");
     }
+  };
+
+  // Handle phone input with automatic +998 prefix
+  const handlePhoneChange = (value) => {
+    // If value is empty or only contains +998, keep it as is
+    if (!value || value.trim() === "" || value === "+998") {
+      handleInputChange("phone", value || "");
+      return;
+    }
+    
+    // If value doesn't start with +998, ensure it does
+    if (!value.startsWith("+998")) {
+      // Remove any non-digit characters and add +998 prefix
+      let cleanedValue = value.replace(/\D/g, "");
+      cleanedValue = "+998" + cleanedValue;
+      handleInputChange("phone", cleanedValue);
+      return;
+    }
+    
+    // Value starts with +998, keep it but ensure only digits after +998
+    let cleanedValue = "+998" + value.substring(4).replace(/\D/g, "");
+    handleInputChange("phone", cleanedValue);
+  };
+
+  // Handle telegram input with automatic @ prefix
+  const handleTelegramChange = (value) => {
+    // If value is empty or only contains @, keep it as is
+    if (!value || value.trim() === "" || value === "@") {
+      handleInputChange("telegram", value || "");
+      return;
+    }
+    
+    // If value doesn't start with @, ensure it does
+    if (!value.startsWith("@")) {
+      // Remove spaces and add @ prefix
+      let cleanedValue = value.replace(/\s/g, "");
+      cleanedValue = "@" + cleanedValue;
+      handleInputChange("telegram", cleanedValue);
+      return;
+    }
+    
+    // Value starts with @, keep it but remove spaces
+    let cleanedValue = "@" + value.substring(1).replace(/\s/g, "");
+    handleInputChange("telegram", cleanedValue);
   };
 
   // Handle service selection (toggle multiple services)
@@ -1134,10 +1183,31 @@ function Booking() {
                     type="tel"
                     name="phone"
                     value={formData.phone}
-                    onChange={(e) => handleInputChange("phone", e.target.value)}
+                    onChange={(e) => handlePhoneChange(e.target.value)}
+                    onFocus={(e) => {
+                      if (!formData.phone || formData.phone === "") {
+                        handleInputChange("phone", "+998");
+                      }
+                    }}
                     label={getTranslation(language, "booking.phone")}
                     placeholder={getTranslation(language, "booking.phonePlaceholder")}
-                    required
+                    size="lg"
+                    disabled={isSubmitting}
+                  />
+
+                  {/* Telegram Input */}
+                  <Input
+                    type="text"
+                    name="telegram"
+                    value={formData.telegram}
+                    onChange={(e) => handleTelegramChange(e.target.value)}
+                    onFocus={(e) => {
+                      if (!formData.telegram || formData.telegram === "") {
+                        handleInputChange("telegram", "@");
+                      }
+                    }}
+                    label={getTranslation(language, "booking.telegram")}
+                    placeholder={getTranslation(language, "booking.telegramPlaceholder")}
                     size="lg"
                     disabled={isSubmitting}
                   />
@@ -1155,7 +1225,7 @@ function Booking() {
                     <Button
                       type="submit"
                       disabled={
-                        isSubmitting || !formData.name || !formData.phone
+                        isSubmitting || !formData.name || (!formData.phone && !formData.telegram)
                       }
                       size="lg"
                       className="bg-barber-olive hover:bg-barber-gold text-white font-semibold"
