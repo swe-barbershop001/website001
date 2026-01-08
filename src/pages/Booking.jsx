@@ -1081,11 +1081,6 @@ function Booking() {
                               <h3 className="font-bold text-lg text-black dark:text-white mb-1 pr-8">
                                 {serviceName}
                               </h3>
-                              {servicePrice && (
-                                <p className="text-sm font-semibold text-barber-olive mb-1">
-                                  {servicePrice}
-                                </p>
-                              )}
                               {serviceDuration && (
                                 <p className="text-sm text-gray-600 dark:text-gray-400">
                                   {serviceDuration}

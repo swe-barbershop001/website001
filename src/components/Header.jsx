@@ -143,7 +143,7 @@ function Header() {
                     className={`text-sm mt-1 lg:text-base font-medium transition-colors ${
                       isActive("/admin")
                         ? "text-barber-gold"
-                        : "text-black hover:text-barber-gold"
+                        : "text-black dark:text-white hover:text-barber-gold"
                     }`}>
                     {getTranslation(language, "nav.admin")}
                   </Link>
@@ -152,7 +152,7 @@ function Header() {
                     className={`text-sm mt-1 lg:text-base font-medium transition-colors ${
                       isActive("/users")
                         ? "text-barber-gold"
-                        : "text-black hover:text-barber-gold"
+                        : "text-black dark:text-white hover:text-barber-gold"
                     }`}>
                     {getTranslation(language, "nav.users")}
                   </Link>
@@ -161,7 +161,7 @@ function Header() {
                     className={`text-sm mt-1 lg:text-base font-medium transition-colors ${
                       isActive("/services")
                         ? "text-barber-gold"
-                        : "text-black hover:text-barber-gold"
+                        : "text-black dark:text-white hover:text-barber-gold"
                     }`}>
                     {getTranslation(language, "nav.services")}
                   </Link>
@@ -170,7 +170,7 @@ function Header() {
                     className={`text-sm mt-1 lg:text-base font-medium transition-colors ${
                       isActive("/analytics")
                         ? "text-barber-gold"
-                        : "text-black hover:text-barber-gold"
+                        : "text-black dark:text-white hover:text-barber-gold"
                     }`}>
                     {getTranslation(language, "nav.statistics")}
                   </Link>
@@ -179,7 +179,7 @@ function Header() {
                     className={`text-sm mt-1 lg:text-base font-medium transition-colors ${
                       isActive("/broadcast")
                         ? "text-barber-gold"
-                        : "text-black hover:text-barber-gold"
+                        : "text-black dark:text-white hover:text-barber-gold"
                     }`}>
                     {getTranslation(language, "nav.broadcast")}
                   </Link>
@@ -192,7 +192,7 @@ function Header() {
                     className={`text-sm mt-1 lg:text-base font-medium transition-colors ${
                       isActive("/admin")
                         ? "text-barber-gold"
-                        : "text-black hover:text-barber-gold"
+                        : "text-black dark:text-white hover:text-barber-gold"
                     }`}>
                     {getTranslation(language, "nav.admin")}
                   </Link>
@@ -201,7 +201,7 @@ function Header() {
                     className={`text-sm mt-1 lg:text-base font-medium transition-colors ${
                       isActive("/users")
                         ? "text-barber-gold"
-                        : "text-black hover:text-barber-gold"
+                        : "text-black dark:text-white hover:text-barber-gold"
                     }`}>
                     {getTranslation(language, "nav.users")}
                   </Link>
@@ -210,7 +210,7 @@ function Header() {
                     className={`text-sm mt-1 lg:text-base font-medium transition-colors ${
                       isActive("/services")
                         ? "text-barber-gold"
-                        : "text-black hover:text-barber-gold"
+                        : "text-black dark:text-white hover:text-barber-gold"
                     }`}>
                     {getTranslation(language, "nav.services")}
                   </Link>
@@ -219,7 +219,7 @@ function Header() {
                     className={`text-sm mt-1 lg:text-base font-medium transition-colors ${
                       isActive("/analytics")
                         ? "text-barber-gold"
-                        : "text-black hover:text-barber-gold"
+                        : "text-black dark:text-white hover:text-barber-gold"
                     }`}>
                     {getTranslation(language, "nav.statistics")}
                   </Link>
@@ -228,7 +228,7 @@ function Header() {
                     className={`text-sm mt-1 lg:text-base font-medium transition-colors ${
                       isActive("/broadcast")
                         ? "text-barber-gold"
-                        : "text-black hover:text-barber-gold"
+                        : "text-black dark:text-white hover:text-barber-gold"
                     }`}>
                     {getTranslation(language, "nav.broadcast")}
                   </Link>
@@ -350,7 +350,7 @@ function Header() {
                         className={`text-base font-medium py-2 text-left transition-colors ${
                           isActive("/admin")
                             ? "text-barber-gold"
-                            : "text-black hover:text-barber-gold"
+                            : "text-black dark:text-white hover:text-barber-gold"
                         }`}>
                         {getTranslation(language, "nav.admin")}
                       </button>
@@ -362,7 +362,7 @@ function Header() {
                         className={`text-base font-medium py-2 text-left transition-colors ${
                           isActive("/users")
                             ? "text-barber-gold"
-                            : "text-black hover:text-barber-gold"
+                            : "text-black dark:text-white hover:text-barber-gold"
                         }`}>
                         {getTranslation(language, "nav.users")}
                       </button>
@@ -374,7 +374,7 @@ function Header() {
                         className={`text-base font-medium py-2 text-left transition-colors ${
                           isActive("/services")
                             ? "text-barber-gold"
-                            : "text-black hover:text-barber-gold"
+                            : "text-black dark:text-white hover:text-barber-gold"
                         }`}>
                         {getTranslation(language, "nav.services")}
                       </button>
@@ -386,7 +386,7 @@ function Header() {
                         className={`text-base font-medium py-2 text-left transition-colors ${
                           isActive("/analytics")
                             ? "text-barber-gold"
-                            : "text-black hover:text-barber-gold"
+                            : "text-black dark:text-white hover:text-barber-gold"
                         }`}>
                         {getTranslation(language, "nav.statistics")}
                       </button>
@@ -398,7 +398,7 @@ function Header() {
                         className={`text-base font-medium py-2 text-left transition-colors ${
                           isActive("/broadcast")
                             ? "text-barber-gold"
-                            : "text-black hover:text-barber-gold"
+                            : "text-black dark:text-white hover:text-barber-gold"
                         }`}>
                         {getTranslation(language, "nav.broadcast")}
                       </button>
@@ -414,7 +414,7 @@ function Header() {
                         className={`text-base font-medium py-2 text-left transition-colors ${
                           isActive("/admin")
                             ? "text-barber-gold"
-                            : "text-black hover:text-barber-gold"
+                            : "text-black dark:text-white hover:text-barber-gold"
                         }`}>
                         {getTranslation(language, "nav.admin")}
                       </button>
@@ -426,7 +426,7 @@ function Header() {
                         className={`text-base font-medium py-2 text-left transition-colors ${
                           isActive("/users")
                             ? "text-barber-gold"
-                            : "text-black hover:text-barber-gold"
+                            : "text-black dark:text-white hover:text-barber-gold"
                         }`}>
                         {getTranslation(language, "nav.users")}
                       </button>
@@ -438,7 +438,7 @@ function Header() {
                         className={`text-base font-medium py-2 text-left transition-colors ${
                           isActive("/services")
                             ? "text-barber-gold"
-                            : "text-black hover:text-barber-gold"
+                            : "text-black dark:text-white hover:text-barber-gold"
                         }`}>
                         {getTranslation(language, "nav.services")}
                       </button>
@@ -450,7 +450,7 @@ function Header() {
                         className={`text-base font-medium py-2 text-left transition-colors ${
                           isActive("/analytics")
                             ? "text-barber-gold"
-                            : "text-black hover:text-barber-gold"
+                            : "text-black dark:text-white hover:text-barber-gold"
                         }`}>
                         {getTranslation(language, "nav.statistics")}
                       </button>
@@ -462,7 +462,7 @@ function Header() {
                         className={`text-base font-medium py-2 text-left transition-colors ${
                           isActive("/broadcast")
                             ? "text-barber-gold"
-                            : "text-black hover:text-barber-gold"
+                            : "text-black dark:text-white hover:text-barber-gold"
                         }`}>
                         {getTranslation(language, "nav.broadcast")}
                       </button>

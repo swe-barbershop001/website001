@@ -201,11 +201,11 @@ function BroadcastPost() {
           )}
 
           {/* Form */}
-          <div className="bg-white rounded-2xl sm:rounded-3xl shadow-lg border border-gray-200 p-6 md:p-8">
+          <div className="bg-white dark:bg-gray-800 rounded-2xl sm:rounded-3xl shadow-lg border border-gray-200 dark:border-gray-700 p-6 md:p-8">
             <form onSubmit={handleSubmit} className="space-y-6">
               {/* Title */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   Post sarlavhasi (ixtiyoriy)
                 </label>
                 <Input
@@ -215,14 +215,14 @@ function BroadcastPost() {
                   onChange={handleInputChange}
                   placeholder="Post sarlavhasini kiriting"
                   size="lg"
-                  className="!text-black !bg-white"
+                  className="!text-black dark:!text-white !bg-white dark:!bg-gray-700"
                   disabled={isSubmitting}
                 />
               </div>
 
               {/* Description */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   Post tavsifi <span className="text-red-500">*</span>
                 </label>
                 <Textarea
@@ -233,7 +233,7 @@ function BroadcastPost() {
                   rows={6}
                   required
                   size="lg"
-                  className="!text-black !bg-white min-h-[150px]"
+                  className="!text-black dark:!text-white !bg-white dark:!bg-gray-700 min-h-[150px]"
                   disabled={isSubmitting}
                 />
               </div>
@@ -241,7 +241,7 @@ function BroadcastPost() {
               {/* Image Upload or URL */}
               <div className="space-y-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                     Post rasmi (yuklash yoki URL)
                   </label>
                   
@@ -271,8 +271,8 @@ function BroadcastPost() {
                       htmlFor="image-upload"
                       className={`flex-1 px-4 py-3 border-2 border-dashed rounded-lg cursor-pointer text-center transition-colors ${
                         isSubmitting || formData.image_url
-                          ? "border-gray-200 text-gray-400 cursor-not-allowed"
-                          : "border-gray-300 hover:border-barber-olive hover:bg-gray-50"
+                          ? "border-gray-200 dark:border-gray-600 text-gray-400 dark:text-gray-500 cursor-not-allowed"
+                          : "border-gray-300 dark:border-gray-600 hover:border-barber-olive hover:bg-gray-50 dark:hover:bg-gray-700"
                       }`}>
                       {formData.image
                         ? formData.image.name
@@ -284,7 +284,7 @@ function BroadcastPost() {
                         onClick={handleRemoveImage}
                         size="sm"
                         variant="outlined"
-                        className="border-red-500 text-red-500 hover:bg-red-50"
+                        className="border-red-500 dark:border-red-600 text-red-500 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/30"
                         disabled={isSubmitting}>
                         O'chirish
                       </Button>
@@ -297,7 +297,7 @@ function BroadcastPost() {
                       <img
                         src={preview}
                         alt="Preview"
-                        className="max-w-full h-auto max-h-64 rounded-lg border border-gray-300"
+                        className="max-w-full h-auto max-h-64 rounded-lg border border-gray-300 dark:border-gray-600"
                       />
                     </div>
                   )}
@@ -307,7 +307,7 @@ function BroadcastPost() {
                       <img
                         src={formData.image_url}
                         alt="Preview"
-                        className="max-w-full h-auto max-h-64 rounded-lg border border-gray-300"
+                        className="max-w-full h-auto max-h-64 rounded-lg border border-gray-300 dark:border-gray-600"
                         onError={(e) => {
                           e.target.style.display = "none";
                         }}
@@ -318,7 +318,7 @@ function BroadcastPost() {
               </div>
 
               {/* Submit Button */}
-              <div className="flex gap-3 justify-end pt-4 border-t border-gray-200">
+              <div className="flex gap-3 justify-end pt-4 border-t border-gray-200 dark:border-gray-700">
                 <Button
                   type="submit"
                   disabled={isSubmitting || !formData.description.trim()}
@@ -332,8 +332,8 @@ function BroadcastPost() {
           </div>
 
           {/* Info Box */}
-          <div className="mt-6 bg-blue-50 border border-blue-200 rounded-lg p-4">
-            <p className="text-sm text-blue-800">
+          <div className="mt-6 bg-blue-50 dark:bg-blue-900/30 border border-blue-200 dark:border-blue-600 rounded-lg p-4">
+            <p className="text-sm text-blue-800 dark:text-blue-300">
               <strong>Eslatma:</strong> Post barcha clientlarga yuboriladi. Tavsif majburiy, sarlavha va rasm ixtiyoriy.
               Rasm yuklash yoki URL berish mumkin.
             </p>

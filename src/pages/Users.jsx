@@ -684,12 +684,12 @@ function Users() {
 
   const getRoleColor = (role) => {
     const colors = {
-      client: "bg-gray-100 text-gray-800",
-      barber: "bg-green-100 text-green-800",
-      admin: "bg-blue-100 text-blue-800",
-      super_admin: "bg-purple-100 text-purple-800",
+      client: "bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-300",
+      barber: "bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300",
+      admin: "bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300",
+      super_admin: "bg-purple-100 dark:bg-purple-900/30 text-purple-800 dark:text-purple-300",
     };
-    return colors[role] || "bg-gray-100 text-gray-800";
+    return colors[role] || "bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-300";
   };
 
   // Filter users by role
@@ -698,10 +698,10 @@ function Users() {
 
   if (loading) {
     return (
-      <div className="pt-16 sm:pt-20 md:pt-[92px] min-h-screen flex items-center justify-center">
+      <div className="pt-16 sm:pt-20 md:pt-[92px] min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-barber-gold mx-auto mb-4"></div>
-          <p className="text-black">Yuklanmoqda...</p>
+          <p className="text-black dark:text-white">Yuklanmoqda...</p>
         </div>
       </div>
     );
@@ -710,11 +710,11 @@ function Users() {
   const availableRoles = getAvailableRoles();
 
   return (
-    <div className="pt-16 sm:pt-20 md:pt-[92px] min-h-screen bg-gray-50">
+    <div className="pt-16 sm:pt-20 md:pt-[92px] min-h-screen bg-gray-50 dark:bg-gray-900">
       <section className="w-full py-8 sm:py-10 md:py-12 lg:py-16">
         <div className="max-w-[1440px] mx-auto px-4 sm:px-6 md:px-8 lg:px-12 xl:px-[127px]">
           <div className="flex justify-between items-center mb-10">
-            <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-black">
+            <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-black dark:text-white">
               Foydalanuvchilar Boshqaruvi
             </h1>
             <div className="flex gap-3">
@@ -729,7 +729,7 @@ function Users() {
                 onClick={logout}
                 size="sm"
                 variant="outlined"
-                className="border-red-500 text-red-500 hover:bg-red-50"
+                className="border-red-500 dark:border-red-600 text-red-500 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/30"
               >
                 Chiqish
               </Button>
@@ -737,13 +737,13 @@ function Users() {
           </div>
 
           {error && (
-            <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg text-sm mb-4">
+            <div className="bg-red-100 dark:bg-red-900/30 border border-red-400 dark:border-red-600 text-red-700 dark:text-red-300 px-4 py-3 rounded-lg text-sm mb-4">
               {error}
             </div>
           )}
 
           {success && (
-            <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded-lg text-sm mb-4">
+            <div className="bg-green-100 dark:bg-green-900/30 border border-green-400 dark:border-green-600 text-green-700 dark:text-green-300 px-4 py-3 rounded-lg text-sm mb-4">
               {success}
             </div>
           )}
@@ -759,7 +759,7 @@ function Users() {
             </Button>
 
             <div className="flex items-center gap-2">
-              <label className="text-sm font-medium text-gray-700">
+              <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
                 Rol bo'yicha filter:
               </label>
               <div className="w-32">
@@ -781,8 +781,8 @@ function Users() {
           </div>
 
           {showAddForm && (
-            <div className="bg-white rounded-2xl sm:rounded-3xl p-6 sm:p-8 md:p-10 shadow-lg border border-gray-200 mb-8">
-              <h2 className="text-xl sm:text-2xl font-bold text-black mb-6">
+            <div className="bg-white dark:bg-gray-800 rounded-2xl sm:rounded-3xl p-6 sm:p-8 md:p-10 shadow-lg border border-gray-200 dark:border-gray-700 mb-8">
+              <h2 className="text-xl sm:text-2xl font-bold text-black dark:text-white mb-6">
                 Yangi foydalanuvchi qo'shish
               </h2>
               <form
@@ -883,7 +883,7 @@ function Users() {
                 )}
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                     Profile rasm (ixtiyoriy)
                   </label>
                   <input
@@ -929,7 +929,7 @@ function Users() {
                       });
                       setError("");
                     }}
-                    className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-barber-olive file:text-white hover:file:bg-barber-gold"
+                    className="block w-full text-sm text-gray-500 dark:text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-barber-olive file:text-white hover:file:bg-barber-gold"
                     disabled={isSubmitting}
                   />
                 </div>
@@ -965,7 +965,7 @@ function Users() {
                     }}
                     size="lg"
                     variant="outlined"
-                    className="border-gray-300 text-gray-700"
+                    className="border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300"
                   >
                     Bekor qilish
                   </Button>
@@ -974,7 +974,7 @@ function Users() {
             </div>
           )}
 
-          <div className="bg-white rounded-2xl sm:rounded-3xl shadow-lg border border-gray-200 overflow-hidden">
+          <div className="bg-white dark:bg-gray-800 rounded-2xl sm:rounded-3xl shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
             <div className="overflow-x-auto">
               <table className="w-full">
                 <thead className="bg-barber-dark text-white">
@@ -1004,7 +1004,7 @@ function Users() {
                     </th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-gray-200">
+                <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
                   {filteredUsers.length === 0 ? (
                     <tr>
                       <td
@@ -1013,7 +1013,7 @@ function Users() {
                             ? "7"
                             : "6"
                         }
-                        className="px-4 py-8 text-center text-gray-500"
+                        className="px-4 py-8 text-center text-gray-500 dark:text-gray-400"
                       >
                         Foydalanuvchilar topilmadi
                       </td>
@@ -1022,18 +1022,18 @@ function Users() {
                     filteredUsers.map((user) => (
                       <tr
                         key={user.id || user._id}
-                        className="hover:bg-gray-50"
+                        className="hover:bg-gray-50 dark:hover:bg-gray-700"
                       >
-                        <td className="px-4 py-3 text-sm">
+                        <td className="px-4 py-3 text-sm text-black dark:text-white">
                           {user.id || user._id}
                         </td>
-                        <td className="px-4 py-3 text-sm">
+                        <td className="px-4 py-3 text-sm text-black dark:text-white">
                           {user.name || user.fullName || "N/A"}
                         </td>
-                        <td className="px-4 py-3 text-sm">
+                        <td className="px-4 py-3 text-sm text-black dark:text-white">
                           {user.tg_username || user.telegram_username || "N/A"}
                         </td>
-                        <td className="px-4 py-3 text-sm">
+                        <td className="px-4 py-3 text-sm text-black dark:text-white">
                           {user.phone_number || user.phone || "N/A"}
                         </td>
                         <td className="px-2 py-3 text-sm w-[120px]">
@@ -1070,17 +1070,17 @@ function Users() {
                           </div>
                         </td>
                         {(roleFilter === "barber" || roleFilter === "all") && (
-                          <td className="px-4 py-3 text-sm">
+                          <td className="px-4 py-3 text-sm text-black dark:text-white">
                             {user.role === "barber" ? (
                               `${user.work_start_time || "N/A"} - ${
                                 user.work_end_time || "N/A"
                               }`
                             ) : (
-                              <span className="text-gray-400">-</span>
+                              <span className="text-gray-400 dark:text-gray-500">-</span>
                             )}
                           </td>
                         )}
-                        <td className="px-4 py-3 text-sm">
+                        <td className="px-4 py-3 text-sm text-black dark:text-white">
                           <div className="flex gap-2 flex-wrap">
                             <Button
                               size="sm"
@@ -1122,9 +1122,9 @@ function Users() {
       {/* Manage Services Modal */}
       {managingServicesForBarber && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-lg p-6 max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+          <div className="bg-white dark:bg-gray-800 rounded-lg p-6 max-w-4xl w-full max-h-[90vh] overflow-y-auto">
             <div className="flex justify-between items-center mb-4">
-              <h3 className="text-lg font-bold text-black">
+              <h3 className="text-lg font-bold text-black dark:text-white">
                 {managingServicesForBarber.name} - Xizmatlar boshqaruvi
               </h3>
               <Button
@@ -1135,20 +1135,20 @@ function Users() {
                   setError("");
                 }}
                 variant="text"
-                className="text-gray-600 hover:text-gray-800"
+                className="text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200"
               >
                 ✕
               </Button>
             </div>
 
             {error && (
-              <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg text-sm mb-4">
+              <div className="bg-red-100 dark:bg-red-900/30 border border-red-400 dark:border-red-600 text-red-700 dark:text-red-300 px-4 py-3 rounded-lg text-sm mb-4">
                 {error}
               </div>
             )}
 
             {success && (
-              <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded-lg text-sm mb-4">
+              <div className="bg-green-100 dark:bg-green-900/30 border border-green-400 dark:border-green-600 text-green-700 dark:text-green-300 px-4 py-3 rounded-lg text-sm mb-4">
                 {success}
               </div>
             )}
@@ -1156,36 +1156,36 @@ function Users() {
             {loadingServices ? (
               <div className="text-center py-8">
                 <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-barber-gold mx-auto mb-2"></div>
-                <p className="text-gray-600">Yuklanmoqda...</p>
+                <p className="text-gray-600 dark:text-gray-400">Yuklanmoqda...</p>
               </div>
             ) : (
               <div className="overflow-x-auto">
                 <table className="w-full">
-                  <thead className="bg-gray-100">
+                  <thead className="bg-gray-100 dark:bg-gray-700">
                     <tr>
-                      <th className="px-4 py-2 text-left text-sm font-semibold">
+                      <th className="px-4 py-2 text-left text-sm font-semibold text-black dark:text-white">
                         ID
                       </th>
-                      <th className="px-4 py-2 text-left text-sm font-semibold">
+                      <th className="px-4 py-2 text-left text-sm font-semibold text-black dark:text-white">
                         Xizmat nomi
                       </th>
-                      <th className="px-4 py-2 text-left text-sm font-semibold">
+                      <th className="px-4 py-2 text-left text-sm font-semibold text-black dark:text-white">
                         Narx
                       </th>
-                      <th className="px-4 py-2 text-left text-sm font-semibold">
+                      <th className="px-4 py-2 text-left text-sm font-semibold text-black dark:text-white">
                         Davomiyligi
                       </th>
-                      <th className="px-4 py-2 text-left text-sm font-semibold">
+                      <th className="px-4 py-2 text-left text-sm font-semibold text-black dark:text-white">
                         Amallar
                       </th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-gray-200">
+                  <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
                     {barberServices.length === 0 ? (
                       <tr>
                         <td
                           colSpan="5"
-                          className="px-4 py-4 text-center text-gray-500"
+                          className="px-4 py-4 text-center text-gray-500 dark:text-gray-400"
                         >
                           Xizmatlar topilmadi
                         </td>
@@ -1194,18 +1194,18 @@ function Users() {
                       barberServices.map((service) => (
                         <tr
                           key={service.id || service._id}
-                          className="hover:bg-gray-50"
+                          className="hover:bg-gray-50 dark:hover:bg-gray-700"
                         >
-                          <td className="px-4 py-2 text-sm">
+                          <td className="px-4 py-2 text-sm text-black dark:text-white">
                             {service.id || service._id}
                           </td>
-                          <td className="px-4 py-2 text-sm font-medium">
+                          <td className="px-4 py-2 text-sm font-medium text-black dark:text-white">
                             {service.name || "N/A"}
                           </td>
-                          <td className="px-4 py-2 text-sm">
+                          <td className="px-4 py-2 text-sm text-black dark:text-white">
                             {formatCurrency(service.price || 0)}
                           </td>
-                          <td className="px-4 py-2 text-sm">
+                          <td className="px-4 py-2 text-sm text-black dark:text-white">
                             {service.duration
                               ? `${service.duration} daqiqa`
                               : "N/A"}
@@ -1235,13 +1235,13 @@ function Users() {
       {/* Edit Service Modal */}
       {editingService && managingServicesForBarber && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-lg p-6 max-w-md w-full">
-            <h4 className="text-lg font-bold text-black mb-4">
+          <div className="bg-white dark:bg-gray-800 rounded-lg p-6 max-w-md w-full">
+            <h4 className="text-lg font-bold text-black dark:text-white mb-4">
               Xizmatni tahrirlash
             </h4>
 
             {error && (
-              <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg text-sm mb-4">
+              <div className="bg-red-100 dark:bg-red-900/30 border border-red-400 dark:border-red-600 text-red-700 dark:text-red-300 px-4 py-3 rounded-lg text-sm mb-4">
                 {error}
               </div>
             )}
@@ -1309,7 +1309,7 @@ function Users() {
                     });
                   }}
                   variant="outlined"
-                  className="border-gray-300 text-gray-700"
+                  className="border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300"
                   disabled={isSubmittingServiceEdit}
                 >
                   Bekor qilish
@@ -1331,13 +1331,13 @@ function Users() {
       {/* Edit User Modal */}
       {editingUser && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-lg p-6 max-w-md w-full max-h-[90vh] overflow-y-auto">
-            <h3 className="text-lg font-bold text-black mb-4">
+          <div className="bg-white dark:bg-gray-800 rounded-lg p-6 max-w-md w-full max-h-[90vh] overflow-y-auto">
+            <h3 className="text-lg font-bold text-black dark:text-white mb-4">
               Foydalanuvchini tahrirlash
             </h3>
 
             {error && (
-              <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg text-sm mb-4">
+              <div className="bg-red-100 dark:bg-red-900/30 border border-red-400 dark:border-red-600 text-red-700 dark:text-red-300 px-4 py-3 rounded-lg text-sm mb-4">
                 {error}
               </div>
             )}
@@ -1435,7 +1435,7 @@ function Users() {
               />
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   Profile rasm (ixtiyoriy)
                 </label>
                 <input
@@ -1476,7 +1476,7 @@ function Users() {
                     });
                     setError("");
                   }}
-                  className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-barber-olive file:text-white hover:file:bg-barber-gold"
+                  className="block w-full text-sm text-gray-500 dark:text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-barber-olive file:text-white hover:file:bg-barber-gold"
                   disabled={isSubmittingEdit}
                 />
               </div>
@@ -1500,7 +1500,7 @@ function Users() {
                     setError("");
                   }}
                   variant="outlined"
-                  className="border-gray-300 text-gray-700"
+                  className="border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300"
                   disabled={isSubmittingEdit}
                 >
                   Bekor qilish

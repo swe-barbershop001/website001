@@ -92,20 +92,20 @@ function AdminLogin() {
   };
 
   return (
-    <div className="pt-16 sm:pt-20 md:pt-[92px] min-h-screen bg-white">
+    <div className="pt-16 sm:pt-20 md:pt-[92px] min-h-screen bg-white dark:bg-gray-900">
       <section className="w-full py-8 sm:py-10 md:py-12 lg:py-16">
         <div className="max-w-[1440px] mx-auto px-4 sm:px-6 md:px-8 lg:px-12 xl:px-[127px]">
           <div className="max-w-md mx-auto">
-            <div className="bg-white rounded-2xl sm:rounded-3xl p-6 sm:p-8 md:p-10 shadow-lg border border-gray-200">
-              <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-black mb-2 text-center">
+            <div className="bg-white dark:bg-gray-800 rounded-2xl sm:rounded-3xl p-6 sm:p-8 md:p-10 shadow-lg border border-gray-200 dark:border-gray-700">
+              <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-black dark:text-white mb-2 text-center">
                 Вход администратора
               </h1>
-              <p className="text-gray-600 text-sm sm:text-base mb-6 text-center">
+              <p className="text-gray-600 dark:text-gray-400 text-sm sm:text-base mb-6 text-center">
                 Вход в админ-панель
               </p>
 
               {error && (
-                <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg text-sm mb-4">
+                <div className="bg-red-100 dark:bg-red-900/30 border border-red-400 dark:border-red-600 text-red-700 dark:text-red-300 px-4 py-3 rounded-lg text-sm mb-4">
                   {error}
                 </div>
               )}

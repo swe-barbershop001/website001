@@ -328,16 +328,16 @@ function AnalyticsPage() {
   const revenueData = stats.revenue_over_time || [];
 
   return (
-    <div className="pt-16 sm:pt-20 md:pt-[92px] min-h-screen bg-gray-50">
+    <div className="pt-16 sm:pt-20 md:pt-[92px] min-h-screen bg-gray-50 dark:bg-gray-900">
       <section className="w-full py-8 sm:py-10 md:py-12 lg:py-16">
         <div className="max-w-[1440px] mx-auto px-4 sm:px-6 md:px-8 lg:px-12 xl:px-[127px]">
           {/* Header */}
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
             <div>
-              <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-black mb-2">
+              <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-black dark:text-white mb-2">
                 Statistika va Tahlil
               </h1>
-              <p className="text-gray-600">Booking va daromad statistikasi</p>
+              <p className="text-gray-600 dark:text-gray-400">Booking va daromad statistikasi</p>
             </div>
             <div className="flex gap-3 flex-wrap">
               <Button
@@ -358,29 +358,29 @@ function AnalyticsPage() {
                 onClick={logout}
                 size="sm"
                 variant="outlined"
-                className="border-red-500 text-red-500 hover:bg-red-50">
+                className="border-red-500 dark:border-red-600 text-red-500 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/30">
                 CHIQISH
               </Button>
             </div>
           </div>
 
           {error && (
-            <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg text-sm mb-4">
+            <div className="bg-red-100 dark:bg-red-900/30 border border-red-400 dark:border-red-600 text-red-700 dark:text-red-300 px-4 py-3 rounded-lg text-sm mb-4">
               {error}
             </div>
           )}
 
           {/* Date Range Selector */}
-          <div className="mb-6 bg-white rounded-xl p-6 shadow-md border border-gray-200">
+          <div className="mb-6 bg-white dark:bg-gray-800 rounded-xl p-6 shadow-md border border-gray-200 dark:border-gray-700">
             <div className="flex items-center gap-3 mb-4">
               <CalendarDaysIcon className="w-5 h-5 text-barber-olive" />
-              <h3 className="text-lg font-semibold text-gray-800">
+              <h3 className="text-lg font-semibold text-gray-800 dark:text-white">
                 Vaqt oralig'ini tanlang
               </h3>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   Boshlanish sanasi
                 </label>
                 <input
@@ -390,11 +390,11 @@ function AnalyticsPage() {
                     setDateRange({ ...dateRange, startDate: e.target.value });
                     setTimeRange("CUSTOM"); // Reset time range when manually changing dates
                   }}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-barber-olive focus:border-barber-olive transition-all"
+                  className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-barber-olive focus:border-barber-olive transition-all bg-white dark:bg-gray-700 text-black dark:text-white"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   Tugash sanasi
                 </label>
                 <input
@@ -404,7 +404,7 @@ function AnalyticsPage() {
                     setDateRange({ ...dateRange, endDate: e.target.value });
                     setTimeRange("CUSTOM"); // Reset time range when manually changing dates
                   }}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-barber-olive focus:border-barber-olive transition-all"
+                  className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-barber-olive focus:border-barber-olive transition-all bg-white dark:bg-gray-700 text-black dark:text-white"
                 />
               </div>
             </div>
@@ -426,8 +426,8 @@ function AnalyticsPage() {
                   <CurrencyDollarIcon className="w-6 h-6 text-white" />
                 </div>
               </div>
-              <div className="text-sm font-medium text-gray-600 mb-1">Jami Daromad</div>
-              <div className="text-3xl font-bold text-gray-900">
+              <div className="text-sm font-medium text-gray-600 dark:text-gray-400 mb-1">Jami Daromad</div>
+              <div className="text-3xl font-bold text-gray-900 dark:text-white">
                 {formatCurrency(stats.total_revenue || 0)}
               </div>
             </div>
@@ -439,8 +439,8 @@ function AnalyticsPage() {
                   <CalendarDaysIcon className="w-6 h-6 text-white" />
                 </div>
               </div>
-              <div className="text-sm font-medium text-gray-600 mb-1">Jami Bronlar</div>
-              <div className="text-3xl font-bold text-gray-900">
+              <div className="text-sm font-medium text-gray-600 dark:text-gray-400 mb-1">Jami Bronlar</div>
+              <div className="text-3xl font-bold text-gray-900 dark:text-white">
                 {stats.total_bookings || 0}
               </div>
             </div>
@@ -455,21 +455,21 @@ function AnalyticsPage() {
                   {stats.conversion_rate >= 80 ? "Yuqori" : stats.conversion_rate >= 50 ? "O'rtacha" : "Past"}
                 </span>
               </div>
-              <div className="text-sm font-medium text-gray-600 mb-1">Konversiya darajasi</div>
-              <div className="text-3xl font-bold text-gray-900">
+              <div className="text-sm font-medium text-gray-600 dark:text-gray-400 mb-1">Konversiya darajasi</div>
+              <div className="text-3xl font-bold text-gray-900 dark:text-white">
                 {(stats.conversion_rate || 0).toFixed(1)}%
               </div>
             </div>
           </div>
 
           {/* Revenue Over Time Chart */}
-          <div className="bg-white rounded-xl p-6 shadow-md border border-gray-200 mb-8">
+          <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-md border border-gray-200 dark:border-gray-700 mb-8">
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
               <div>
-                <h2 className="text-xl font-bold text-gray-900 mb-1">
+                <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-1">
                   Daromad vaqt bo'yicha
                 </h2>
-                <p className="text-sm text-gray-500">
+                <p className="text-sm text-gray-500 dark:text-gray-400">
                   Tanlangan vaqt oralig'idagi daromad dinamikasi
                 </p>
               </div>
@@ -481,7 +481,7 @@ function AnalyticsPage() {
                     className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-all ${
                       timeRange === range
                         ? "bg-barber-olive text-white shadow-md"
-                        : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                        : "bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600"
                     }`}>
                     {range}
                   </button>
@@ -552,7 +552,7 @@ function AnalyticsPage() {
                 </LineChart>
               </ResponsiveContainer>
             ) : (
-              <div className="h-[350px] flex flex-col items-center justify-center text-gray-400 bg-gray-50 rounded-lg">
+              <div className="h-[350px] flex flex-col items-center justify-center text-gray-400 dark:text-gray-500 bg-gray-50 dark:bg-gray-700 rounded-lg">
                 <ChartBarIcon className="w-12 h-12 mb-2 opacity-50" />
                 <p className="text-sm">Ma'lumotlar mavjud emas</p>
               </div>
@@ -562,11 +562,11 @@ function AnalyticsPage() {
           {/* Bottom Three Cards */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-stretch">
             {/* By Services */}
-            <div className="bg-white rounded-xl p-6 shadow-md border border-gray-200 flex flex-col h-full">
-              <h3 className="text-lg font-bold text-gray-900 mb-1">
+            <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-md border border-gray-200 dark:border-gray-700 flex flex-col h-full">
+              <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-1">
                 Xizmatlar bo'yicha
               </h3>
-              <p className="text-sm text-gray-500 mb-4">Eng ko'p buyurtma qilingan xizmatlar</p>
+              <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">Eng ko'p buyurtma qilingan xizmatlar</p>
               {stats.by_services && stats.by_services.length > 0 ? (
                 <div className="flex-1 min-h-[400px]">
                   <ResponsiveContainer width="100%" height="100%">
@@ -593,7 +593,7 @@ function AnalyticsPage() {
                   </ResponsiveContainer>
                 </div>
               ) : (
-                <div className="flex-1 min-h-[400px] flex flex-col items-center justify-center text-gray-400 bg-gray-50 rounded-lg">
+                <div className="flex-1 min-h-[400px] flex flex-col items-center justify-center text-gray-400 dark:text-gray-500 bg-gray-50 dark:bg-gray-700 rounded-lg">
                   <ChartBarIcon className="w-10 h-10 mb-2 opacity-50" />
                   <p className="text-sm">Ma'lumotlar mavjud emas</p>
                 </div>
@@ -601,11 +601,11 @@ function AnalyticsPage() {
             </div>
 
             {/* By Barbers */}
-            <div className="bg-white rounded-xl p-6 shadow-md border border-gray-200">
-              <h3 className="text-lg font-bold text-gray-900 mb-1">
+            <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-md border border-gray-200 dark:border-gray-700">
+              <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-1">
                 Barberlar bo'yicha
               </h3>
-              <p className="text-sm text-gray-500 mb-4">
+              <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
                 {stats.by_barbers.some(b => b.revenue > 0) 
                   ? "Daromad taqsimoti" 
                   : "Bronlar taqsimoti"}
@@ -674,8 +674,8 @@ function AnalyticsPage() {
                   <div className="mt-4 pt-4 border-t border-gray-200">
                     {stats.by_barbers.some(b => b.revenue > 0) ? (
                       <div className="text-center mb-3">
-                        <span className="text-xs text-gray-500">Jami daromad: </span>
-                        <span className="text-sm font-bold text-gray-900">
+                        <span className="text-xs text-gray-500 dark:text-gray-400">Jami daromad: </span>
+                        <span className="text-sm font-bold text-gray-900 dark:text-white">
                           {formatCurrency(
                             stats.by_barbers.reduce((sum, b) => sum + b.revenue, 0)
                           )}
@@ -683,8 +683,8 @@ function AnalyticsPage() {
                       </div>
                     ) : (
                       <div className="text-center mb-3">
-                        <span className="text-xs text-gray-500">Jami bronlar: </span>
-                        <span className="text-sm font-bold text-gray-900">
+                        <span className="text-xs text-gray-500 dark:text-gray-400">Jami bronlar: </span>
+                        <span className="text-sm font-bold text-gray-900 dark:text-white">
                           {stats.by_barbers.reduce((sum, b) => sum + (b.totalBookings || 0), 0)}
                         </span>
                       </div>
@@ -693,27 +693,27 @@ function AnalyticsPage() {
                       {stats.by_barbers.map((barber, index) => (
                         <div
                           key={barber.name}
-                          className="flex items-center justify-between p-2 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
+                          className="flex items-center justify-between p-2 bg-gray-50 dark:bg-gray-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors">
                           <div className="flex items-center gap-2">
                             <div
                               className="w-3 h-3 rounded-full"
                               style={{
                                 backgroundColor: COLORS[index % COLORS.length],
                               }}></div>
-                            <span className="text-sm font-medium text-gray-700">
+                            <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
                               {barber.name}
                             </span>
                           </div>
                           <div className="text-right">
                             {barber.revenue > 0 ? (
                               <>
-                                <div className="text-sm font-bold text-gray-900">
+                                <div className="text-sm font-bold text-gray-900 dark:text-white">
                                   {formatCurrency(barber.revenue)}
                                 </div>
-                                <div className="text-xs text-gray-500">{barber.percentage}%</div>
+                                <div className="text-xs text-gray-500 dark:text-gray-400">{barber.percentage}%</div>
                               </>
                             ) : (
-                              <div className="text-sm font-medium text-gray-600">
+                              <div className="text-sm font-medium text-gray-600 dark:text-gray-400">
                                 {barber.totalBookings || 0} bron
                               </div>
                             )}
@@ -724,7 +724,7 @@ function AnalyticsPage() {
                   </div>
                 </>
               ) : (
-                <div className="h-[280px] flex flex-col items-center justify-center text-gray-400 bg-gray-50 rounded-lg">
+                <div className="h-[280px] flex flex-col items-center justify-center text-gray-400 dark:text-gray-500 bg-gray-50 dark:bg-gray-700 rounded-lg">
                   <ChartBarIcon className="w-10 h-10 mb-2 opacity-50" />
                   <p className="text-sm">Ma'lumotlar mavjud emas</p>
                 </div>
@@ -732,65 +732,65 @@ function AnalyticsPage() {
             </div>
 
             {/* Booking Status */}
-            <div className="bg-white rounded-xl p-6 shadow-md border border-gray-200">
-              <h3 className="text-lg font-bold text-gray-900 mb-1">
+            <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-md border border-gray-200 dark:border-gray-700">
+              <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-1">
                 Bronlar holati
               </h3>
-              <p className="text-sm text-gray-500 mb-4">Bronlarning umumiy ko'rinishi</p>
-              <div className="text-center mb-6 p-4 bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl">
-                <div className="text-4xl font-bold text-gray-900 mb-1">
+              <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">Bronlarning umumiy ko'rinishi</p>
+              <div className="text-center mb-6 p-4 bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-700 dark:to-gray-800 rounded-xl">
+                <div className="text-4xl font-bold text-gray-900 dark:text-white mb-1">
                   {stats.booking_status?.total || 0}
                 </div>
-                <div className="text-sm font-medium text-gray-600">Jami bronlar</div>
+                <div className="text-sm font-medium text-gray-600 dark:text-gray-400">Jami bronlar</div>
               </div>
               <div className="space-y-2">
-                <div className="flex flex-col p-3 bg-green-50 rounded-lg border border-green-200">
+                <div className="flex flex-col p-3 bg-green-50 dark:bg-green-900/30 rounded-lg border border-green-200 dark:border-green-600">
                   <div className="flex items-center gap-3 mb-2">
                     <div className="w-4 h-4 rounded-full bg-green-500"></div>
-                    <span className="text-sm font-medium text-gray-700">Tasdiqlangan</span>
+                    <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Tasdiqlangan</span>
                   </div>
-                  <span className="font-bold text-green-700 text-lg">
+                  <span className="font-bold text-green-700 dark:text-green-300 text-lg">
                     {stats.booking_status?.approved || 0}
                   </span>
                 </div>
-                <div className="flex flex-col p-3 bg-yellow-50 rounded-lg border border-yellow-200">
+                <div className="flex flex-col p-3 bg-yellow-50 dark:bg-yellow-900/30 rounded-lg border border-yellow-200 dark:border-yellow-600">
                   <div className="flex items-center gap-3 mb-2">
                     <div className="w-4 h-4 rounded-full bg-yellow-500"></div>
-                    <span className="text-sm font-medium text-gray-700">Kutilmoqda</span>
+                    <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Kutilmoqda</span>
                   </div>
-                  <span className="font-bold text-yellow-700 text-lg">
+                  <span className="font-bold text-yellow-700 dark:text-yellow-300 text-lg">
                     {stats.booking_status?.pending || 0}
                   </span>
                 </div>
                 {stats.booking_status?.completed > 0 && (
-                  <div className="flex flex-col p-3 bg-blue-50 rounded-lg border border-blue-200">
+                  <div className="flex flex-col p-3 bg-blue-50 dark:bg-blue-900/30 rounded-lg border border-blue-200 dark:border-blue-600">
                     <div className="flex items-center gap-3 mb-2">
                       <div className="w-4 h-4 rounded-full bg-blue-500"></div>
-                      <span className="text-sm font-medium text-gray-700">Yakunlangan</span>
+                      <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Yakunlangan</span>
                     </div>
-                    <span className="font-bold text-blue-700 text-lg">
+                    <span className="font-bold text-blue-700 dark:text-blue-300 text-lg">
                       {stats.booking_status.completed}
                     </span>
                   </div>
                 )}
                 {stats.booking_status?.rejected > 0 && (
-                  <div className="flex flex-col p-3 bg-red-50 rounded-lg border border-red-200">
+                  <div className="flex flex-col p-3 bg-red-50 dark:bg-red-900/30 rounded-lg border border-red-200 dark:border-red-600">
                     <div className="flex items-center gap-3 mb-2">
                       <div className="w-4 h-4 rounded-full bg-red-500"></div>
-                      <span className="text-sm font-medium text-gray-700">Rad etilgan</span>
+                      <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Rad etilgan</span>
                     </div>
-                    <span className="font-bold text-red-700 text-lg">
+                    <span className="font-bold text-red-700 dark:text-red-300 text-lg">
                       {stats.booking_status.rejected}
                     </span>
                   </div>
                 )}
                 {stats.booking_status?.cancelled > 0 && (
-                  <div className="flex flex-col p-3 bg-gray-50 rounded-lg border border-gray-200">
+                  <div className="flex flex-col p-3 bg-gray-50 dark:bg-gray-700 rounded-lg border border-gray-200 dark:border-gray-600">
                     <div className="flex items-center gap-3 mb-2">
                       <div className="w-4 h-4 rounded-full bg-gray-500"></div>
-                      <span className="text-sm font-medium text-gray-700">Bekor qilingan</span>
+                      <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Bekor qilingan</span>
                     </div>
-                    <span className="font-bold text-gray-700 text-lg">
+                    <span className="font-bold text-gray-700 dark:text-gray-300 text-lg">
                       {stats.booking_status.cancelled}
                     </span>
                   </div>

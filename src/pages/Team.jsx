@@ -24,7 +24,7 @@ function Team() {
         setLoading(true);
         setError(null);
         const response = await fetch(
-          `${BARBERS_BASE_URL}${API_ENDPOINTS.barbers}`
+          `${BARBERS_BASE_URL}/barber`
         );
 
         if (!response.ok) {

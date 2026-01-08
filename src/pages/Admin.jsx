@@ -1068,40 +1068,40 @@ function Admin() {
   const getStatusColor = (status) => {
     switch (status?.toLowerCase()) {
       case "approved":
-        return "bg-green-100 text-green-800 border-green-300";
+        return "bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300 border-green-300 dark:border-green-600";
       case "rejected":
-        return "bg-red-100 text-red-800 border-red-300";
+        return "bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-300 border-red-300 dark:border-red-600";
       case "pending":
-        return "bg-yellow-100 text-yellow-800 border-yellow-300";
+        return "bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-300 border-yellow-300 dark:border-yellow-600";
       case "completed":
-        return "bg-blue-100 text-blue-800 border-blue-300";
+        return "bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300 border-blue-300 dark:border-blue-600";
       default:
-        return "bg-gray-100 text-gray-800 border-gray-300";
+        return "bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-300 border-gray-300 dark:border-gray-600";
     }
   };
 
   if (loading) {
     return (
-      <div className="pt-16 sm:pt-20 md:pt-[92px] min-h-screen flex items-center justify-center">
+      <div className="pt-16 sm:pt-20 md:pt-[92px] min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-barber-gold mx-auto mb-4"></div>
-          <p className="text-black">Yuklanmoqda...</p>
+          <p className="text-black dark:text-white">Yuklanmoqda...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="pt-16 sm:pt-20 md:pt-[92px] min-h-screen bg-gray-50">
+    <div className="pt-16 sm:pt-20 md:pt-[92px] min-h-screen bg-gray-50 dark:bg-gray-900">
       <section className="w-full py-8 sm:py-10 md:py-12 lg:py-16">
         <div className="max-w-[1440px] mx-auto px-4 sm:px-6 md:px-8 lg:px-12 xl:px-[127px]">
           {/* Header */}
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
             <div>
-              <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-black mb-2">
+              <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-black dark:text-white mb-2">
                 Admin Boshqaruv Paneli
               </h1>
-              <p className="text-gray-600">
+              <p className="text-gray-600 dark:text-gray-400">
                 Bronlarni boshqarish va nazorat qilish
               </p>
             </div>
@@ -1123,7 +1123,7 @@ function Admin() {
                   onClick={handleResetSearch}
                   size="sm"
                   variant="outlined"
-                  className="border-gray-500 text-gray-700 hover:bg-gray-50">
+                  className="border-gray-500 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800">
                   Filterni tozalash
                 </Button>
               )}
@@ -1139,26 +1139,26 @@ function Admin() {
 
           {/* Messages */}
           {error && (
-            <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg text-sm mb-4">
+            <div className="bg-red-100 dark:bg-red-900/30 border border-red-400 dark:border-red-600 text-red-700 dark:text-red-300 px-4 py-3 rounded-lg text-sm mb-4">
               {error}
             </div>
           )}
 
           {success && (
-            <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded-lg text-sm mb-4">
+            <div className="bg-green-100 dark:bg-green-900/30 border border-green-400 dark:border-green-600 text-green-700 dark:text-green-300 px-4 py-3 rounded-lg text-sm mb-4">
               ✅ {success}
             </div>
           )}
 
           {/* Statistics Section */}
           {showStatistics && (
-            <div className="mb-6 bg-white rounded-2xl sm:rounded-3xl shadow-lg border border-gray-200 p-6">
-              <h2 className="text-xl font-bold text-black mb-4">
+            <div className="mb-6 bg-white dark:bg-gray-800 rounded-2xl sm:rounded-3xl shadow-lg border border-gray-200 dark:border-gray-700 p-6">
+              <h2 className="text-xl font-bold text-black dark:text-white mb-4">
                 Booking Statistikasi
               </h2>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                     Boshlanish sanasi
                   </label>
                   <Input
@@ -1171,11 +1171,11 @@ function Admin() {
                       })
                     }
                     size="lg"
-                    className="!text-black !bg-white"
+                    className="!text-black dark:!text-white !bg-white dark:!bg-gray-700"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                     Tugash sanasi
                   </label>
                   <Input
@@ -1188,7 +1188,7 @@ function Admin() {
                       })
                     }
                     size="lg"
-                    className="!text-black !bg-white"
+                    className="!text-black dark:!text-white !bg-white dark:!bg-gray-700"
                   />
                 </div>
               </div>
@@ -1245,11 +1245,11 @@ function Admin() {
                       return (
                         <div
                           key={key}
-                          className="bg-gray-50 rounded-lg p-4 border border-gray-200">
-                          <div className="text-sm text-gray-600 mb-1">
+                          className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4 border border-gray-200 dark:border-gray-600">
+                          <div className="text-sm text-gray-600 dark:text-gray-400 mb-1">
                             {displayKey}
                           </div>
-                          <div className="text-2xl font-bold text-black break-words">
+                          <div className="text-2xl font-bold text-black dark:text-white break-words">
                             {displayValue}
                           </div>
                         </div>
@@ -1263,13 +1263,13 @@ function Admin() {
           {/* Filter and Stats */}
           <div className="mb-6 flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
             <div className="flex-1">
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 Bronlarni filtrlash
               </label>
               <select
                 value={filter}
                 onChange={(e) => setFilter(e.target.value)}
-                className="w-full sm:w-auto min-w-[200px] px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-barber-olive focus:border-barber-olive text-base">
+                className="w-full sm:w-auto min-w-[200px] px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-barber-olive focus:border-barber-olive text-base bg-white dark:bg-gray-800 text-black dark:text-white">
                 <option value="all">Barcha bronlar ({bookings.length})</option>
                 <option value="pending">Kutilmoqda</option>
                 <option value="approved">Tasdiqlangan</option>
@@ -1279,7 +1279,7 @@ function Admin() {
             </div>
             <div className="flex flex-col sm:flex-row gap-3 items-start sm:items-center">
               {/* Socket.IO connection status */}
-              <div className="flex items-center gap-1.5 bg-white rounded-md px-1.5 py-1 border border-gray-300">
+              <div className="flex items-center gap-1.5 bg-white dark:bg-gray-800 rounded-md px-1.5 py-1 border border-gray-300 dark:border-gray-600">
                 <div className="flex items-center gap-1.5">
                   <div
                     className={`w-2 h-2 rounded-full ${
@@ -1297,7 +1297,7 @@ function Admin() {
                         : "Socket.IO disconnected"
                     }
                   />
-                  <span className="text-xs font-medium text-gray-700">
+                  <span className="text-xs font-medium text-gray-700 dark:text-gray-300">
                     {wsConnected 
                       ? "Live" 
                       : usePollingFallback 
@@ -1305,7 +1305,7 @@ function Admin() {
                       : "Offline"}
                   </span>
                   {!wsConnected && !usePollingFallback && wsReconnectAttempts > 0 && (
-                    <span className="text-[10px] text-gray-500">
+                    <span className="text-[10px] text-gray-500 dark:text-gray-400">
                       ({wsReconnectAttempts}/5)
                     </span>
                   )}
@@ -1334,28 +1334,28 @@ function Admin() {
                 )}
               </div>
               <div className="flex gap-2 text-sm flex-wrap">
-                <div className="px-3 py-2 bg-yellow-100 text-yellow-800 rounded-lg">
+                <div className="px-3 py-2 bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-300 rounded-lg">
                   Kutilmoqda:{" "}
                   {
                     bookings.filter((b) => b.status?.toLowerCase() === "pending")
                       .length
                   }
                 </div>
-                <div className="px-3 py-2 bg-green-100 text-green-800 rounded-lg">
+                <div className="px-3 py-2 bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300 rounded-lg">
                   Tasdiqlangan:{" "}
                   {
                     bookings.filter((b) => b.status?.toLowerCase() === "approved")
                       .length
                   }
                 </div>
-                <div className="px-3 py-2 bg-red-100 text-red-800 rounded-lg">
+                <div className="px-3 py-2 bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-300 rounded-lg">
                   Rad etilgan:{" "}
                   {
                     bookings.filter((b) => b.status?.toLowerCase() === "rejected")
                       .length
                   }
                 </div>
-                <div className="px-3 py-2 bg-blue-100 text-blue-800 rounded-lg">
+                <div className="px-3 py-2 bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300 rounded-lg">
                   Yakunlangan:{" "}
                   {
                     bookings.filter((b) => b.status?.toLowerCase() === "completed")
@@ -1367,7 +1367,7 @@ function Admin() {
           </div>
 
           {/* Bookings Table */}
-          <div className="bg-white rounded-2xl sm:rounded-3xl shadow-lg border border-gray-200 overflow-hidden">
+          <div className="bg-white dark:bg-gray-800 rounded-2xl sm:rounded-3xl shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
             <div className="overflow-x-auto">
               <table className="w-full">
                 <thead className="bg-barber-dark text-white">
@@ -1401,12 +1401,12 @@ function Admin() {
                     </th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-gray-200">
+                <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
                   {bookings.length === 0 ? (
                     <tr>
                       <td
                         colSpan="9"
-                        className="px-4 py-8 text-center text-gray-500">
+                        className="px-4 py-8 text-center text-gray-500 dark:text-gray-400">
                         Bronlar topilmadi
                       </td>
                     </tr>
@@ -1414,7 +1414,7 @@ function Admin() {
                     bookings.map((booking) => (
                       <tr
                         key={booking.id || booking._id}
-                        className="hover:bg-gray-50">
+                        className="hover:bg-gray-50 dark:hover:bg-gray-700">
                         <td className="px-4 py-3 text-sm font-medium whitespace-nowrap">
                           {booking.id || booking._id}
                         </td>
@@ -1483,7 +1483,7 @@ function Admin() {
                                   const bookingId = String(booking.id || booking._id);
                                   handleStatusChange(bookingId, e.target.value);
                                 }}
-                                className="px-3 py-1 border border-gray-300 rounded-lg focus:ring-2 focus:ring-barber-olive focus:border-barber-olive text-xs">
+                                className="px-3 py-1 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-barber-olive focus:border-barber-olive text-xs bg-white dark:bg-gray-700 text-black dark:text-white">
                                 <option value="pending">Kutilmoqda</option>
                                 <option value="approved">Tasdiqlangan</option>
                                 <option value="rejected">Rad etilgan</option>
@@ -1515,18 +1515,18 @@ function Admin() {
       {/* Delete Confirmation Modal */}
       {deleteConfirm && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-lg p-6 max-w-md w-full">
-            <h3 className="text-lg font-bold text-black mb-4">
+          <div className="bg-white dark:bg-gray-800 rounded-lg p-6 max-w-md w-full">
+            <h3 className="text-lg font-bold text-black dark:text-white mb-4">
               Bronni o'chirish
             </h3>
-            <p className="text-gray-700 mb-6">
+            <p className="text-gray-700 dark:text-gray-300 mb-6">
               Bu bronni o'chirishni xohlaysizmi? Bu amalni qaytarib bo'lmaydi.
             </p>
             <div className="flex gap-3 justify-end">
               <Button
                 onClick={() => setDeleteConfirm(null)}
                 variant="outlined"
-                className="border-gray-300 text-gray-700">
+                className="border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300">
                 Bekor qilish
               </Button>
               <Button
@@ -1542,9 +1542,9 @@ function Admin() {
       {/* Booking Form Modal */}
       {showBookingForm && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-lg p-6 max-w-3xl w-full max-h-[90vh] overflow-y-auto">
+          <div className="bg-white dark:bg-gray-800 rounded-lg p-6 max-w-3xl w-full max-h-[90vh] overflow-y-auto">
             <div className="flex justify-between items-center mb-6">
-              <h3 className="text-xl font-bold text-black">
+              <h3 className="text-xl font-bold text-black dark:text-white">
                 Yangi bron qo'shish
               </h3>
               <button
@@ -1559,7 +1559,7 @@ function Admin() {
                     phone: "",
                   });
                 }}
-                className="text-gray-500 hover:text-gray-700 text-2xl">
+                className="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 text-2xl">
                 ×
               </button>
             </div>
@@ -1567,7 +1567,7 @@ function Admin() {
             <form onSubmit={handleBookingSubmit} className="space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                     Barber <span className="text-red-500">*</span>
                   </label>
                   <select
@@ -1579,7 +1579,7 @@ function Admin() {
                       })
                     }
                     required
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-barber-olive focus:border-barber-olive">
+                    className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-barber-olive focus:border-barber-olive bg-white dark:bg-gray-700 text-black dark:text-white">
                     <option value="">Barberni tanlang</option>
                     {barbers.map((barber) => (
                       <option
@@ -1592,7 +1592,7 @@ function Admin() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                     Sana <span className="text-red-500">*</span>
                   </label>
                   <Input
@@ -1607,11 +1607,12 @@ function Admin() {
                     required
                     size="lg"
                     min={new Date().toISOString().split("T")[0]}
+                    className="dark:!text-white dark:!bg-gray-700"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                     Vaqt <span className="text-red-500">*</span>
                   </label>
                   <Input
@@ -1625,11 +1626,12 @@ function Admin() {
                     }
                     required
                     size="lg"
+                    className="dark:!text-white dark:!bg-gray-700"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                     Mijoz ismi <span className="text-red-500">*</span>
                   </label>
                   <Input
@@ -1644,11 +1646,12 @@ function Admin() {
                     required
                     size="lg"
                     placeholder="Ism kiriting"
+                    className="dark:!text-white dark:!bg-gray-700"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                     Telefon raqami <span className="text-red-500">*</span>
                   </label>
                   <Input
@@ -1663,19 +1666,20 @@ function Admin() {
                     required
                     size="lg"
                     placeholder="+998901234567"
+                    className="dark:!text-white dark:!bg-gray-700"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   Xizmatlar
                 </label>
                 <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
                   {services.map((service) => (
                     <label
                       key={service.id || service._id}
-                      className="flex items-center space-x-2 p-3 border border-gray-300 rounded-lg cursor-pointer hover:bg-gray-50">
+                      className="flex items-center space-x-2 p-3 border border-gray-300 dark:border-gray-600 rounded-lg cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700">
                       <input
                         type="checkbox"
                         checked={bookingFormData.service_ids.includes(
@@ -1684,9 +1688,9 @@ function Admin() {
                         onChange={() =>
                           handleServiceToggle(service.id || service._id)
                         }
-                        className="w-4 h-4 text-barber-olive border-gray-300 rounded focus:ring-barber-olive"
+                        className="w-4 h-4 text-barber-olive border-gray-300 dark:border-gray-600 rounded focus:ring-barber-olive bg-white dark:bg-gray-700"
                       />
-                      <span className="text-sm text-gray-700">
+                      <span className="text-sm text-gray-700 dark:text-gray-300">
                         {service.name}
                       </span>
                     </label>
@@ -1694,7 +1698,7 @@ function Admin() {
                 </div>
               </div>
 
-              <div className="flex gap-3 justify-end pt-4 border-t border-gray-200">
+              <div className="flex gap-3 justify-end pt-4 border-t border-gray-200 dark:border-gray-700">
                 <Button
                   type="button"
                   onClick={() => {
@@ -1709,7 +1713,7 @@ function Admin() {
                     });
                   }}
                   variant="outlined"
-                  className="border-gray-300 text-gray-700">
+                  className="border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300">
                   Bekor qilish
                 </Button>
                 <Button
@@ -1729,15 +1733,15 @@ function Admin() {
       {/* Search Modal */}
       {showSearchModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-lg p-6 max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-            <h3 className="text-xl font-bold text-black mb-6">
+          <div className="bg-white dark:bg-gray-800 rounded-lg p-6 max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+            <h3 className="text-xl font-bold text-black dark:text-white mb-6">
               Bronlarni qidirish
             </h3>
 
             <div className="space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                     Mijoz ismi
                   </label>
                   <Input
@@ -1748,11 +1752,12 @@ function Admin() {
                     }
                     placeholder="Mijoz ismini kiriting"
                     size="lg"
+                    className="dark:!text-white dark:!bg-gray-700"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                     Telefon raqami
                   </label>
                   <Input
@@ -1763,11 +1768,12 @@ function Admin() {
                     }
                     placeholder="+998901234567"
                     size="lg"
+                    className="dark:!text-white dark:!bg-gray-700"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                     Barber
                   </label>
                   <select
@@ -1775,7 +1781,7 @@ function Admin() {
                     onChange={(e) =>
                       handleSearchCriteriaChange("barberId", e.target.value)
                     }
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-barber-olive focus:border-barber-olive">
+                    className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-barber-olive focus:border-barber-olive bg-white dark:bg-gray-700 text-black dark:text-white">
                     <option value="">Barcha barberlar</option>
                     {barbers.map((barber) => (
                       <option
@@ -1788,7 +1794,7 @@ function Admin() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                     Xizmat
                   </label>
                   <select
@@ -1796,7 +1802,7 @@ function Admin() {
                     onChange={(e) =>
                       handleSearchCriteriaChange("serviceId", e.target.value)
                     }
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-barber-olive focus:border-barber-olive">
+                    className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-barber-olive focus:border-barber-olive bg-white dark:bg-gray-700 text-black dark:text-white">
                     <option value="">Barcha xizmatlar</option>
                     {services.map((service) => (
                       <option
@@ -1809,7 +1815,7 @@ function Admin() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                     Sanadan
                   </label>
                   <Input
@@ -1819,11 +1825,12 @@ function Admin() {
                       handleSearchCriteriaChange("dateFrom", e.target.value)
                     }
                     size="lg"
+                    className="dark:!text-white dark:!bg-gray-700"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                     Sanagacha
                   </label>
                   <Input
@@ -1833,11 +1840,12 @@ function Admin() {
                       handleSearchCriteriaChange("dateTo", e.target.value)
                     }
                     size="lg"
+                    className="dark:!text-white dark:!bg-gray-700"
                   />
                 </div>
 
                 <div className="md:col-span-2">
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                     Holat
                   </label>
                   <select
@@ -1845,7 +1853,7 @@ function Admin() {
                     onChange={(e) =>
                       handleSearchCriteriaChange("status", e.target.value)
                     }
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-barber-olive focus:border-barber-olive">
+                    className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-barber-olive focus:border-barber-olive bg-white dark:bg-gray-700 text-black dark:text-white">
                     <option value="">Barcha holatlar</option>
                     <option value="pending">Kutilmoqda</option>
                     <option value="approved">Tasdiqlangan</option>
@@ -1855,12 +1863,12 @@ function Admin() {
                 </div>
               </div>
 
-              <div className="flex gap-3 justify-end pt-4 border-t border-gray-200">
+              <div className="flex gap-3 justify-end pt-4 border-t border-gray-200 dark:border-gray-700">
                 <Button
                   type="button"
                   onClick={() => setShowSearchModal(false)}
                   variant="outlined"
-                  className="border-gray-300 text-gray-700">
+                  className="border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300">
                   Bekor qilish
                 </Button>
                 <Button
@@ -1885,8 +1893,8 @@ function Admin() {
       {/* Add Admin Modal */}
       {showAddAdmin && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-lg p-6 max-w-md w-full max-h-[90vh] overflow-y-auto">
-            <h3 className="text-lg font-bold text-black mb-4">
+          <div className="bg-white dark:bg-gray-800 rounded-lg p-6 max-w-md w-full max-h-[90vh] overflow-y-auto">
+            <h3 className="text-lg font-bold text-black dark:text-white mb-4">
               Yangi Admin Qo'shish
             </h3>
 
@@ -1952,7 +1960,7 @@ function Admin() {
               />
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   Rol
                 </label>
                 <select
@@ -1960,7 +1968,7 @@ function Admin() {
                   onChange={(e) =>
                     handleAdminFormChange("role", e.target.value)
                   }
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-barber-olive focus:border-barber-olive text-base"
+                  className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-barber-olive focus:border-barber-olive text-base bg-white dark:bg-gray-700 text-black dark:text-white"
                   disabled={isSubmittingAdmin}>
                   <option value="admin">Admin</option>
                   <option value="super_admin">Super Admin</option>
@@ -1982,7 +1990,7 @@ function Admin() {
                     setError("");
                   }}
                   variant="outlined"
-                  className="border-gray-300 text-gray-700"
+                  className="border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300"
                   disabled={isSubmittingAdmin}>
                   Bekor qilish
                 </Button>
