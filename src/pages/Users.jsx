@@ -338,20 +338,51 @@ function Users() {
 
       const userId = editingUser.id || editingUser._id;
 
-      // Create FormData for multipart/form-data
-      const formDataToSend = new FormData();
-      formDataToSend.append("name", editFormData.name);
-      formDataToSend.append(
-        "tg_username",
-        editFormData.tg_username?.replace(/^@/, "") || editFormData.tg_username
-      );
-      formDataToSend.append("phone_number", editFormData.phone_number);
-      formDataToSend.append("role", editFormData.role);
+      // Determine the correct endpoint and data format based on user role
+      const userRole = editFormData.role || editingUser.role;
+      let endpoint;
+      let formDataToSend = new FormData();
 
-      // Add barber-specific fields if role is barber
-      if (editFormData.role === "barber") {
-        formDataToSend.append("work_start_time", editFormData.work_start_time);
-        formDataToSend.append("work_end_time", editFormData.work_end_time);
+      if (userRole === "barber") {
+        // For barber: use /barber/{id} endpoint and don't include role field
+        endpoint = `${AUTH_BASE_URL}/barber/${userId}`;
+        formDataToSend.append("name", editFormData.name);
+        formDataToSend.append(
+          "tg_username",
+          editFormData.tg_username?.replace(/^@/, "") || editFormData.tg_username
+        );
+        formDataToSend.append("phone_number", editFormData.phone_number);
+        formDataToSend.append("working", (editFormData.working !== undefined ? editFormData.working : true).toString());
+        formDataToSend.append("work_start_time", editFormData.work_start_time || "09:00");
+        formDataToSend.append("work_end_time", editFormData.work_end_time || "18:00");
+      } else if (userRole === "client") {
+        // For client: use /client/{id} endpoint and don't include role field
+        endpoint = `${AUTH_BASE_URL}/client/${userId}`;
+        formDataToSend.append("name", editFormData.name);
+        formDataToSend.append(
+          "tg_username",
+          editFormData.tg_username?.replace(/^@/, "") || editFormData.tg_username
+        );
+        formDataToSend.append("phone_number", editFormData.phone_number);
+      } else if (userRole === "admin" || userRole === "super_admin") {
+        // For admin: use /admin/{id} endpoint and don't include role field
+        endpoint = `${AUTH_BASE_URL}/admin/${userId}`;
+        formDataToSend.append("name", editFormData.name);
+        formDataToSend.append(
+          "tg_username",
+          editFormData.tg_username?.replace(/^@/, "") || editFormData.tg_username
+        );
+        formDataToSend.append("phone_number", editFormData.phone_number);
+      } else {
+        // Fallback: use original endpoint with role field
+        endpoint = `${AUTH_BASE_URL}${API_ENDPOINTS.users}/${userId}`;
+        formDataToSend.append("name", editFormData.name);
+        formDataToSend.append(
+          "tg_username",
+          editFormData.tg_username?.replace(/^@/, "") || editFormData.tg_username
+        );
+        formDataToSend.append("phone_number", editFormData.phone_number);
+        formDataToSend.append("role", editFormData.role);
       }
 
       // Only include password if it's provided
@@ -359,8 +390,8 @@ function Users() {
         formDataToSend.append("password", editFormData.password);
       }
 
-      // Add profile image if selected
-      if (editFormData.profile_image) {
+      // Add profile image if selected (for barber and client)
+      if (editFormData.profile_image && (userRole === "barber" || userRole === "client")) {
         const file = editFormData.profile_image;
         const fileName = file.name.toLowerCase();
         let finalFileName = fileName;
@@ -390,7 +421,7 @@ function Users() {
       }
 
       const response = await fetch(
-        `${AUTH_BASE_URL}${API_ENDPOINTS.users}/${userId}`,
+        endpoint,
         {
           method: "PATCH",
           headers: {
@@ -497,7 +528,7 @@ function Users() {
       formDataToSend.append("role", newRole);
 
       const response = await fetch(
-        `${AUTH_BASE_URL}${API_ENDPOINTS.users}/${userId}`,
+        `${AUTH_BASE_URL}${API_ENDPOINTS.users}/${userId}/role`,
         {
           method: "PATCH",
           headers: {

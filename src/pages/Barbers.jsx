@@ -269,7 +269,7 @@ function Barbers() {
       }
 
       const response = await fetch(
-        `${AUTH_BASE_URL}${API_ENDPOINTS.users}/${barberId}`,
+        `${AUTH_BASE_URL}/barber/${barberId}`,
         {
           method: "PATCH",
           headers: {

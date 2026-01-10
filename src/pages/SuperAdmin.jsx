@@ -325,7 +325,7 @@ function SuperAdmin() {
       // Profile image not needed for admins
 
       const response = await fetch(
-        `${AUTH_BASE_URL}${API_ENDPOINTS.users}/${adminId}`,
+        `${AUTH_BASE_URL}/admin/${adminId}`,
         {
           method: "PATCH",
           headers: {
